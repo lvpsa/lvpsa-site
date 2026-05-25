@@ -16,7 +16,7 @@ export default function App() {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <img src="/logo.jpg" className="h-14 w-14 rounded-full bg-white object-cover" />
+            <img src="/logo.jpg" className="h-24 w-24 rounded-full bg-white object-cover" />
             <div>
               <p className="text-xl font-black">LVPSA</p>
               <p className="text-sm text-slate-300">Volleyball de plage de St-Augustin</p>
