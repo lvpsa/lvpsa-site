@@ -24,6 +24,12 @@ export default function App() {
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/reglements" element={<Reglements />} />
+<Route path="/ligue" element={<Ligue />} />
+<Route path="/inscription-ligue" element={<InscriptionLigue />} />
+<Route path="/gestion-equipe" element={<GestionEquipe />} />
+<Route path="/reglements-tournoi" element={<ReglementsTournoi />} />
+<Route path="/membres" element={<Membres />} />
+<Route path="/contact" element={<Contact />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
