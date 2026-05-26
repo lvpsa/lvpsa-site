@@ -463,19 +463,126 @@ function Tournoi() {
 function Reglements() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black">Règlements</h1>
-      <p className="mt-4 text-slate-300">
-        Consultez les règlements officiels de la ligue.
+
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        LVPSA 2026
       </p>
 
-      <a
-        href="/LVPSA 2026_règlements seulement.pptx"
-        target="_blank"
-        rel="noreferrer"
-        className="mt-8 inline-flex items-center gap-2 rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950"
-      >
-        Consulter les règlements <ExternalLink size={18} />
-      </a>
+      <h1 className="mt-2 text-5xl font-black">
+        Règlements de la ligue
+      </h1>
+
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+        Voici les règlements officiels de la Ligue de Volleyball de Plage
+        de St-Augustin pour la saison 2026.
+      </p>
+
+      <div className="mt-14 grid gap-8 lg:grid-cols-2">
+
+        {/* FORMAT */}
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Format des équipes
+          </h2>
+
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• 4 contre 4 avec au moins une fille sur le terrain en tout temps</li>
+            <li>• Une équipe peut avoir plus de 4 joueurs</li>
+            <li>• Seulement 4 joueurs sur le terrain à la fois</li>
+            <li>• Les équipes doivent trouver leurs remplaçants</li>
+            <li>• Une équipe à 3 joueurs utilisera un joueur fantôme</li>
+          </ul>
+        </div>
+
+        {/* INTERDICTIONS */}
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Interdictions
+          </h2>
+
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• Bloquer une fille à l’attaque</li>
+            <li>• Faire des tips ou des touches</li>
+            <li>• Toucher le filet</li>
+            <li>• Traverser de l’autre côté</li>
+            <li>• Faire un transport</li>
+          </ul>
+        </div>
+
+        {/* RÈGLES */}
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Règles de jeu
+          </h2>
+
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• Deux joueurs avant et deux joueurs arrière</li>
+            <li>• Rotation obligatoire</li>
+            <li>• Les joueurs arrière attaquent derrière la ligne de 3 mètres</li>
+            <li>• Deux sets de 21 points par match</li>
+            <li>• Chaque équipe joue deux matchs par soir</li>
+          </ul>
+        </div>
+
+        {/* AUTO-ARBITRAGE */}
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Auto-arbitrage
+          </h2>
+
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• Les situations grises sont reprises</li>
+            <li>• Les équipes doivent rester respectueuses</li>
+            <li>• Le capitaine gagnant transmet les résultats</li>
+            <li>• L’esprit sportif est prioritaire</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* TOURNOI */}
+      <div className="mt-10 rounded-3xl border border-amber-300/20 bg-amber-300/10 p-8">
+        <h2 className="text-3xl font-black text-amber-300">
+          Tournoi des séries
+        </h2>
+
+        <div className="mt-6 grid gap-6 md:grid-cols-2 text-slate-200">
+
+          <div>
+            <h3 className="text-xl font-bold">
+              Remplaçants autorisés
+            </h3>
+
+            <ul className="mt-4 space-y-3 text-slate-300">
+              <li>• Un gars ayant joué au moins 3 fois</li>
+              <li>• Une fille ayant joué au moins 1 fois</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold">
+              Dépôt de présence
+            </h3>
+
+            <p className="mt-4 text-slate-300 leading-7">
+              Le dépôt de 100$ est remboursé aux équipes présentes
+              toute la saison et au tournoi des séries.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* MÉTÉO */}
+      <div className="mt-10 rounded-3xl border border-sky-400/20 bg-sky-400/10 p-8">
+        <h2 className="text-3xl font-black text-sky-300">
+          Politique météo
+        </h2>
+
+        <p className="mt-5 max-w-3xl leading-8 text-slate-300">
+          S’il pleut, les matchs ont lieu normalement.
+          En cas d’orage, les parties seront reportées si possible.
+        </p>
+      </div>
+
     </section>
   );
 }
