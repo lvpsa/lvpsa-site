@@ -242,7 +242,7 @@ function ClassementDetail({ titre }) {
     src={lien}
     title={titre}
     width="100%"
-    height="650"
+    height="260"
     style={{
       border: "none",
       display: "block",
