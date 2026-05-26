@@ -44,6 +44,7 @@ export default function App() {
           <Route path="/inscription-ligue" element={<InscriptionLigue />} />
           <Route path="/gestion-equipe" element={<GestionEquipe />} />
           <Route path="/reglements-tournoi" element={<ReglementsTournoi />} />
+          <Route path="/connexion" element={<Membres />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
