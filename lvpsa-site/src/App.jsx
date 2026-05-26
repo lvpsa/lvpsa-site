@@ -68,7 +68,6 @@ function Header() {
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-200 md:flex">
           <Link to="/" className="hover:text-amber-300">Accueil</Link>
           <Dropdown title="Ligue" items={[
-            { label: "Informations", to: "/ligue" },
             { label: "Classements", to: "/classements" },
             { label: "Règlements", to: "/reglements" },
             { label: "Inscription", to: "/inscription-ligue" },
@@ -501,7 +500,7 @@ function Reglements() {
           </h2>
 
           <ul className="mt-6 space-y-4 text-slate-300">
-            <li>• Bloquer une fille à l’attaque</li>
+            <li>• Bloquer une fille sur un mouvement d'attaque</li>
             <li>• Traverser la balle en tips ou touches, (touches permises récréatif)</li>
             <li>• Toucher le filet</li>
             <li>• Traverser de l’autre côté</li>
@@ -615,7 +614,7 @@ function Contact() {
     <section className="mx-auto max-w-7xl px-6 py-20">
       <h1 className="text-4xl font-black">Contact</h1>
       <p className="mt-4 text-slate-300">
-        Valérie Thomassin, Mike Théroux et Sylvain Arbour
+        Valérie Thomassin, Michael Théroux et Sylvain Arbour
       </p>
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row">
