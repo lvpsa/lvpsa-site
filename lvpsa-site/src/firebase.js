@@ -1,18 +1,15 @@
-const [statutMatchs, setStatutMatchs] = useState({
-  texte: "Chargement...",
-  couleur: "emerald",
-  message: "LVPSA",
-});
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
-useEffect(() => {
-  async function chargerStatut() {
-    const ref = doc(db, "settings", "matchStatus");
-    const snap = await getDoc(ref);
+const firebaseConfig = {
+  apiKey: "AIzaSyDGkdMo9pLw7mvMLDegPqeyQhExhv_E4iM",
+  authDomain: "lvpsa-81fa8.firebaseapp.com",
+  projectId: "lvpsa-81fa8",
+  storageBucket: "lvpsa-81fa8.firebasestorage.app",
+  messagingSenderId: "562341714816",
+  appId: "1:562341714816:web:4a6cd6b55a2c1d64e33f65"
+};
 
-    if (snap.exists()) {
-      setStatutMatchs(snap.data());
-    }
-  }
+const app = initializeApp(firebaseConfig);
 
-  chargerStatut();
-}, []);
+export const db = getFirestore(app);
