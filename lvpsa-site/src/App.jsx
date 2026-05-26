@@ -24,12 +24,11 @@ export default function App() {
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/reglements" element={<Reglements />} />
-<Route path="/ligue" element={<Ligue />} />
-<Route path="/inscription-ligue" element={<InscriptionLigue />} />
-<Route path="/gestion-equipe" element={<GestionEquipe />} />
-<Route path="/reglements-tournoi" element={<ReglementsTournoi />} />
-<Route path="/membres" element={<Membres />} />
-<Route path="/contact" element={<Contact />} />
+          
+          <Route path="/ligue" element={<Ligue />} />
+          <Route path="/inscription-ligue" element={<InscriptionLigue />} />
+          <Route path="/gestion-equipe" element={<GestionEquipe />} />
+          <Route path="/reglements-tournoi" element={<ReglementsTournoi />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
@@ -303,5 +302,54 @@ function Footer() {
     <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-400">
       © 2026 LVPSA — Ligue de volleyball de plage de St-Augustin.
     </footer>
+  );
+}
+function Ligue() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <h1 className="text-4xl font-black">Informations sur la ligue</h1>
+      <p className="mt-4 text-slate-300">
+        La LVPSA offre un volet récréatif le lundi soir et un volet compétitif le mardi soir au parc Portneuf.
+      </p>
+    </section>
+  );
+}
+
+function InscriptionLigue() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <h1 className="text-4xl font-black">Inscription à la ligue</h1>
+      <p className="mt-4 text-slate-300">
+        Les inscriptions pour la saison 2026 sont maintenant terminées.
+      </p>
+      <p className="mt-4 text-slate-300">
+        Pour donner votre nom comme remplaçant, écrivez à{" "}
+        <a className="font-bold text-amber-300" href="mailto:liguevpsa@gmail.com">
+          liguevpsa@gmail.com
+        </a>.
+      </p>
+    </section>
+  );
+}
+
+function GestionEquipe() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <h1 className="text-4xl font-black">Gestion d’équipe</h1>
+      <p className="mt-4 text-slate-300">
+        Cette section servira plus tard aux capitaines pour gérer leur équipe, les présences et les résultats.
+      </p>
+    </section>
+  );
+}
+
+function ReglementsTournoi() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <h1 className="text-4xl font-black">Règlements du tournoi</h1>
+      <p className="mt-4 text-slate-300">
+        Les règlements du tournoi seront ajoutés ici.
+      </p>
+    </section>
   );
 }
