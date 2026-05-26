@@ -142,7 +142,7 @@ function Header() {
       </div>
     </header>
   );
-
+}
 function Accueil() {
   return (
     <>
