@@ -417,6 +417,19 @@ function Contact() {
   );
 }
 
+function HomeCard({ title, text, link, label }) {
+  return (
+    <Link
+      to={link}
+      className="rounded-3xl border border-white/10 bg-white/10 p-6 transition hover:-translate-y-1 hover:bg-white/15"
+    >
+      <h3 className="text-xl font-black">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
+      <p className="mt-5 font-bold text-amber-300">{label} →</p>
+    </Link>
+  );
+}
+
 function Footer() {
   return (
     <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-400">
