@@ -37,6 +37,7 @@ export default function App() {
           <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           
           <Route path="/ligue" element={<Ligue />} />
@@ -546,6 +547,111 @@ function MeteoJour() {
         Voir MétéoMédia →
       </a>
     </div>
+  );
+}
+
+function Admin() {
+  const [emailAdmin, setEmailAdmin] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
+  const [statut, setStatut] = useState({
+    texte: "Les parties ont lieu ce soir",
+    couleur: "emerald",
+    message: "Mise à jour officielle LVPSA",
+  });
+
+  async function connexion() {
+    const result = await signInWithEmailAndPassword(auth, emailAdmin, password);
+    setUser(result.user);
+
+    const snap = await getDoc(doc(db, "settings", "matchStatus"));
+    if (snap.exists()) setStatut(snap.data());
+  }
+
+  async function sauvegarder() {
+    await setDoc(doc(db, "settings", "matchStatus"), statut);
+    alert("Statut mis à jour !");
+  }
+
+  async function deconnexion() {
+    await signOut(auth);
+    setUser(null);
+  }
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-xl px-6 py-20">
+        <h1 className="text-4xl font-black">Connexion admin</h1>
+
+        <input
+          className="mt-8 w-full rounded-2xl border px-4 py-3 text-slate-950"
+          placeholder="Courriel"
+          value={emailAdmin}
+          onChange={(e) => setEmailAdmin(e.target.value)}
+        />
+
+        <input
+          className="mt-3 w-full rounded-2xl border px-4 py-3 text-slate-950"
+          placeholder="Mot de passe"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          onClick={connexion}
+          className="mt-5 w-full rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950"
+        >
+          Se connecter
+        </button>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-20">
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-black">Administration LVPSA</h1>
+        <button onClick={deconnexion} className="text-amber-300">
+          Déconnexion
+        </button>
+      </div>
+
+      <div className="mt-10 rounded-3xl border border-white/10 bg-white/10 p-6">
+        <h2 className="text-2xl font-black">Statut des parties</h2>
+
+        <label className="mt-6 block text-sm text-slate-300">Texte principal</label>
+        <input
+          className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+          value={statut.texte}
+          onChange={(e) => setStatut({ ...statut, texte: e.target.value })}
+        />
+
+        <label className="mt-5 block text-sm text-slate-300">Message secondaire</label>
+        <input
+          className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+          value={statut.message}
+          onChange={(e) => setStatut({ ...statut, message: e.target.value })}
+        />
+
+        <label className="mt-5 block text-sm text-slate-300">Couleur</label>
+        <select
+          className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+          value={statut.couleur}
+          onChange={(e) => setStatut({ ...statut, couleur: e.target.value })}
+        >
+          <option value="emerald">Vert — parties confirmées</option>
+          <option value="red">Rouge — parties annulées</option>
+        </select>
+
+        <button
+          onClick={sauvegarder}
+          className="mt-8 rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950"
+        >
+          Sauvegarder le statut
+        </button>
+      </div>
+    </section>
   );
 }
 
