@@ -132,24 +132,50 @@ const statutMatchs = {
 };
 
 function Accueil() {
-  const [statutMatchs, setStatutMatchs] = useState({
-    texte: "Chargement...",
-    couleur: "emerald",
-    message: "LVPSA",
-  });
+const [statutMatchs, setStatutMatchs] = useState({
+  texte: "Chargement...",
+  couleur: "emerald",
+  message: "LVPSA",
+});
 
-  useEffect(() => {
-    async function chargerStatut() {
-      const ref = doc(db, "settings", "matchStatus");
-      const snap = await getDoc(ref);
+const [meteoHeures, setMeteoHeures] = useState([]);
 
-      if (snap.exists()) {
-        setStatutMatchs(snap.data());
-      }
+useEffect(() => {
+  async function chargerStatut() {
+    const ref = doc(db, "settings", "matchStatus");
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      setStatutMatchs(snap.data());
     }
+  }
 
-    chargerStatut();
-  }, []);
+  async function chargerMeteo() {
+    const url =
+      "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=America%2FToronto&forecast_days=1";
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
+
+    const resultats = data.hourly.time
+      .map((time, index) => ({
+        time,
+        heure: time.slice(11, 16),
+        temperature: Math.round(data.hourly.temperature_2m[index]),
+        vent: Math.round(data.hourly.wind_speed_10m[index]),
+        humidite: data.hourly.relative_humidity_2m[index],
+        code: data.hourly.weather_code[index],
+      }))
+      .filter((item) => heuresVoulues.includes(item.heure));
+
+    setMeteoHeures(resultats);
+  }
+
+  chargerStatut();
+  chargerMeteo();
+}, []);
 
   return (
     <>
