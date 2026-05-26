@@ -113,70 +113,92 @@ function Dropdown({ title, items }) {
 }
 
 function Accueil() {
-    return (
+  return (
     <>
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(250,204,21,0.22),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.22),transparent_35%)]" />
         <div className="absolute inset-0 bg-slate-950/80" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28">
-         <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
-  <img
-    src="/volley-bg.jpg"
-    alt="LVPSA"
-    className="h-full min-h-[620px] w-full object-cover"
-  />
+          <div>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-5 py-2 text-sm font-semibold text-amber-200">
+              <Calendar size={16} /> Saison 2026 · Beach vibes
+            </div>
 
-  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+            <h1 className="text-5xl font-black leading-tight md:text-7xl">
+              Plus qu’une ligue.
+              <span className="block text-amber-300">Une ambiance.</span>
+            </h1>
 
-  <div className="absolute inset-0 flex flex-col justify-end p-8">
-    <div className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-md">
-      <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
-        LVPSA • Saison 2026
-      </p>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+              La LVPSA rassemble les passionnés de volleyball de plage à St-Augustin
+              dans une atmosphère sportive, estivale et conviviale.
+            </p>
 
-      <h2 className="mt-3 text-5xl font-black leading-tight">
-        Volleyball.
-        <br />
-        Été.
-        <br />
-        Ambiance.
-      </h2>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                to="/classements"
+                className="rounded-full bg-amber-400 px-7 py-3 text-center font-bold text-slate-950 shadow-lg shadow-amber-400/20 hover:bg-amber-300"
+              >
+                Voir les classements
+              </Link>
 
-      <p className="mt-5 max-w-md text-slate-200">
-        Une ligue de volleyball de plage locale où compétition,
-        plaisir et communauté se rencontrent chaque semaine.
-      </p>
+              <Link
+                to="/tournoi"
+                className="rounded-full border border-white/15 px-7 py-3 text-center font-semibold hover:bg-white/10"
+              >
+                Tournoi 18 juillet
+              </Link>
+            </div>
 
-<div className="mt-8">
-  <Link
-    to="/tournoi"
-    className="inline-flex rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950 hover:bg-amber-300"
-  >
-    Découvrir le tournoi
-  </Link>
-</div>
+            <p className="mt-6 text-sm text-slate-400">
+              Inscriptions de la ligue terminées · Remplaçants :{" "}
+              <a className="font-bold text-amber-300" href={`mailto:${email}`}>
+                {email}
+              </a>
+            </p>
+          </div>
 
-        <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
-          <p className="text-3xl font-black text-amber-300">12</p>
-          <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
-            Semaines
-          </p>
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
+            <img
+              src="/volley-bg.jpg"
+              alt="LVPSA"
+              className="h-full min-h-[620px] w-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+
+            <div className="absolute inset-0 flex flex-col justify-end p-8">
+              <div className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-md">
+                <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
+                  LVPSA • Saison 2026
+                </p>
+
+                <h2 className="mt-3 text-5xl font-black leading-tight">
+                  Volleyball.
+                  <br />
+                  Été.
+                  <br />
+                  Ambiance.
+                </h2>
+
+                <p className="mt-5 max-w-md text-slate-200">
+                  Une ligue locale où compétition, plaisir et communauté se
+                  rencontrent chaque semaine.
+                </p>
+
+                <div className="mt-8">
+                  <Link
+                    to="/tournoi"
+                    className="inline-flex rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950 hover:bg-amber-300"
+                  >
+                    Découvrir le tournoi
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
-          <p className="text-3xl font-black text-amber-300">1</p>
-          <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
-            Tournoi
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>      
-      
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-16">
@@ -218,7 +240,8 @@ function Accueil() {
               Du sable, du volley, du plaisir.
             </h2>
             <p className="mt-5 text-lg leading-8 text-slate-700">
-              Une ligue locale pensée pour créer des soirées actives, sociales et rassembleuses autour du volleyball de plage.
+              Une ligue locale pensée pour créer des soirées actives, sociales
+              et rassembleuses autour du volleyball de plage.
             </p>
           </div>
 
@@ -235,28 +258,6 @@ function Accueil() {
         </div>
       </section>
     </>
-  );
-}
-
-function QuickItem({ title, text }) {
-  return (
-    <div className="rounded-2xl bg-white/5 p-4">
-      <p className="font-black text-amber-300">{title}</p>
-      <p className="mt-1 text-sm text-slate-300">{text}</p>
-    </div>
-  );
-}
-
-function HomeCard({ title, text, link, label }) {
-  return (
-    <Link
-      to={link}
-      className="rounded-3xl border border-white/10 bg-white/10 p-6 transition hover:-translate-y-1 hover:bg-white/15"
-    >
-      <h3 className="text-xl font-black">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
-      <p className="mt-5 font-bold text-amber-300">{label} →</p>
-    </Link>
   );
 }
 
