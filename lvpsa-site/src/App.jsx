@@ -54,34 +54,143 @@ export default function App() {
 }
 
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        {/* LOGO */}
         <Link to="/" className="flex items-center gap-4">
-          <img src="/logo.jpg" className="h-20 w-20 rounded-full bg-white object-cover" />
+          <img
+            src="/logo.jpg"
+            alt="LVPSA"
+            className="h-20 w-20 rounded-full object-cover"
+          />
+
           <div>
-            <p className="text-2xl font-black">LVPSA</p>
-            <p className="text-sm text-slate-300">Volleyball de plage de St-Augustin</p>
+            <h1 className="text-4xl font-black tracking-tight text-white">
+              LVPSA
+            </h1>
+
+            <p className="text-xl text-slate-300">
+              Volleyball de plage de St-Augustin
+            </p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-200 md:flex">
-          <Link to="/" className="hover:text-amber-300">Accueil</Link>
-          <Dropdown title="Ligue" items={[
-            { label: "Classements", to: "/classements" },
-            { label: "Règlements", to: "/reglements" },
-            { label: "Inscription", to: "/inscription-ligue" },
-            { label: "Gestion d’équipe", to: "/gestion-equipe" },
-          ]} />
-          <Dropdown title="Tournoi" items={[
-            { label: "Informations", to: "/tournoi" },
-            { label: "Inscription", href: "https://forms.gle/csLUt6NmcjNADcBm7" },
-            { label: "Règlements", to: "/reglements-tournoi" },
-          ]} />
-          <Link to="/membres" className="rounded-full border border-white/15 px-5 py-2 hover:bg-white/10 hover:text-amber-300">Connexion</Link>
-          <Link to="/contact" className="hover:text-amber-300">Contact</Link>
+        {/* MENU DESKTOP */}
+        <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
+
+          <Link to="/" className="hover:text-amber-300">
+            Accueil
+          </Link>
+
+          <div className="group relative">
+            <button className="flex items-center gap-1 hover:text-amber-300">
+              Ligue
+            </button>
+
+            <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
+              <Link
+                to="/classements"
+                className="block rounded-xl px-3 py-2 hover:bg-white/10"
+              >
+                Classements
+              </Link>
+
+              <Link
+                to="/reglements"
+                className="block rounded-xl px-3 py-2 hover:bg-white/10"
+              >
+                Règlements
+              </Link>
+            </div>
+          </div>
+
+          <div className="group relative">
+            <button className="flex items-center gap-1 hover:text-amber-300">
+              Tournoi
+            </button>
+
+            <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
+              <Link
+                to="/tournoi"
+                className="block rounded-xl px-3 py-2 hover:bg-white/10"
+              >
+                Informations
+              </Link>
+
+              <Link
+                to="/tournoi/reglements"
+                className="block rounded-xl px-3 py-2 hover:bg-white/10"
+              >
+                Règlements
+              </Link>
+            </div>
+          </div>
+
+          <Link
+            to="/connexion"
+            className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+          >
+            Connexion
+          </Link>
+
+          <Link to="/contact" className="hover:text-amber-300">
+            Contact
+          </Link>
         </nav>
+
+        {/* BOUTON MOBILE */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="rounded-xl border border-white/10 p-3 text-white md:hidden"
+        >
+          ☰
+        </button>
       </div>
+
+      {/* MENU MOBILE */}
+      {menuOpen && (
+        <div className="border-t border-white/10 bg-slate-950 px-6 py-4 md:hidden">
+
+          <div className="flex flex-col gap-4 text-white">
+
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              Accueil
+            </Link>
+
+            <Link to="/classements" onClick={() => setMenuOpen(false)}>
+              Classements
+            </Link>
+
+            <Link to="/reglements" onClick={() => setMenuOpen(false)}>
+              Règlements Ligue
+            </Link>
+
+            <Link to="/tournoi" onClick={() => setMenuOpen(false)}>
+              Tournoi
+            </Link>
+
+            <Link
+              to="/tournoi/reglements"
+              onClick={() => setMenuOpen(false)}
+            >
+              Règlements Tournoi
+            </Link>
+
+            <Link to="/connexion" onClick={() => setMenuOpen(false)}>
+              Connexion
+            </Link>
+
+            <Link to="/contact" onClick={() => setMenuOpen(false)}>
+              Contact
+            </Link>
+
+          </div>
+        </div>
+      )}
     </header>
   );
 }
