@@ -3,12 +3,12 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDGkdMo9pLw7mvMLDegPqeyQhExhv_E4iM",
-  authDomain: "lvpsa-81fa8.firebaseapp.com",
-  projectId: "lvpsa-81fa8",
-  storageBucket: "lvpsa-81fa8.firebasestorage.app",
-  messagingSenderId: "562341714816",
-  appId: "1:562341714816:web:4a6cd6b55a2c1d64e33f65"
+  apiKey: "AIzaSyDgWX7FNdNMwd4k6W0Z-2eD_VzzCkr-t50",
+  authDomain: "lvpsa-site.firebaseapp.com",
+  projectId: "lvpsa-site",
+  storageBucket: "lvpsa-site.firebasestorage.app",
+  messagingSenderId: "314446097658",
+  appId: "1:314446097658:web:724b87e7424c52336aad43"
 };
 
 const app = initializeApp(firebaseConfig);
