@@ -188,8 +188,12 @@ function ClassementDetail({ titre }) {
           src={lien}
           title={titre}
           width="100%"
-          height="900"
-          style={{ border: "none" }}
+          height="520"
+          style={{
+  border: "none",
+  background: "white",
+  display: "block",
+}}
         />
       </div>
     </section>
@@ -205,7 +209,6 @@ function Tournoi() {
           <h1 className="mt-2 text-4xl font-black">18 juillet 2026</h1>
           <p className="mt-5 text-lg leading-8 text-slate-700">
             Tournoi de volleyball de plage avec catégories compétitif et récréatif.
-            Coût d’inscription : 100 $ par équipe.
           </p>
 
           <a
