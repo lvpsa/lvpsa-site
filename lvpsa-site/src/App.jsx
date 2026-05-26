@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
   Calendar, Trophy, Mail, MapPin, ExternalLink, CheckCircle2,
@@ -202,36 +202,38 @@ function Accueil() {
       </section>
 
 <section className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-6 md:grid-cols-4">
-          <HomeCard
-            title="Classements"
-            text="Suivez les résultats récréatifs et compétitifs."
-            link="/classements"
-            label="Voir"
-          />
+  <div className="grid gap-6 md:grid-cols-4">
+    <HomeCard
+      title="Classements"
+      text="Suivez les résultats récréatifs et compétitifs."
+      link="/classements"
+      label="Voir"
+    />
 
-          <HomeCard
-            title="Tournoi"
-            text="Inscription au tournoi du 18 juillet 2026."
-            link="/tournoi"
-            label="Découvrir"
-          />
+    <HomeCard
+      title="Tournoi"
+      text="Inscription au tournoi du 18 juillet 2026."
+      link="/tournoi"
+      label="Découvrir"
+    />
 
-          <HomeCard
-            title="Remplaçants"
-            text="Donnez votre nom pour remplacer pendant la saison."
-            link="/inscription-ligue"
-            label="Infos"
-          />
+    <HomeCard
+      title="Remplaçants"
+      text="Donnez votre nom pour remplacer pendant la saison."
+      link="/inscription-ligue"
+      label="Infos"
+    />
 
-          <HomeCard
-            title="Contact"
-            text="Questions, météo ou informations générales."
-            link="/contact"
-            label="Contacter"
-          />
-        </div>
-      </section>
+    <HomeCard
+      title="Contact"
+      text="Questions, météo ou informations générales."
+      link="/contact"
+      label="Contacter"
+    />
+
+    <MeteoJour />
+  </div>
+</section>
     </>
   );
 }
@@ -427,6 +429,44 @@ function HomeCard({ title, text, link, label }) {
       <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
       <p className="mt-5 font-bold text-amber-300">{label} →</p>
     </Link>
+  );
+}
+
+function MeteoJour() {
+  const [meteo, setMeteo] = useState(null);
+
+  useEffect(() => {
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&current=temperature_2m,precipitation,wind_speed_10m&timezone=America%2FToronto")
+      .then((res) => res.json())
+      .then((data) => setMeteo(data.current))
+      .catch(() => setMeteo(null));
+  }, []);
+
+  if (!meteo) return null;
+
+  return (
+    <div className="rounded-3xl border border-white/10 bg-white/10 p-6">
+      <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+        Météo du jour
+      </p>
+      <h3 className="mt-2 text-3xl font-black">
+        {Math.round(meteo.temperature_2m)}°C
+      </h3>
+      <p className="mt-2 text-slate-300">
+        Vent : {Math.round(meteo.wind_speed_10m)} km/h
+      </p>
+      <p className="text-slate-300">
+        Précipitations : {meteo.precipitation} mm
+      </p>
+      <a
+        href="https://www.meteomedia.com/ca/meteo/quebec/saint-augustin-de-desmaures"
+        target="_blank"
+        rel="noreferrer"
+        className="mt-4 inline-block font-bold text-amber-300"
+      >
+        Voir MétéoMédia →
+      </a>
+    </div>
   );
 }
 
