@@ -188,7 +188,8 @@ function ClassementDetail({ titre }) {
           src={lien}
           title={titre}
           width="100%"
-          height="520"
+          height="340"
+          className="w-full overflow-hidden rounded-3xl"
           style={{
   border: "none",
   background: "white",
