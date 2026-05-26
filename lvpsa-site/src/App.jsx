@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
-  Calendar, Trophy, Mail, MapPin, ExternalLink, CheckCircle2,
-  CloudSun, Lock, LogIn
+import {
+  Calendar,
+  Trophy,
+  Mail,
+  MapPin,
+  ExternalLink,
+ CheckCircle2,
+  CloudSun,
+  Lock,
+  LogIn,
 } from "lucide-react";
 import "./index.css";
 
