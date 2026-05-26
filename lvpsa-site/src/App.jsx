@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import {
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "./firebase";
   Calendar, Trophy, Mail, MapPin, ExternalLink, CheckCircle2,
   CloudSun, Lock, LogIn
 } from "lucide-react";
@@ -116,7 +117,27 @@ const statutMatchs = {
   couleur: "emerald",
   message: "Mise à jour officielle LVPSA",
 };
+
 function Accueil() {
+const [statutMatchs, setStatutMatchs] = useState({
+  texte: "Chargement...",
+  couleur: "emerald",
+  message: "LVPSA",
+});
+
+useEffect(() => {
+  async function chargerStatut() {
+    const ref = doc(db, "settings", "matchStatus");
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      setStatutMatchs(snap.data());
+    }
+  }
+
+  chargerStatut();
+}, []);
+  
   return (
     <>
       <section className="relative overflow-hidden">
