@@ -43,104 +43,72 @@ function Header() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="flex items-center gap-4">
-          <img
-            src="/LVPSA_logo (1).jpg"
-            className="h-20 w-20 rounded-full bg-white object-cover"
-          />
+          <img src="/LVPSA_logo (1).jpg" className="h-20 w-20 rounded-full bg-white object-cover" />
           <div>
             <p className="text-2xl font-black">LVPSA</p>
-            <p className="text-sm text-slate-300">
-              Volleyball de plage de St-Augustin
-            </p>
+            <p className="text-sm text-slate-300">Volleyball de plage de St-Augustin</p>
           </div>
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-200 md:flex">
-          <Link to="/" className="hover:text-amber-300">
-            Accueil
-          </Link>
-<div className="relative group">
-  <button className="hover:text-amber-300 transition">
-    Ligue
-  </button>
-
-  <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
-    <div className="w-64 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
-      <Link
-        to="/ligue"
-        className="block px-5 py-3 hover:bg-slate-800 rounded-t-2xl"
-      >
-        Informations
-      </Link>
-
-      <Link
-        to="/classements"
-        className="block px-5 py-3 hover:bg-slate-800"
-      >
-        Classements
-      </Link>
-
-      <Link
-        to="/reglements"
-        className="block px-5 py-3 hover:bg-slate-800"
-      >
-        Règlements
-      </Link>
-
-      <Link
-        to="/gestion-equipe"
-        className="block px-5 py-3 hover:bg-slate-800"
-      >
-        Gestion d’équipe
-      </Link>
-
-      <Link
-        to="/inscription-ligue"
-        className="block px-5 py-3 hover:bg-slate-800 rounded-b-2xl"
-      >
-        Inscription
-      </Link>
-    </div>
-  </div>
-</div>
-
-          <div className="relative group">
-            <button className="hover:text-amber-300">
-              Tournoi ▾
-            </button>
-
-            <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
-            <div className="w-64 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
-              <Link to="/tournoi" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Informations
-              </Link>
-              <a
-                href="https://forms.gle/csLUt6NmcjNADcBm7"
-                target="_blank"
-                rel="noreferrer"
-                className="block rounded-xl px-4 py-3 hover:bg-white/10"
-              >
-                Inscription
-              </a>
-              <Link to="/reglements-tournoi" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Règlements
-              </Link>
-            </div>
-          </div>
-
-          <Link
-            to="/membres"
-            className="rounded-full border border-white/15 px-5 py-2 hover:bg-white/10 hover:text-amber-300"
-          >
-            Connexion
-          </Link>
-
-          <Link to="/contact" className="hover:text-amber-300">
-            Contact
-          </Link>
+          <Link to="/" className="hover:text-amber-300">Accueil</Link>
+          <Dropdown title="Ligue" items={[
+            { label: "Informations", to: "/ligue" },
+            { label: "Classements", to: "/classements" },
+            { label: "Règlements", to: "/reglements" },
+            { label: "Inscription", to: "/inscription-ligue" },
+            { label: "Gestion d’équipe", to: "/gestion-equipe" },
+          ]} />
+          <Dropdown title="Tournoi" items={[
+            { label: "Informations", to: "/tournoi" },
+            { label: "Inscription", href: "https://forms.gle/csLUt6NmcjNADcBm7" },
+            { label: "Règlements", to: "/reglements-tournoi" },
+          ]} />
+          <Link to="/membres" className="rounded-full border border-white/15 px-5 py-2 hover:bg-white/10 hover:text-amber-300">Connexion</Link>
+          <Link to="/contact" className="hover:text-amber-300">Contact</Link>
         </nav>
       </div>
-</header>
+    </header>
+  );
+}
+
+function Dropdown({ title, items }) {
+  return (
+    <div className="relative group">
+      <button className="hover:text-amber-300 transition">
+        {title} ▾
+      </button>
+
+      <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
+        <div className="w-64 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
+          {items.map((item, index) =>
+            item.href ? (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className={`block px-5 py-3 hover:bg-slate-800 ${
+                  index === 0 ? "rounded-t-2xl" : ""
+                } ${index === items.length - 1 ? "rounded-b-2xl" : ""}`}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`block px-5 py-3 hover:bg-slate-800 ${
+                  index === 0 ? "rounded-t-2xl" : ""
+                } ${index === items.length - 1 ? "rounded-b-2xl" : ""}`}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
