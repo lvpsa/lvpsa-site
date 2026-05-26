@@ -40,23 +40,83 @@ export default function App() {
 
 function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link to="/" className="flex items-center gap-3">
-          <img src="/logo.jpg" className="h-28 w-28 rounded-full bg-white object-cover" />
+        <Link to="/" className="flex items-center gap-4">
+          <img
+            src="/LVPSA_logo (1).jpg"
+            className="h-20 w-20 rounded-full bg-white object-cover"
+          />
           <div>
-            <p className="text-xl font-black">LVPSA</p>
-            <p className="text-sm text-slate-300">Volleyball de plage de St-Augustin</p>
+            <p className="text-2xl font-black">LVPSA</p>
+            <p className="text-sm text-slate-300">
+              Volleyball de plage de St-Augustin
+            </p>
           </div>
         </Link>
 
-        <nav className="hidden gap-6 text-sm text-slate-300 md:flex">
-          <Link to="/">Accueil</Link>
-          <Link to="/classements">Classements</Link>
-          <Link to="/tournoi">Tournoi</Link>
-          <Link to="/reglements">Règlements</Link>
-          <Link to="/membres">Membres</Link>
-          <Link to="/contact">Contact</Link>
+        <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-200 md:flex">
+          <Link to="/" className="hover:text-amber-300">
+            Accueil
+          </Link>
+
+          <div className="group relative">
+            <button className="hover:text-amber-300">
+              Ligue ▾
+            </button>
+
+            <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-2xl border border-white/10 bg-slate-900 p-3 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100">
+              <Link to="/ligue" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Informations
+              </Link>
+              <Link to="/classements" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Classements
+              </Link>
+              <Link to="/reglements" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Règlements
+              </Link>
+              <Link to="/inscription-ligue" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Inscription
+              </Link>
+              <Link to="/gestion-equipe" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Gestion d’équipe
+              </Link>
+            </div>
+          </div>
+
+          <div className="group relative">
+            <button className="hover:text-amber-300">
+              Tournoi ▾
+            </button>
+
+            <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-2xl border border-white/10 bg-slate-900 p-3 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100">
+              <Link to="/tournoi" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Informations
+              </Link>
+              <a
+                href="https://forms.gle/csLUt6NmcjNADcBm7"
+                target="_blank"
+                rel="noreferrer"
+                className="block rounded-xl px-4 py-3 hover:bg-white/10"
+              >
+                Inscription
+              </a>
+              <Link to="/reglements-tournoi" className="block rounded-xl px-4 py-3 hover:bg-white/10">
+                Règlements
+              </Link>
+            </div>
+          </div>
+
+          <Link
+            to="/membres"
+            className="rounded-full border border-white/15 px-5 py-2 hover:bg-white/10 hover:text-amber-300"
+          >
+            Connexion
+          </Link>
+
+          <Link to="/contact" className="hover:text-amber-300">
+            Contact
+          </Link>
         </nav>
       </div>
     </header>
