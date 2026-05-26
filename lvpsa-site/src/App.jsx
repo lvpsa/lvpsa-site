@@ -111,7 +111,11 @@ function Dropdown({ title, items }) {
     </div>
   );
 }
-
+const statutMatchs = {
+  texte: "Les parties ont lieu ce soir",
+  couleur: "emerald",
+  message: "Mise à jour officielle LVPSA",
+};
 function Accueil() {
   return (
     <>
