@@ -201,7 +201,7 @@ function Accueil() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16">
+<section className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-6 md:grid-cols-4">
           <HomeCard
             title="Classements"
@@ -209,52 +209,27 @@ function Accueil() {
             link="/classements"
             label="Voir"
           />
+
           <HomeCard
             title="Tournoi"
             text="Inscription au tournoi du 18 juillet 2026."
             link="/tournoi"
             label="Découvrir"
           />
+
           <HomeCard
             title="Remplaçants"
             text="Donnez votre nom pour remplacer pendant la saison."
             link="/inscription-ligue"
             label="Infos"
           />
+
           <HomeCard
-            title="Météo"
-            text="Consultez les conditions avant de vous déplacer."
+            title="Contact"
+            text="Questions, météo ou informations générales."
             link="/contact"
-            label="Voir"
+            label="Contacter"
           />
-        </div>
-      </section>
-
-      <section className="bg-white py-16 text-slate-950">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 md:grid-cols-2">
-          <div>
-            <p className="font-bold uppercase tracking-wider text-amber-600">
-              L’ambiance LVPSA
-            </p>
-            <h2 className="mt-2 text-4xl font-black">
-              Du sable, du volley, du plaisir.
-            </h2>
-            <p className="mt-5 text-lg leading-8 text-slate-700">
-              Une ligue locale pensée pour créer des soirées actives, sociales
-              et rassembleuses autour du volleyball de plage.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {["BBQ", "Musique", "Compétition", "Communauté"].map((item) => (
-              <div
-                key={item}
-                className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm"
-              >
-                <p className="text-2xl font-black">{item}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
     </>
