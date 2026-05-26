@@ -113,54 +113,145 @@ function Dropdown({ title, items }) {
 }
 
 function Accueil() {
-  return (
+    return (
     <>
-      <section className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:grid-cols-2 md:py-28">
-        <div>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/30 bg-amber-300/10 px-4 py-2 text-sm text-amber-200">
-            <Calendar size={16} /> Saison 2026
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(250,204,21,0.22),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(14,165,233,0.22),transparent_35%)]" />
+        <div className="absolute inset-0 bg-slate-950/80" />
+
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28">
+          <div>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-5 py-2 text-sm font-semibold text-amber-200">
+              <Calendar size={16} /> Saison 2026 · Beach vibes
+            </div>
+
+            <h1 className="text-5xl font-black leading-tight md:text-7xl">
+              Plus qu’une ligue.
+              <span className="block text-amber-300">Une ambiance.</span>
+            </h1>
+
+            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+              La LVPSA rassemble les passionnés de volleyball de plage à St-Augustin dans une atmosphère sportive, estivale et conviviale.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                to="/classements"
+                className="rounded-full bg-amber-400 px-7 py-3 text-center font-bold text-slate-950 shadow-lg shadow-amber-400/20 hover:bg-amber-300"
+              >
+                Voir les classements
+              </Link>
+
+              <Link
+                to="/tournoi"
+                className="rounded-full border border-white/15 px-7 py-3 text-center font-semibold hover:bg-white/10"
+              >
+                Tournoi 18 juillet
+              </Link>
+            </div>
+
+            <p className="mt-6 text-sm text-slate-400">
+              Inscriptions de la ligue terminées · Remplaçants :{" "}
+              <a className="font-bold text-amber-300" href={`mailto:${email}`}>
+                {email}
+              </a>
+            </p>
           </div>
 
-          <h1 className="text-4xl font-black leading-tight md:text-6xl">
-            Ligue de volleyball de plage de St-Augustin
-          </h1>
+          <div className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-2xl backdrop-blur">
+            <div className="rounded-[1.5rem] bg-slate-900/90 p-6">
+              <p className="text-sm text-sky-300">St-Augustin-de-Desmaures</p>
+              <h2 className="mt-1 text-3xl font-black">Parc Portneuf</h2>
 
-          <p className="mt-6 text-lg leading-8 text-slate-300">
-            Les inscriptions pour la saison 2026 sont maintenant terminées.
-            Pour donner votre nom comme remplaçant, écrivez-nous à{" "}
-            <a className="font-bold text-amber-300" href={`mailto:${email}`}>{email}</a>.
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link to="/tournoi" className="rounded-full bg-amber-400 px-7 py-3 text-center font-bold text-slate-950">
-              Voir le tournoi
-            </Link>
-            <Link to="/classements" className="rounded-full border border-white/15 px-7 py-3 text-center font-semibold">
-              Voir les classements
-            </Link>
+              <div className="mt-6 grid gap-4">
+                <QuickItem title="Récréatif" text="Lundi soir · plaisir et ambiance" />
+                <QuickItem title="Compétitif" text="Mardi soir · intensité et dépassement" />
+                <QuickItem title="Tournoi" text="18 juillet 2026 · 100 $ par équipe" />
+                <QuickItem title="Séries" text="Fin août · BBQ, prix et champions" />
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 shadow-2xl">
-          <div className="rounded-[1.5rem] bg-slate-900 p-6">
-            <p className="text-sm text-slate-400">St-Augustin-de-Desmaures</p>
-            <h2 className="text-3xl font-black">Parc Portneuf</h2>
+      <section className="mx-auto max-w-7xl px-6 py-16">
+        <div className="grid gap-6 md:grid-cols-4">
+          <HomeCard
+            title="Classements"
+            text="Suivez les résultats récréatifs et compétitifs."
+            link="/classements"
+            label="Voir"
+          />
+          <HomeCard
+            title="Tournoi"
+            text="Inscription au tournoi du 18 juillet 2026."
+            link="/tournoi"
+            label="Découvrir"
+          />
+          <HomeCard
+            title="Remplaçants"
+            text="Donnez votre nom pour remplacer pendant la saison."
+            link="/inscription-ligue"
+            label="Infos"
+          />
+          <HomeCard
+            title="Météo"
+            text="Consultez les conditions avant de vous déplacer."
+            link="/contact"
+            label="Voir"
+          />
+        </div>
+      </section>
 
-            {[
-              "Volet récréatif le lundi soir",
-              "Volet compétitif le mardi soir",
-              "Saison de 12 semaines",
-              "Tournoi des séries à la fin août",
-            ].map((item) => (
-              <div key={item} className="mt-4 flex gap-3 rounded-2xl bg-white/5 p-4">
-                <CheckCircle2 className="shrink-0 text-amber-300" size={20} />
-                <p>{item}</p>
+      <section className="bg-white py-16 text-slate-950">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 md:grid-cols-2">
+          <div>
+            <p className="font-bold uppercase tracking-wider text-amber-600">
+              L’ambiance LVPSA
+            </p>
+            <h2 className="mt-2 text-4xl font-black">
+              Du sable, du volley, du plaisir.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-slate-700">
+              Une ligue locale pensée pour créer des soirées actives, sociales et rassembleuses autour du volleyball de plage.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {["BBQ", "Musique", "Compétition", "Communauté"].map((item) => (
+              <div
+                key={item}
+                className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm"
+              >
+                <p className="text-2xl font-black">{item}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
     </>
+  );
+}
+
+function QuickItem({ title, text }) {
+  return (
+    <div className="rounded-2xl bg-white/5 p-4">
+      <p className="font-black text-amber-300">{title}</p>
+      <p className="mt-1 text-sm text-slate-300">{text}</p>
+    </div>
+  );
+}
+
+function HomeCard({ title, text, link, label }) {
+  return (
+    <Link
+      to={link}
+      className="rounded-3xl border border-white/10 bg-white/10 p-6 transition hover:-translate-y-1 hover:bg-white/15"
+    >
+      <h3 className="text-xl font-black">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-slate-300">{text}</p>
+      <p className="mt-5 font-bold text-amber-300">{label} →</p>
+    </Link>
   );
 }
 
