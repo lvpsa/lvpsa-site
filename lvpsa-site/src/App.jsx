@@ -121,26 +121,39 @@ function Accueil() {
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28">
           <div>
-            <div className="mb-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-sky-500/20 to-slate-900/40 p-6 backdrop-blur-xl">
-  <div className="flex items-center justify-between">
-    <div>
-      <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
-        Météo aujourd’hui
-      </p>
-
-      <h3 className="mt-2 text-4xl font-black">
-        24°
-      </h3>
-
-      <p className="mt-1 text-slate-300">
-        Partiellement nuageux à St-Augustin
-      </p>
-    </div>
-
-    <div className="text-6xl">
-      ☀️
-    </div>
+<div className="mb-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-sky-500/20 to-slate-900/40 p-6 backdrop-blur-xl">
+  <div className="mb-5 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4">
+    <p className="text-sm uppercase tracking-[0.25em] text-emerald-300">
+      Statut des parties
+    </p>
+    <h3 className="mt-2 text-2xl font-black text-white">
+      Les parties ont lieu ce soir
+    </h3>
+    <p className="mt-1 text-sm text-slate-300">
+      Mise à jour officielle LVPSA
+    </p>
   </div>
+
+  <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
+    Météo des prochaines heures
+  </p>
+
+  <div className="mt-5 grid grid-cols-5 gap-3">
+    {[
+      { h: "18h", t: "23°", icon: "☀️" },
+      { h: "19h", t: "21°", icon: "🌦️" },
+      { h: "20h", t: "19°", icon: "🌧️" },
+      { h: "21h", t: "18°", icon: "🌧️" },
+      { h: "22h", t: "17°", icon: "🌙" },
+    ].map((item) => (
+      <div key={item.h} className="rounded-2xl bg-white/10 p-3 text-center">
+        <p className="text-sm text-slate-300">{item.h}</p>
+        <p className="mt-2 text-3xl">{item.icon}</p>
+        <p className="mt-2 text-xl font-black">{item.t}</p>
+      </div>
+    ))}
+  </div>
+</div>
 
   <div className="mt-6 flex gap-4 text-sm text-slate-300">
     <div className="rounded-xl bg-white/10 px-4 py-2">
