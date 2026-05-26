@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebase";
 
-import { auth } from "./firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "./firebase";
+
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import {
   Calendar,
