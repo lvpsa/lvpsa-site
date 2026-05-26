@@ -59,37 +59,58 @@ function Header() {
           <Link to="/" className="hover:text-amber-300">
             Accueil
           </Link>
+<div className="relative group">
+  <button className="hover:text-amber-300 transition">
+    Ligue
+  </button>
 
-          <div className="group relative">
-            <button className="hover:text-amber-300">
-              Ligue ▾
-            </button>
+  <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
+    <div className="w-64 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
+      <Link
+        to="/ligue"
+        className="block px-5 py-3 hover:bg-slate-800 rounded-t-2xl"
+      >
+        Informations
+      </Link>
 
-            <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-2xl border border-white/10 bg-slate-900 p-3 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100">
-              <Link to="/ligue" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Informations
-              </Link>
-              <Link to="/classements" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Classements
-              </Link>
-              <Link to="/reglements" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Règlements
-              </Link>
-              <Link to="/inscription-ligue" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Inscription
-              </Link>
-              <Link to="/gestion-equipe" className="block rounded-xl px-4 py-3 hover:bg-white/10">
-                Gestion d’équipe
-              </Link>
-            </div>
-          </div>
+      <Link
+        to="/classements"
+        className="block px-5 py-3 hover:bg-slate-800"
+      >
+        Classements
+      </Link>
 
-          <div className="group relative">
+      <Link
+        to="/reglements"
+        className="block px-5 py-3 hover:bg-slate-800"
+      >
+        Règlements
+      </Link>
+
+      <Link
+        to="/gestion-equipe"
+        className="block px-5 py-3 hover:bg-slate-800"
+      >
+        Gestion d’équipe
+      </Link>
+
+      <Link
+        to="/inscription-ligue"
+        className="block px-5 py-3 hover:bg-slate-800 rounded-b-2xl"
+      >
+        Inscription
+      </Link>
+    </div>
+  </div>
+</div>
+
+          <div className="relative group">
             <button className="hover:text-amber-300">
               Tournoi ▾
             </button>
 
-            <div className="invisible absolute left-0 top-full mt-3 w-56 rounded-2xl border border-white/10 bg-slate-900 p-3 opacity-0 shadow-2xl transition group-hover:visible group-hover:opacity-100">
+            <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
+            <div className="w-64 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
               <Link to="/tournoi" className="block rounded-xl px-4 py-3 hover:bg-white/10">
                 Informations
               </Link>
