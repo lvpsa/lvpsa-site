@@ -43,7 +43,7 @@ function Header() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="flex items-center gap-4">
-          <img src="/LVPSA_logo (1).jpg" className="h-20 w-20 rounded-full bg-white object-cover" />
+          <img src="/logo.jpg" className="h-20 w-20 rounded-full bg-white object-cover" />
           <div>
             <p className="text-2xl font-black">LVPSA</p>
             <p className="text-sm text-slate-300">Volleyball de plage de St-Augustin</p>
@@ -237,20 +237,19 @@ function ClassementDetail({ titre }) {
 
       <h1 className="mt-6 text-4xl font-black">{titre}</h1>
 
-      <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white">
-        <iframe
-          src={lien}
-          title={titre}
-          width="100%"
-          height="340"
-          className="w-full overflow-hidden rounded-3xl"
-          style={{
-  border: "none",
-  background: "white",
-  display: "block",
-}}
-        />
-      </div>
+      <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white" style={{ height: "310px" }}>
+  <iframe
+    src={lien}
+    title={titre}
+    width="100%"
+    height="650"
+    style={{
+      border: "none",
+      display: "block",
+      transform: "translateY(0px)",
+    }}
+  />
+</div>
     </section>
   );
 }
