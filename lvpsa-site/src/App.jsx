@@ -240,6 +240,7 @@ function Accueil() {
     className="h-[220px] w-full"
   />
 </div>
+  </div>
 </section>
     </>
   );
