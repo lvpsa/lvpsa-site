@@ -835,10 +835,94 @@ function GestionEquipe() {
 function ReglementsTournoi() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black">Règlements du tournoi</h1>
-      <p className="mt-4 text-slate-300">
-        Les règlements du tournoi seront ajoutés ici.
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Tournoi LVPSA
       </p>
+
+      <h1 className="mt-2 text-5xl font-black">
+        Règlements du tournoi
+      </h1>
+
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+        Règlements officiels du tournoi LVPSA du 18 juillet 2026.
+      </p>
+
+      <div className="mt-14 grid gap-8 lg:grid-cols-2">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Format des équipes
+          </h2>
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• 4 contre 4 avec au moins une fille sur le terrain en tout temps</li>
+            <li>• Une équipe peut avoir plus de 4 joueurs</li>
+            <li>• Seulement 4 joueurs sur le terrain à la fois</li>
+            <li>• Si l’équipe n’a que 3 joueurs, un joueur fantôme perdra un point à sa rotation au service</li>
+          </ul>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Interdictions
+          </h2>
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• Bloquer une femme à l’attaque pour les hommes</li>
+            <li>• Renvoyer en touche ou en tip</li>
+            <li>• Les touches sont acceptées pour le volet récréatif</li>
+            <li>• Toucher le filet</li>
+            <li>• Traverser de l’autre côté</li>
+            <li>• Faire un transport</li>
+          </ul>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Rotation
+          </h2>
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• L’ordre des serveurs doit être respecté en tout temps</li>
+            <li>• Il n’y a aucune erreur de position</li>
+            <li>• Tous les joueurs peuvent attaquer au filet en tout temps</li>
+          </ul>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Arbitrage / Marqueur
+          </h2>
+          <ul className="mt-6 space-y-4 text-slate-300">
+            <li>• Un arbitre/marqueur non officiel sera attitré</li>
+            <li>• Toutes les équipes devront fournir un arbitre/marqueur pendant la journée</li>
+            <li>• En cas de doute, le point sera repris</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-10 rounded-3xl border border-sky-400/20 bg-sky-400/10 p-8">
+        <h2 className="text-3xl font-black text-sky-300">
+          Météo
+        </h2>
+
+        <p className="mt-5 max-w-3xl leading-8 text-slate-300">
+          En cas de mauvais temps, le tournoi sera remis au 19 juillet.
+        </p>
+      </div>
+
+      <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-3xl font-black text-amber-300">
+          Organisateurs
+        </h2>
+
+        <p className="mt-5 text-slate-300">
+          Valérie Thomassin et Michael Théroux
+        </p>
+
+        <p className="mt-3 text-slate-300">
+          Pour nous joindre :{" "}
+          <a className="font-bold text-amber-300" href="mailto:liguevpsa@gmail.com">
+            Liguevpsa@gmail.com
+          </a>
+        </p>
+      </div>
     </section>
   );
 }
