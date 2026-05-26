@@ -158,20 +158,59 @@ function Accueil() {
             </p>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/10 p-5 shadow-2xl backdrop-blur">
-            <div className="rounded-[1.5rem] bg-slate-900/90 p-6">
-              <p className="text-sm text-sky-300">St-Augustin-de-Desmaures</p>
-              <h2 className="mt-1 text-3xl font-black">Parc Portneuf</h2>
+<div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
+  <img
+    src="/volley-bg.jpg"
+    alt="LVPSA"
+    className="h-full min-h-[620px] w-full object-cover"
+  />
 
-              <div className="mt-6 grid gap-4">
-                <QuickItem title="Récréatif" text="Lundi soir · plaisir et ambiance" />
-                <QuickItem title="Compétitif" text="Mardi soir · intensité et dépassement" />
-                <QuickItem title="Tournoi" text="18 juillet 2026 · 100 $ par équipe" />
-                <QuickItem title="Séries" text="Fin août · BBQ, prix et champions" />
-              </div>
-            </div>
-          </div>
+  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+
+  <div className="absolute inset-0 flex flex-col justify-end p-8">
+    <div className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-md">
+      <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
+        Summer Beach League
+      </p>
+
+      <h2 className="mt-3 text-5xl font-black leading-tight">
+        Volleyball.
+        <br />
+        Soleil.
+        <br />
+        Communauté.
+      </h2>
+
+      <p className="mt-5 max-w-md text-slate-300">
+        Des soirées de volleyball de plage dans une ambiance compétitive,
+        sociale et estivale au cœur de St-Augustin.
+      </p>
+
+      <div className="mt-8 grid grid-cols-3 gap-4">
+        <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
+          <p className="text-3xl font-black text-amber-300">2</p>
+          <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
+            Soirs / semaine
+          </p>
         </div>
+
+        <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
+          <p className="text-3xl font-black text-amber-300">12</p>
+          <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
+            Semaines
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
+          <p className="text-3xl font-black text-amber-300">1</p>
+          <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
+            Gros tournoi
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-16">
