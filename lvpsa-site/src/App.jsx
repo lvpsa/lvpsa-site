@@ -121,6 +121,37 @@ function Accueil() {
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28">
           <div>
+            <div className="mb-8 rounded-[2rem] border border-white/10 bg-gradient-to-br from-sky-500/20 to-slate-900/40 p-6 backdrop-blur-xl">
+  <div className="flex items-center justify-between">
+    <div>
+      <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
+        Météo aujourd’hui
+      </p>
+
+      <h3 className="mt-2 text-4xl font-black">
+        24°
+      </h3>
+
+      <p className="mt-1 text-slate-300">
+        Partiellement nuageux à St-Augustin
+      </p>
+    </div>
+
+    <div className="text-6xl">
+      ☀️
+    </div>
+  </div>
+
+  <div className="mt-6 flex gap-4 text-sm text-slate-300">
+    <div className="rounded-xl bg-white/10 px-4 py-2">
+      Vent : 12 km/h
+    </div>
+
+    <div className="rounded-xl bg-white/10 px-4 py-2">
+      Humidité : 58%
+    </div>
+  </div>
+</div>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-5 py-2 text-sm font-semibold text-amber-200">
               <Calendar size={16} /> Saison 2026 · Beach vibes
             </div>
@@ -230,16 +261,6 @@ function Accueil() {
       link="/contact"
       label="Contacter"
     />
-
-   <div className="mb-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl">
-  <iframe
-    src="https://www.meteoblue.com/fr/meteo/widget/daily/saint-augustin-de-desmaures_canada_6138057?geoloc=fixed&days=1&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=image"
-    frameBorder="0"
-    scrolling="NO"
-    allowTransparency="true"
-    className="h-[220px] w-full"
-  />
-</div>
   </div>
 </section>
     </>
