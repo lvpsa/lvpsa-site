@@ -111,18 +111,42 @@ function Accueil() {
 }
 
 function Classements() {
-  return (
+ return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">Classements</p>
-      <h1 className="mt-2 text-4xl font-black">Choisissez un classement</h1>
-      <p className="mt-4 text-slate-300">
-        Sélectionnez le calibre désiré pour voir uniquement le tableau correspondant.
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Classements
       </p>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        <ClassementCard titre="Récréatif" lien="/classements/recreatif" />
-        <ClassementCard titre="Compétitif" lien="/classements/competitif" />
-        <ClassementCard titre="Facebook" lien="/classements/facebook" />
+      <h1 className="mt-2 text-4xl font-black">
+        Classements officiels LVPSA
+      </h1>
+
+      <p className="mt-4 text-slate-300">
+        Consultez les résultats et classements mis à jour de la saison.
+      </p>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <Link
+          to="/classements/recreatif"
+          className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15"
+        >
+          <Trophy className="mb-4 text-amber-300" size={34} />
+          <h2 className="text-2xl font-black">Récréatif</h2>
+          <p className="mt-3 text-slate-300">
+            Voir le classement récréatif
+          </p>
+        </Link>
+
+        <Link
+          to="/classements/competitif"
+          className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15"
+        >
+          <Trophy className="mb-4 text-amber-300" size={34} />
+          <h2 className="text-2xl font-black">Compétitif</h2>
+          <p className="mt-3 text-slate-300">
+            Voir le classement compétitif
+          </p>
+        </Link>
       </div>
     </section>
   );
@@ -139,27 +163,34 @@ function ClassementCard({ titre, lien }) {
 }
 
 function ClassementDetail({ titre }) {
+  let lien = "";
+
+  if (titre === "Classement récréatif") {
+    lien =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTardkLh0jJ8QU48byhbDRNRFPJLvJn6WkZ-3XfWcAsPXmC1dBB-OmHfqW_vq_BZQ/pubhtml?gid=1356137713&single=true";
+  }
+
+  if (titre === "Classement compétitif") {
+    lien =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTardkLh0jJ8QU48byhbDRNRFPJLvJn6WkZ-3XfWcAsPXmC1dBB-OmHfqW_vq_BZQ/pubhtml?gid=1226338215&single=true";
+  }
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <Link to="/classements" className="text-amber-300">← Retour aux classements</Link>
+      <Link to="/classements" className="text-amber-300">
+        ← Retour aux classements
+      </Link>
+
       <h1 className="mt-6 text-4xl font-black">{titre}</h1>
-      <p className="mt-4 text-slate-300">
-        Pour afficher uniquement ce tableau ici, il faudra publier l’onglet Google Sheets correspondant et utiliser son lien d’intégration.
-      </p>
 
-      <div className="mt-8 rounded-3xl border border-white/10 bg-white/10 p-8">
-        <p className="text-slate-300">
-          Tableau à intégrer ici.
-        </p>
-
-        <a
-          href={sheetLink}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950"
-        >
-          Ouvrir le fichier officiel <ExternalLink size={18} />
-        </a>
+      <div className="mt-10 overflow-hidden rounded-3xl border border-white/10 bg-white">
+        <iframe
+          src={lien}
+          title={titre}
+          width="100%"
+          height="900"
+          style={{ border: "none" }}
+        />
       </div>
     </section>
   );
