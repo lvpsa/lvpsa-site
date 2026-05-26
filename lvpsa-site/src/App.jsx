@@ -148,13 +148,14 @@ function Accueil() {
         plaisir et communauté se rencontrent chaque semaine.
       </p>
 
-      <div className="mt-8 grid grid-cols-3 gap-4">
-        <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
-          <p className="text-3xl font-black text-amber-300">2</p>
-          <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
-            Soirs
-          </p>
-        </div>
+<div className="mt-8">
+  <Link
+    to="/tournoi"
+    className="inline-flex rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950 hover:bg-amber-300"
+  >
+    Découvrir le tournoi
+  </Link>
+</div>
 
         <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
           <p className="text-3xl font-black text-amber-300">12</p>
