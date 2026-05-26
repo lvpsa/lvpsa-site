@@ -120,77 +120,39 @@ function Accueil() {
         <div className="absolute inset-0 bg-slate-950/80" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28">
-          <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-5 py-2 text-sm font-semibold text-amber-200">
-              <Calendar size={16} /> Saison 2026 · Beach vibes
-            </div>
-
-            <h1 className="text-5xl font-black leading-tight md:text-7xl">
-              Plus qu’une ligue.
-              <span className="block text-amber-300">Une ambiance.</span>
-            </h1>
-
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-              La LVPSA rassemble les passionnés de volleyball de plage à St-Augustin dans une atmosphère sportive, estivale et conviviale.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
-                to="/classements"
-                className="rounded-full bg-amber-400 px-7 py-3 text-center font-bold text-slate-950 shadow-lg shadow-amber-400/20 hover:bg-amber-300"
-              >
-                Voir les classements
-              </Link>
-
-              <Link
-                to="/tournoi"
-                className="rounded-full border border-white/15 px-7 py-3 text-center font-semibold hover:bg-white/10"
-              >
-                Tournoi 18 juillet
-              </Link>
-            </div>
-
-            <p className="mt-6 text-sm text-slate-400">
-              Inscriptions de la ligue terminées · Remplaçants :{" "}
-              <a className="font-bold text-amber-300" href={`mailto:${email}`}>
-                {email}
-              </a>
-            </p>
-          </div>
-
-<div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
+         <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
   <img
     src="/volley-bg.jpg"
     alt="LVPSA"
     className="h-full min-h-[620px] w-full object-cover"
   />
 
-  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
   <div className="absolute inset-0 flex flex-col justify-end p-8">
     <div className="rounded-3xl border border-white/10 bg-black/30 p-6 backdrop-blur-md">
       <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
-        Summer Beach League
+        LVPSA • Saison 2026
       </p>
 
       <h2 className="mt-3 text-5xl font-black leading-tight">
         Volleyball.
         <br />
-        Soleil.
+        Été.
         <br />
-        Communauté.
+        Ambiance.
       </h2>
 
-      <p className="mt-5 max-w-md text-slate-300">
-        Des soirées de volleyball de plage dans une ambiance compétitive,
-        sociale et estivale au cœur de St-Augustin.
+      <p className="mt-5 max-w-md text-slate-200">
+        Une ligue de volleyball de plage locale où compétition,
+        plaisir et communauté se rencontrent chaque semaine.
       </p>
 
       <div className="mt-8 grid grid-cols-3 gap-4">
         <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
           <p className="text-3xl font-black text-amber-300">2</p>
           <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
-            Soirs / semaine
+            Soirs
           </p>
         </div>
 
@@ -204,7 +166,7 @@ function Accueil() {
         <div className="rounded-2xl bg-white/10 p-4 text-center backdrop-blur">
           <p className="text-3xl font-black text-amber-300">1</p>
           <p className="mt-1 text-xs uppercase tracking-wider text-slate-300">
-            Gros tournoi
+            Tournoi
           </p>
         </div>
       </div>
@@ -212,7 +174,7 @@ function Accueil() {
   </div>
 </div>
 
-</div>
+        </div>
           
       </section>
 
