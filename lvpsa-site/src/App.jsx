@@ -502,7 +502,7 @@ function Reglements() {
 
           <ul className="mt-6 space-y-4 text-slate-300">
             <li>• Bloquer une fille à l’attaque</li>
-            <li>• Faire des tips ou des touches</li>
+            <li>• Traverser la balle en tips ou touches, (touches permises récréatif)</li>
             <li>• Toucher le filet</li>
             <li>• Traverser de l’autre côté</li>
             <li>• Faire un transport</li>
@@ -519,7 +519,7 @@ function Reglements() {
             <li>• Deux joueurs avant et deux joueurs arrière</li>
             <li>• Rotation obligatoire</li>
             <li>• Les joueurs arrière attaquent derrière la ligne de 3 mètres</li>
-            <li>• Deux sets de 21 points par match</li>
+            <li>• Deux sets de 25 points par match</li>
             <li>• Chaque équipe joue deux matchs par soir</li>
           </ul>
         </div>
@@ -531,7 +531,7 @@ function Reglements() {
           </h2>
 
           <ul className="mt-6 space-y-4 text-slate-300">
-            <li>• Les situations grises sont reprises</li>
+            <li>• Les situations ''zone grises'' sont reprises</li>
             <li>• Les équipes doivent rester respectueuses</li>
             <li>• Le capitaine gagnant transmet les résultats</li>
             <li>• L’esprit sportif est prioritaire</li>
