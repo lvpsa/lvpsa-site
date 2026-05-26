@@ -231,8 +231,15 @@ function Accueil() {
       label="Contacter"
     />
 
-    <MeteoJour />
-  </div>
+   <div className="mb-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl">
+  <iframe
+    src="https://www.meteoblue.com/fr/meteo/widget/daily/saint-augustin-de-desmaures_canada_6138057?geoloc=fixed&days=1&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=image"
+    frameBorder="0"
+    scrolling="NO"
+    allowTransparency="true"
+    className="h-[220px] w-full"
+  />
+</div>
 </section>
     </>
   );
