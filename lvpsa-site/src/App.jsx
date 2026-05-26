@@ -203,9 +203,34 @@ useEffect(() => {
     </div>
   </div>
 </div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-5 py-2 text-sm font-semibold text-amber-200">
-              <Calendar size={16} /> Saison 2026 · Beach vibes
-            </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl">
+  <div className="overflow-hidden rounded-[1.5rem]">
+    <img
+      src="/tournoi-lvpsa-2026.jpg"
+      alt="Tournoi LVPSA 18 juillet 2026"
+      className="w-full transition duration-500 hover:scale-105"
+    />
+  </div>
+
+  <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+    <a
+      href={tournoiLink}
+      target="_blank"
+      rel="noreferrer"
+      className="flex-1 rounded-full bg-amber-400 px-6 py-3 text-center font-bold text-slate-950 hover:bg-amber-300"
+    >
+      S’inscrire maintenant
+    </a>
+
+    <Link
+      to="/tournoi"
+      className="flex-1 rounded-full border border-white/15 px-6 py-3 text-center font-semibold hover:bg-white/10"
+    >
+      Voir les détails
+    </Link>
+  </div>
+</div>
 
             <h1 className="text-5xl font-black leading-tight md:text-7xl">
               Plus qu’une ligue.
