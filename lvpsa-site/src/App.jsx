@@ -598,7 +598,7 @@ function ClassementDetail({ titre }) {
       height="500"
       style={{
         border: "none",
-        transform: "translate(-120px, -35px) scale(1)",
+        transform: "translate(0px, -35px) scale(1)",
         transformOrigin: "top left",
       }}
     />
