@@ -590,16 +590,15 @@ function ClassementDetail({ titre }) {
       <h1 className="mt-6 text-4xl font-black">{titre}</h1>
 
     <div className="mt-10 flex justify-center">
-  <div className="overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl w-[980px] h-[330px]">
+  <div className="overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl bg-white p-6">
     <iframe
       src={lien}
       title={titre}
-      width="1200"
-      height="500"
+      width="950"
+      height="320"
       style={{
         border: "none",
-        transform: "translate(0px, -35px) scale(1)",
-        transformOrigin: "top left",
+        display: "block",
       }}
     />
   </div>
