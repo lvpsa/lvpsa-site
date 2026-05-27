@@ -306,8 +306,20 @@ useEffect(() => {
               {/* STATUT + MÉTÉO */}
               <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-sky-500/20 to-slate-900/40 p-6 backdrop-blur-xl">
 
-                <div className="mb-5 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4">
-                  <p className="text-sm uppercase tracking-[0.25em] text-emerald-300">
+                <div
+  className={`mb-5 rounded-2xl border p-4 ${
+    statutMatchs.couleur === "red"
+      ? "border-red-400/30 bg-red-400/10"
+      : "border-emerald-400/30 bg-emerald-400/10"
+  }`}
+>
+                  <p
+  className={`text-sm uppercase tracking-[0.25em] ${
+    statutMatchs.couleur === "red"
+      ? "text-red-300"
+      : "text-emerald-300"
+  }`}
+>
                     Statut des parties
                   </p>
 
@@ -922,11 +934,19 @@ useEffect(() => {
         <h2 className="text-2xl font-black">Statut des parties</h2>
 
         <label className="mt-6 block text-sm text-slate-300">Texte principal</label>
-        <input
-          className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
-          value={statut.texte}
-          onChange={(e) => setStatut({ ...statut, texte: e.target.value })}
-        />
+        <select
+  className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+  value={statut.texte}
+  onChange={(e) => setStatut({ ...statut, texte: e.target.value })}
+>
+  <option value="Les parties ont lieu ce soir">
+    Les parties ont lieu ce soir
+  </option>
+
+  <option value="Les parties sont annulées ce soir">
+    Les parties sont annulées ce soir
+  </option>
+</select>
 
         <label className="mt-5 block text-sm text-slate-300">Message secondaire</label>
         <input
