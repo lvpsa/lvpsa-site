@@ -43,6 +43,7 @@ export default function App() {
           <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
+          <Route path="/boutique" element={<Boutique />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           
@@ -141,6 +142,11 @@ function Header() {
   to="/admin"
   className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
 >
+
+            <Link to="/boutique" className="hover:text-amber-300">
+  Boutique
+</Link>
+            
   Connexion
 </Link>
 
@@ -185,6 +191,10 @@ function Header() {
               onClick={() => setMenuOpen(false)}
             >
               Règlements Tournoi
+            </Link>
+
+            <Link to="/boutique" onClick={() => setMenuOpen(false)}>
+              Boutique
             </Link>
 
             <Link to="/admin" onClick={() => setMenuOpen(false)}>
@@ -992,6 +1002,181 @@ useEffect(() => {
         >
           Sauvegarder le statut
         </button>
+      </div>
+    </section>
+  );
+}
+
+function Boutique() {
+  const produits = [
+    { nom: "T-shirt LVPSA", prix: "35$", image: "/boutique-tshirt.jpg" },
+    { nom: "Camisole LVPSA", prix: "30$", image: "/boutique-camisole.jpg" },
+    { nom: "Hoodie LVPSA", prix: "60$", image: "/boutique-hoodie.jpg" },
+  ];
+
+  const [commande, setCommande] = useState({
+    produit: "T-shirt LVPSA",
+    taille: "M",
+    couleur: "",
+    quantite: 1,
+    nom: "",
+    courriel: "",
+    telephone: "",
+    notes: "",
+  });
+
+  const sujet = encodeURIComponent("Commande boutique LVPSA");
+  const corps = encodeURIComponent(
+    `Nouvelle commande boutique LVPSA
+
+Produit : ${commande.produit}
+Taille : ${commande.taille}
+Couleur : ${commande.couleur}
+Quantité : ${commande.quantite}
+
+Nom : ${commande.nom}
+Courriel : ${commande.courriel}
+Téléphone : ${commande.telephone}
+
+Notes :
+${commande.notes}`
+  );
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        LVPSA
+      </p>
+
+      <h1 className="mt-2 text-5xl font-black">Boutique</h1>
+
+      <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
+  <img
+    src="/boutique-lvpsa.png"
+    alt="Collection LVPSA"
+    className="w-full object-cover"
+  />
+</div>
+      
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+        Commandez vos vêtements LVPSA directement en ligne. Votre commande sera
+        envoyée à l’équipe LVPSA par courriel.
+      </p>
+
+      <div className="mt-12 grid gap-6 md:grid-cols-3">
+        {produits.map((produit) => (
+          <div
+            key={produit.nom}
+            className="rounded-3xl border border-white/10 bg-white/5 p-5"
+          >
+            <div className="overflow-hidden rounded-2xl bg-white/10">
+              <img
+                src={produit.image}
+                alt={produit.nom}
+                className="h-80 w-full object-cover"
+              />
+            </div>
+
+            <h2 className="mt-5 text-2xl font-black">{produit.nom}</h2>
+            <p className="mt-2 text-amber-300">{produit.prix}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-14 rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-3xl font-black">Passer une commande</h2>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          <select
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            value={commande.produit}
+            onChange={(e) =>
+              setCommande({ ...commande, produit: e.target.value })
+            }
+          >
+            {produits.map((produit) => (
+              <option key={produit.nom} value={produit.nom}>
+                {produit.nom}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            value={commande.taille}
+            onChange={(e) =>
+              setCommande({ ...commande, taille: e.target.value })
+            }
+          >
+            <option>XS</option>
+            <option>S</option>
+            <option>M</option>
+            <option>L</option>
+            <option>XL</option>
+            <option>XXL</option>
+          </select>
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            placeholder="Couleur désirée"
+            value={commande.couleur}
+            onChange={(e) =>
+              setCommande({ ...commande, couleur: e.target.value })
+            }
+          />
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            type="number"
+            min="1"
+            placeholder="Quantité"
+            value={commande.quantite}
+            onChange={(e) =>
+              setCommande({ ...commande, quantite: e.target.value })
+            }
+          />
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            placeholder="Votre nom"
+            value={commande.nom}
+            onChange={(e) => setCommande({ ...commande, nom: e.target.value })}
+          />
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            placeholder="Votre courriel"
+            value={commande.courriel}
+            onChange={(e) =>
+              setCommande({ ...commande, courriel: e.target.value })
+            }
+          />
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            placeholder="Téléphone"
+            value={commande.telephone}
+            onChange={(e) =>
+              setCommande({ ...commande, telephone: e.target.value })
+            }
+          />
+
+          <textarea
+            className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+            placeholder="Notes ou demandes spéciales"
+            value={commande.notes}
+            onChange={(e) =>
+              setCommande({ ...commande, notes: e.target.value })
+            }
+          />
+        </div>
+
+        <a
+          href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
+          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+        >
+          Envoyer ma commande
+        </a>
       </div>
     </section>
   );
