@@ -43,7 +43,10 @@ export default function App() {
           <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
-          <Route path="/boutique" element={<Boutique />} />
+          <Route
+  path="/boutique"
+  element={user ? <Boutique /> : <Admin />}
+/>
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           
@@ -1007,6 +1010,29 @@ useEffect(() => {
 }
 
 function Boutique() {
+
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+if (!user) {
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+      <h1 className="text-5xl font-black">Boutique en préparation</h1>
+
+      <p className="mt-6 text-slate-300">
+        La boutique LVPSA sera disponible bientôt.
+      </p>
+    </section>
+  );
+}
+  
   const produits = [
     { nom: "T-shirt LVPSA", prix: "35$", image: "/boutique-tshirt.jpg" },
     { nom: "Camisole LVPSA", prix: "30$", image: "/boutique-camisole.jpg" },
