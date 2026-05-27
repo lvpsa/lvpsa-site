@@ -138,15 +138,14 @@ function Header() {
             </div>
           </div>
 
-          <Link
+          <Link to="/boutique" className="hover:text-amber-300">
+  Boutique
+</Link>
+
+<Link
   to="/admin"
   className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
 >
-
-            <Link to="/boutique" className="hover:text-amber-300">
-  Boutique
-</Link>
-            
   Connexion
 </Link>
 
