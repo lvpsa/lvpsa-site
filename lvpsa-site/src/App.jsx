@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import { auth, db } from "./firebase";
 
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { await setPersistence(auth, browserLocalPersistence);
+
+    await signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
