@@ -589,25 +589,20 @@ function ClassementDetail({ titre }) {
 
       <h1 className="mt-6 text-4xl font-black">{titre}</h1>
 
-     <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
-  <Trophy className="mx-auto text-amber-300" size={44} />
-
-  <h2 className="mt-4 text-2xl font-black">
-    {titre}
-  </h2>
-
-  <p className="mt-3 text-slate-300">
-    Consultez le classement officiel mis à jour automatiquement.
-  </p>
-
-  <a
-    href={lien}
-    target="_blank"
-    rel="noreferrer"
-    className="mt-6 inline-flex rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950 hover:bg-amber-300"
-  >
-    Ouvrir le classement
-  </a>
+    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl">
+  <iframe
+    src={lien}
+    title={titre}
+    width="100%"
+    height="255"
+    style={{
+      border: "none",
+      display: "block",
+      transform: "translateY(-115px) scale(1.02)",
+      transformOrigin: "top",
+      overflow: "hidden",
+    }}
+  />
 </div>
     </section>
   );
