@@ -3,9 +3,13 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import { auth, db } from "./firebase";
 
-import { await setPersistence(auth, browserLocalPersistence);
-
-    await signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
+} from "firebase/auth";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -846,13 +850,21 @@ useEffect(() => {
   return () => unsubscribe();
 }, []);
 
-  async function connexion() {
-    const result = await signInWithEmailAndPassword(auth, emailAdmin, password);
-    setUser(result.user);
+  async function connecter() {
+  try {
 
-    const snap = await getDoc(doc(db, "settings", "matchStatus"));
-    if (snap.exists()) setStatut(snap.data());
+    await setPersistence(auth, browserLocalPersistence);
+
+    await signInWithEmailAndPassword(
+      auth,
+      emailAdmin,
+      password
+    );
+
+  } catch (err) {
+    alert("Erreur de connexion");
   }
+}
 
   async function sauvegarder() {
     await setDoc(doc(db, "settings", "matchStatus"), statut);
