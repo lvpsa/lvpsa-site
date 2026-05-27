@@ -1039,11 +1039,14 @@ function BoutiqueProtegee() {
 
 function Boutique() {
   
-  const produits = [
-    { nom: "T-shirt LVPSA", prix: "35$", image: "/boutique-tshirt.jpg" },
-    { nom: "Camisole LVPSA", prix: "30$", image: "/boutique-camisole.jpg" },
-    { nom: "Hoodie LVPSA", prix: "60$", image: "/boutique-hoodie.jpg" },
-  ];
+const produits = [
+  { categorie: "T-shirts homme", modeles: ["1", "2", "3", "4"] },
+  { categorie: "T-shirts femme", modeles: ["1", "2", "3", "4"] },
+  { categorie: "Camisoles homme", modeles: ["1", "2", "3", "4"] },
+  { categorie: "Camisoles femme", modeles: ["1", "2", "3", "4"] },
+  { categorie: "Hoodies homme", modeles: ["1", "2", "3", "4"] },
+  { categorie: "Hoodies femme", modeles: ["1", "2", "3", "4"] },
+];
 
   const [commande, setCommande] = useState({
     produit: "T-shirt LVPSA",
@@ -1060,7 +1063,8 @@ function Boutique() {
   const corps = encodeURIComponent(
     `Nouvelle commande boutique LVPSA
 
-Produit : ${commande.produit}
+Catégorie : ${commande.categorie}
+Modèle : ${commande.modele}
 Taille : ${commande.taille}
 Couleur : ${commande.couleur}
 Quantité : ${commande.quantite}
@@ -1119,18 +1123,31 @@ ${commande.notes}`
 
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <select
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            value={commande.produit}
-            onChange={(e) =>
-              setCommande({ ...commande, produit: e.target.value })
-            }
-          >
-            {produits.map((produit) => (
-              <option key={produit.nom} value={produit.nom}>
-                {produit.nom}
-              </option>
-            ))}
-          </select>
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  value={commande.categorie}
+  onChange={(e) =>
+    setCommande({ ...commande, categorie: e.target.value, modele: "1" })
+  }
+>
+  {produits.map((produit) => (
+    <option key={produit.categorie} value={produit.categorie}>
+      {produit.categorie}
+    </option>
+  ))}
+</select>
+
+<select
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  value={commande.modele}
+  onChange={(e) =>
+    setCommande({ ...commande, modele: e.target.value })
+  }
+>
+  <option value="1">Modèle 1</option>
+  <option value="2">Modèle 2</option>
+  <option value="3">Modèle 3</option>
+  <option value="4">Modèle 4</option>
+</select>
 
           <select
             className="rounded-2xl px-4 py-3 text-slate-950"
