@@ -43,10 +43,7 @@ export default function App() {
           <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
-          <Route
-  path="/boutique"
-  element={user ? <Boutique /> : <Admin />}
-/>
+          <Route path="/boutique" element={<BoutiqueProtegee />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           
@@ -1009,29 +1006,38 @@ useEffect(() => {
   );
 }
 
-function Boutique() {
-
+function BoutiqueProtegee() {
   const [user, setUser] = useState(null);
+  const [chargement, setChargement] = useState(true);
 
-useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setChargement(false);
+    });
 
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, []);
 
-if (!user) {
-  return (
-    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
-      <h1 className="text-5xl font-black">Boutique en préparation</h1>
+  if (chargement) {
+    return null;
+  }
 
-      <p className="mt-6 text-slate-300">
-        La boutique LVPSA sera disponible bientôt.
-      </p>
-    </section>
-  );
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-5xl font-black">Boutique en préparation</h1>
+        <p className="mt-6 text-slate-300">
+          La boutique LVPSA sera disponible bientôt.
+        </p>
+      </section>
+    );
+  }
+
+  return <Boutique />;
 }
+
+function Boutique() {
   
   const produits = [
     { nom: "T-shirt LVPSA", prix: "35$", image: "/boutique-tshirt.jpg" },
