@@ -379,7 +379,7 @@ useEffect(() => {
 
 <div className="mt-10 relative overflow-hidden rounded-[2rem] border border-white/10 h-[320px]">
   <img
-    src="/volley-lvpsa.jpg"
+    src="/volley-bg.jpg"
     alt="Terrain LVPSA"
     className="h-full w-full object-cover"
   />
