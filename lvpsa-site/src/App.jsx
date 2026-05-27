@@ -334,15 +334,7 @@ useEffect(() => {
     Chargement de la météo...
   </p>
 )}
-                    <div
-                      key={item.h}
-                      className="rounded-2xl bg-white/10 p-3 text-center"
-                    >
-                      <p className="text-sm text-slate-300">{item.h}</p>
-                      <p className="mt-2 text-3xl">{item.icon}</p>
-                      <p className="mt-2 text-xl font-black">{item.t}</p>
-                    </div>
-                  ))}
+                    
                 </div>
 
                 <div className="mt-6 flex gap-4 text-sm text-slate-300">
