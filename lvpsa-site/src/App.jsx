@@ -339,11 +339,11 @@ useEffect(() => {
 
                 <div className="mt-6 flex gap-4 text-sm text-slate-300">
                   <div className="rounded-xl bg-white/10 px-4 py-2">
-                    Vent : 12 km/h
+                    Vent : {meteoHeures[0]?.vent ?? "--"} km/h
                   </div>
 
                   <div className="rounded-xl bg-white/10 px-4 py-2">
-                    Humidité : 58%
+                    Humidité : {meteoHeures[0]?.humidite ?? "--"}%
                   </div>
                 </div>
               </div>
