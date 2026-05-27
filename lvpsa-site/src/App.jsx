@@ -138,7 +138,7 @@ function Header() {
           </div>
 
           <Link
-  to="/connexion"
+  to="/admin"
   className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
 >
   Connexion
@@ -187,7 +187,7 @@ function Header() {
               Règlements Tournoi
             </Link>
 
-            <Link to="/connexion" onClick={() => setMenuOpen(false)}>
+            <Link to="/admin" onClick={() => setMenuOpen(false)}>
               Connexion
             </Link>
 
@@ -732,14 +732,14 @@ function Membres() {
   return (
     <section className="bg-white py-16 text-slate-950">
       <div className="mx-auto max-w-7xl px-6">
-        <h1 className="text-4xl font-black">Espace membre</h1>
+        <h1 className="text-4xl font-black">Espace Admin</h1>
         <p className="mt-4 text-slate-600">
-          Accès réservé aux joueurs et capitaines.
+          Accès réservé aux administrateurs.
         </p>
 
         <div className="mt-8 max-w-xl rounded-3xl border bg-slate-50 p-6">
           <Lock className="mb-4" />
-          <h2 className="text-2xl font-black">Connexion membre</h2>
+          <h2 className="text-2xl font-black">Connexion</h2>
           <input className="mt-5 w-full rounded-2xl border px-4 py-3" placeholder="Courriel" />
           <input className="mt-3 w-full rounded-2xl border px-4 py-3" placeholder="Mot de passe" type="password" />
           <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950">
