@@ -850,19 +850,22 @@ useEffect(() => {
   return () => unsubscribe();
 }, []);
 
-  async function connecter() {
+  async function connexion() {
   try {
-
     await setPersistence(auth, browserLocalPersistence);
 
-    await signInWithEmailAndPassword(
+    const result = await signInWithEmailAndPassword(
       auth,
       emailAdmin,
       password
     );
 
-  } catch (err) {
-    alert("Erreur de connexion");
+    setUser(result.user);
+
+    const snap = await getDoc(doc(db, "settings", "matchStatus"));
+    if (snap.exists()) setStatut(snap.data());
+  } catch (error) {
+    alert("Erreur de connexion : " + error.message);
   }
 }
 
