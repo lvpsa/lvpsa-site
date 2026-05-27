@@ -132,11 +132,11 @@ function Header() {
           </div>
 
           <Link
-            to="/admin"
-            className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
-          >
-            Connexion
-          </Link>
+  to="/connexion"
+  className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+>
+  Connexion
+</Link>
 
           <Link to="/contact" className="hover:text-amber-300">
             Contact
@@ -181,7 +181,7 @@ function Header() {
               Règlements Tournoi
             </Link>
 
-            <Link to="/admin" onClick={() => setMenuOpen(false)}>
+            <Link to="/connexion" onClick={() => setMenuOpen(false)}>
               Connexion
             </Link>
 
