@@ -594,11 +594,11 @@ function ClassementDetail({ titre }) {
     src={lien}
     title={titre}
     width="100%"
-    height="260"
+    height="310"
     style={{
       border: "none",
       display: "block",
-      transform: "translateY(0px)",
+      transform: "translateY(-40px)",
     }}
   />
 </div>
