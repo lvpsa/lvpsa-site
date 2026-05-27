@@ -377,6 +377,26 @@ useEffect(() => {
               </div>
             </div>
 
+<div className="mt-10 relative overflow-hidden rounded-[2rem] border border-white/10 h-[320px]">
+  <img
+    src="/volley-lvpsa.jpg"
+    alt="Terrain LVPSA"
+    className="h-full w-full object-cover"
+  />
+
+  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+
+  <div className="absolute bottom-6 left-6">
+    <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
+      Parc Portneuf
+    </p>
+
+    <h3 className="mt-2 text-3xl font-black text-white">
+      Terrain officiel LVPSA
+    </h3>
+  </div>
+</div>
+            
             {/* COLONNE DROITE */}
             <div>
 
