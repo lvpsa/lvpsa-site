@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import { auth, db } from "./firebase";
 
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -822,10 +822,27 @@ function Admin() {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [statut, setStatut] = useState({
-    texte: "Les parties ont lieu ce soir",
-    couleur: "emerald",
-    message: "Mise à jour officielle LVPSA",
+  texte: "Les parties ont lieu ce soir",
+  couleur: "emerald",
+  message: "Mise à jour officielle LVPSA",
+});
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+
+    if (currentUser) {
+      setUser(currentUser);
+
+      const snap = await getDoc(doc(db, "settings", "matchStatus"));
+
+      if (snap.exists()) {
+        setStatut(snap.data());
+      }
+    }
   });
+
+  return () => unsubscribe();
+}, []);
 
   async function connexion() {
     const result = await signInWithEmailAndPassword(auth, emailAdmin, password);
