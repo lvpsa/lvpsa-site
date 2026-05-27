@@ -1049,15 +1049,37 @@ const produits = [
 ];
 
   const [commande, setCommande] = useState({
-    produit: "T-shirt LVPSA",
-    taille: "M",
-    couleur: "",
-    quantite: 1,
-    nom: "",
-    courriel: "",
-    telephone: "",
-    notes: "",
+  articles: [
+    {
+      categorie: "T-shirts homme",
+      modele: "1",
+      taille: "M",
+      couleur: "",
+      quantite: 1,
+    },
+  ],
+
+  nom: "",
+  courriel: "",
+  telephone: "",
+  notes: "",
+});
+
+  const ajouterArticle = () => {
+  setCommande({
+    ...commande,
+    articles: [
+      ...commande.articles,
+      {
+        categorie: "T-shirts homme",
+        modele: "1",
+        taille: "M",
+        couleur: "",
+        quantite: 1,
+      },
+    ],
   });
+};
 
   const sujet = encodeURIComponent("Commande boutique LVPSA");
   const corps = encodeURIComponent(
@@ -1122,93 +1144,122 @@ ${commande.notes}`
         <h2 className="text-3xl font-black">Passer une commande</h2>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2">
-          <select
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  value={commande.categorie}
-  onChange={(e) =>
-    setCommande({ ...commande, categorie: e.target.value, modele: "1" })
-  }
+          {commande.articles.map((article, index) => (
+  <div
+    key={index}
+    className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5"
+  >
+    <h3 className="mb-4 text-xl font-bold">
+      Article #{index + 1}
+    </h3>
+
+    <select
+      className="w-full rounded-2xl px-4 py-3 text-slate-950"
+      value={article.categorie}
+      onChange={(e) => {
+        const nouveauxArticles = [...commande.articles];
+        nouveauxArticles[index].categorie = e.target.value;
+        setCommande({ ...commande, articles: nouveauxArticles });
+      }}
+    >
+      {produits.map((produit) => (
+        <option
+          key={produit.categorie}
+          value={produit.categorie}
+        >
+          {produit.categorie}
+        </option>
+      ))}
+    </select>
+
+    <select
+      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+      value={article.modele}
+      onChange={(e) => {
+        const nouveauxArticles = [...commande.articles];
+        nouveauxArticles[index].modele = e.target.value;
+        setCommande({ ...commande, articles: nouveauxArticles });
+      }}
+    >
+      <option value="1">Modèle 1</option>
+      <option value="2">Modèle 2</option>
+      <option value="3">Modèle 3</option>
+      <option value="4">Modèle 4</option>
+    </select>
+
+    <input
+      type="text"
+      placeholder="Taille"
+      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+      value={article.taille}
+      onChange={(e) => {
+        const nouveauxArticles = [...commande.articles];
+        nouveauxArticles[index].taille = e.target.value;
+        setCommande({ ...commande, articles: nouveauxArticles });
+      }}
+    />
+
+    <input
+      type="text"
+      placeholder="Couleur"
+      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+      value={article.couleur}
+      onChange={(e) => {
+        const nouveauxArticles = [...commande.articles];
+        nouveauxArticles[index].couleur = e.target.value;
+        setCommande({ ...commande, articles: nouveauxArticles });
+      }}
+    />
+
+    <input
+      type="number"
+      placeholder="Quantité"
+      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+      value={article.quantite}
+      onChange={(e) => {
+        const nouveauxArticles = [...commande.articles];
+        nouveauxArticles[index].quantite = e.target.value;
+        setCommande({ ...commande, articles: nouveauxArticles });
+      }}
+    />
+  </div>
+))}
+
+          <button
+  type="button"
+  onClick={ajouterArticle}
+  className="mt-6 rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950"
 >
-  {produits.map((produit) => (
-    <option key={produit.categorie} value={produit.categorie}>
-      {produit.categorie}
-    </option>
-  ))}
-</select>
+  Ajouter un article
+</button>
 
-<select
+<input
   className="rounded-2xl px-4 py-3 text-slate-950"
-  value={commande.modele}
+  placeholder="Votre nom"
+  value={commande.nom}
   onChange={(e) =>
-    setCommande({ ...commande, modele: e.target.value })
+    setCommande({ ...commande, nom: e.target.value })
   }
->
-  <option value="1">Modèle 1</option>
-  <option value="2">Modèle 2</option>
-  <option value="3">Modèle 3</option>
-  <option value="4">Modèle 4</option>
-</select>
+/>
 
-          <select
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            value={commande.taille}
-            onChange={(e) =>
-              setCommande({ ...commande, taille: e.target.value })
-            }
-          >
-            <option>XS</option>
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-            <option>XL</option>
-            <option>XXL</option>
-          </select>
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Votre courriel"
+  value={commande.courriel}
+  onChange={(e) =>
+    setCommande({ ...commande, courriel: e.target.value })
+  }
+/>
 
-          <input
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            placeholder="Couleur désirée"
-            value={commande.couleur}
-            onChange={(e) =>
-              setCommande({ ...commande, couleur: e.target.value })
-            }
-          />
-
-          <input
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            type="number"
-            min="1"
-            placeholder="Quantité"
-            value={commande.quantite}
-            onChange={(e) =>
-              setCommande({ ...commande, quantite: e.target.value })
-            }
-          />
-
-          <input
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            placeholder="Votre nom"
-            value={commande.nom}
-            onChange={(e) => setCommande({ ...commande, nom: e.target.value })}
-          />
-
-          <input
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            placeholder="Votre courriel"
-            value={commande.courriel}
-            onChange={(e) =>
-              setCommande({ ...commande, courriel: e.target.value })
-            }
-          />
-
-          <input
-            className="rounded-2xl px-4 py-3 text-slate-950"
-            placeholder="Téléphone"
-            value={commande.telephone}
-            onChange={(e) =>
-              setCommande({ ...commande, telephone: e.target.value })
-            }
-          />
-
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Téléphone"
+  value={commande.telephone}
+  onChange={(e) =>
+    setCommande({ ...commande, telephone: e.target.value })
+  }
+/>
+          
           <textarea
             className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
             placeholder="Notes ou demandes spéciales"
