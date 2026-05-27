@@ -394,7 +394,8 @@ useEffect(() => {
       </h3>
     </div>
   </div>
-            
+</div>
+  
             {/* COLONNE DROITE */}
             <div>
 
