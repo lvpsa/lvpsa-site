@@ -319,13 +319,21 @@ useEffect(() => {
                 </p>
 
                 <div className="mt-5 grid grid-cols-5 gap-3">
-                  {[
-                    { h: "18h", t: "23°", icon: "☀️" },
-                    { h: "19h", t: "21°", icon: "🌦️" },
-                    { h: "20h", t: "19°", icon: "🌧️" },
-                    { h: "21h", t: "18°", icon: "🌧️" },
-                    { h: "22h", t: "17°", icon: "🌙" },
-                  ].map((item) => (
+                  {meteoHeures.length > 0 ? (
+  meteoHeures.map((item) => (
+    <div key={item.heure} className="rounded-2xl bg-white/10 p-3 text-center">
+      <p className="text-sm text-slate-300">{item.heure.replace(":00", "h")}</p>
+      <p className="mt-2 text-3xl">
+        {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
+      </p>
+      <p className="mt-2 text-xl font-black">{item.temperature}°</p>
+    </div>
+  ))
+) : (
+  <p className="col-span-5 text-sm text-slate-300">
+    Chargement de la météo...
+  </p>
+)}
                     <div
                       key={item.h}
                       className="rounded-2xl bg-white/10 p-3 text-center"
