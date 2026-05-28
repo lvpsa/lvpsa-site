@@ -1295,18 +1295,20 @@ ${commande.notes}`
     ))}
   </div>
 </div>
-          
-            className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-            placeholder="Notes ou demandes spéciales"
-            value={commande.notes}
-            onChange={(e) =>
-              setCommande({ ...commande, notes: e.target.value })
-            }
-          />
-        </div>
-
-                 Envoyer ma commande
-        </a>
+    <textarea
+  className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+  placeholder="Notes ou demandes spéciales"
+  value={commande.notes}
+  onChange={(e) =>
+    setCommande({ ...commande, notes: e.target.value })
+  }
+/>
+<a
+  href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
+  className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+>
+  Envoyer ma commande
+</a>
       </div>
     </section>
   );
