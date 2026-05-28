@@ -1295,13 +1295,11 @@ ${commande.notes}`
     ))}
   </div>
 </div>
-    <textarea
+   <textarea
   className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
   placeholder="Notes ou demandes spéciales"
   value={commande.notes}
-  onChange={(e) =>
-    setCommande({ ...commande, notes: e.target.value })
-  }
+  onChange={(e) => setCommande({ ...commande, notes: e.target.value })}
 />
 <a
   href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
