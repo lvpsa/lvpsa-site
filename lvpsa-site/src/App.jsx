@@ -1260,7 +1260,6 @@ ${commande.notes}`
   }
 />
           
-          <textarea
             <a
   href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
   className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
