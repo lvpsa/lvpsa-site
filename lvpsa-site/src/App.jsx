@@ -1228,7 +1228,10 @@ ${commande.notes}`
           <button
   type="button"
   onClick={ajouterArticle}
-  className="mt-6 rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950"
+  className="mt-6 w-full rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950 md:w-auto md:self-start"
+>
+  Ajouter un article
+</button>
 >
   Ajouter un article
 </button>
