@@ -1143,7 +1143,8 @@ ${commande.notes}`
       <div className="mt-14 rounded-3xl border border-white/10 bg-white/5 p-8">
         <h2 className="text-3xl font-black">Passer une commande</h2>
 
-        <div className="mt-8 grid gap-5 md:grid-cols-2">
+        <div className="mt-8 grid gap-10 md:grid-cols-2">
+          <div>
           {commande.articles.map((article, index) => (
   <div
     key={index}
@@ -1260,6 +1261,42 @@ ${commande.notes}`
 />
           
           <textarea
+            <a
+  href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
+  className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+>
+  Envoyer ma commande
+</a>
+
+</div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+  <h2 className="text-3xl font-black">
+    Résumé de la commande
+  </h2>
+
+  <div className="mt-6 space-y-5">
+    {commande.articles.map((article, index) => (
+      <div
+        key={index}
+        className="rounded-2xl border border-white/10 bg-black/20 p-5"
+      >
+        <h3 className="text-xl font-bold text-amber-300">
+          Article #{index + 1}
+        </h3>
+
+        <div className="mt-3 space-y-1 text-slate-300">
+          <p><strong>Catégorie :</strong> {article.categorie}</p>
+          <p><strong>Modèle :</strong> {article.modele}</p>
+          <p><strong>Taille :</strong> {article.taille}</p>
+          <p><strong>Couleur :</strong> {article.couleur}</p>
+          <p><strong>Quantité :</strong> {article.quantite}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+          
             className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
             placeholder="Notes ou demandes spéciales"
             value={commande.notes}
@@ -1269,11 +1306,7 @@ ${commande.notes}`
           />
         </div>
 
-        <a
-          href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
-          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-        >
-          Envoyer ma commande
+                 Envoyer ma commande
         </a>
       </div>
     </section>
