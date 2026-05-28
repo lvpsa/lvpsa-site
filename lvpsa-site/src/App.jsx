@@ -1307,9 +1307,12 @@ ${commande.notes}`
 >
   Envoyer ma commande
 </a>
-      </div>
-    </section>
-  );
+
+</div>
+</div>
+
+</section>
+);
 }
 
 function Footer() {
