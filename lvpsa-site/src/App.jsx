@@ -1148,7 +1148,7 @@ ${commande.notes}`
       <div className="mt-14 rounded-3xl border border-white/10 bg-white/5 p-8">
         <h2 className="text-3xl font-black">Passer une commande</h2>
 
-        <div className="mt-8 grid gap-10 md:grid-cols-2">
+        <div className="mt-8 grid gap-10 lg:grid-cols-2">
           <div>
           {commande.articles.map((article, index) => (
   <div
