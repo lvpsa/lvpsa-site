@@ -1113,21 +1113,32 @@ const envoyerCommande = () => {
     )
     .join("\n");
 
-  emailjs
-    .send(
+  const params = {
+    nom: commande.nom,
+    courriel: commande.courriel,
+    telephone: commande.telephone,
+    commande: resumeCommande,
+    notes: commande.notes,
+    to_email: commande.courriel,
+  };
+
+  Promise.all([
+    emailjs.send(
       "service_f4h3rii",
       "template_nwl643g",
-      {
-        nom: commande.nom,
-        courriel: commande.courriel,
-        telephone: commande.telephone,
-        commande: resumeCommande,
-        notes: commande.notes,
-      },
+      params,
       "ZooBSx9i6qVl5HI8T"
-    )
+    ),
+
+    emailjs.send(
+      "service_f4h3rii",
+      "template_c5ab7bt",
+      params,
+      "ZooBSx9i6qVl5HI8T"
+    ),
+  ])
     .then(() => {
-      alert("Commande envoyée avec succès!");
+      alert("Commande envoyée avec succès! Un courriel de confirmation a été envoyé.");
     })
     .catch((error) => {
       alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
