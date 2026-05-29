@@ -47,7 +47,6 @@ export default function App() {
           <Route path="/boutique" element={<BoutiqueProtegee />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
-          
           <Route path="/ligue" element={<Ligue />} />
           <Route path="/inscription-ligue" element={<InscriptionLigue />} />
           <Route path="/gestion-equipe" element={<GestionEquipe />} />
@@ -55,6 +54,7 @@ export default function App() {
           <Route path="/connexion" element={<Membres />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/calendrier" element={<Calendrier />} />
         </Routes>
         <Footer />
       </div>
@@ -107,7 +107,9 @@ function Header() {
               >
                 Classements
               </Link>
-
+           <Link to="/calendrier"className="block rounded-xl px-3 py-2 hover:bg-white/10">
+                Calendrier
+              </Link>
               <Link
                 to="/reglements"
                 className="block rounded-xl px-3 py-2 hover:bg-white/10"
@@ -178,6 +180,10 @@ function Header() {
               Classements
             </Link>
 
+            <Link to="/calendrier" onClick={() => setMenuOpen(false)}>
+              Calendrier
+            </Link>
+            
             <Link to="/reglements" onClick={() => setMenuOpen(false)}>
               Règlements Ligue
             </Link>
@@ -1373,6 +1379,101 @@ const envoyerCommande = () => {
 </div>
 </section>
 );
+}
+
+function Calendrier() {
+  const [categorie, setCategorie] = useState("recreatif");
+
+  const horaires = {
+    recreatif: [
+      ["18 mai", ["18h00 à 18h45 — Les As vs Les Bronzés", "18h45 à 19h30 — Les Bronzés vs Les Smash", "19h30 à 20h15 — Les As vs Les Artishow", "20h15 à 21h00 — Les Smash vs Les Artishow"]],
+      ["25 mai", ["18h00 à 18h45 — Les Bronzés vs Les Smash", "18h45 à 19h30 — Les As vs Les Smash", "19h30 à 20h15 — Les Bronzés vs Les Artishow", "20h15 à 21h00 — Les As vs Les Artishow"]],
+      ["1 juin", ["18h00 à 18h45 — Les Smash vs Les Artishow", "18h45 à 19h30 — Les Bronzés vs Les Artishow", "19h30 à 20h15 — Les As vs Les Smash", "20h15 à 21h00 — Les As vs Les Bronzés"]],
+      ["8 juin", ["18h00 à 18h45 — Les As vs Les Artishow", "18h45 à 19h30 — Les As vs Les Bronzés", "19h30 à 20h15 — Les Smash vs Les Artishow", "20h15 à 21h00 — Les Bronzés vs Les Smash"]],
+      ["15 juin", ["18h00 à 18h45 — Les Bronzés vs Les Artishow", "18h45 à 19h30 — Les As vs Les Artishow", "19h30 à 20h15 — Les Bronzés vs Les Smash", "20h15 à 21h00 — Les As vs Les Smash"]],
+      ["22 juin", ["18h00 à 18h45 — Les As vs Les Smash", "18h45 à 19h30 — Les Smash vs Les Artishow", "19h30 à 20h15 — Les As vs Les Bronzés", "20h15 à 21h00 — Les Bronzés vs Les Artishow"]],
+      ["29 juin", ["18h00 à 18h45 — Les As vs Les Bronzés", "18h45 à 19h30 — Les Bronzés vs Les Smash", "19h30 à 20h15 — Les As vs Les Artishow", "20h15 à 21h00 — Les Smash vs Les Artishow"]],
+      ["6 juil.", ["18h00 à 18h45 — Les Bronzés vs Les Smash", "18h45 à 19h30 — Les As vs Les Smash", "19h30 à 20h15 — Les Bronzés vs Les Artishow", "20h15 à 21h00 — Les As vs Les Artishow"]],
+      ["13 juil.", ["18h00 à 18h45 — Les Smash vs Les Artishow", "18h45 à 19h30 — Les Bronzés vs Les Artishow", "19h30 à 20h15 — Les As vs Les Smash", "20h15 à 21h00 — Les As vs Les Bronzés"]],
+      ["3 août", ["18h00 à 18h45 — Les As vs Les Artishow", "18h45 à 19h30 — Les As vs Les Bronzés", "19h30 à 20h15 — Les Smash vs Les Artishow", "20h15 à 21h00 — Les Bronzés vs Les Smash"]],
+      ["10 août", ["18h00 à 18h45 — Les Bronzés vs Les Artishow", "18h45 à 19h30 — Les As vs Les Artishow", "19h30 à 20h15 — Les Bronzés vs Les Smash", "20h15 à 21h00 — Les As vs Les Smash"]],
+      ["17 août", ["18h00 à 18h45 — Les As vs Les Smash", "18h45 à 19h30 — Les Smash vs Les Artishow", "19h30 à 20h15 — Les As vs Les Bronzés", "20h15 à 21h00 — Les Bronzés vs Les Artishow"]],
+    ],
+    competitif: [
+      ["19 mai", ["18h00 à 18h45 — Carbe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Geneviève", "19h30 à 20h15 — Carbe en Bikini vs Félix", "20h15 à 21h00 — Geneviève vs Félix"]],
+      ["26 mai", ["18h00 à 18h45 — Fireballs vs Geneviève", "18h45 à 19h30 — Carbe en Bikini vs Geneviève", "19h30 à 20h15 — Fireballs vs Félix", "20h15 à 21h00 — Carbe en Bikini vs Félix"]],
+      ["2 juin", ["18h00 à 18h45 — Geneviève vs Félix", "18h45 à 19h30 — Fireballs vs Félix", "19h30 à 20h15 — Carbe en Bikini vs Geneviève", "20h15 à 21h00 — Carbe en Bikini vs Fireballs"]],
+      ["9 juin", ["18h00 à 18h45 — Carbe en Bikini vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Fireballs", "19h30 à 20h15 — Geneviève vs Félix", "20h15 à 21h00 — Fireballs vs Geneviève"]],
+      ["16 juin", ["18h00 à 18h45 — Fireballs vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Félix", "19h30 à 20h15 — Fireballs vs Geneviève", "20h15 à 21h00 — Carbe en Bikini vs Geneviève"]],
+      ["23 juin", ["18h00 à 18h45 — Carbe en Bikini vs Geneviève", "18h45 à 19h30 — Geneviève vs Félix", "19h30 à 20h15 — Carbe en Bikini vs Fireballs", "20h15 à 21h00 — Fireballs vs Félix"]],
+      ["30 juin", ["18h00 à 18h45 — Carbe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Geneviève", "19h30 à 20h15 — Carbe en Bikini vs Félix", "20h15 à 21h00 — Geneviève vs Félix"]],
+      ["7 juil.", ["18h00 à 18h45 — Fireballs vs Geneviève", "18h45 à 19h30 — Carbe en Bikini vs Geneviève", "19h30 à 20h15 — Fireballs vs Félix", "20h15 à 21h00 — Carbe en Bikini vs Félix"]],
+      ["14 juil.", ["18h00 à 18h45 — Geneviève vs Félix", "18h45 à 19h30 — Fireballs vs Félix", "19h30 à 20h15 — Carbe en Bikini vs Geneviève", "20h15 à 21h00 — Carbe en Bikini vs Fireballs"]],
+      ["4 août", ["18h00 à 18h45 — Carbe en Bikini vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Fireballs", "19h30 à 20h15 — Geneviève vs Félix", "20h15 à 21h00 — Fireballs vs Geneviève"]],
+      ["11 août", ["18h00 à 18h45 — Fireballs vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Félix", "19h30 à 20h15 — Fireballs vs Geneviève", "20h15 à 21h00 — Carbe en Bikini vs Geneviève"]],
+      ["18 août", ["18h00 à 18h45 — Carbe en Bikini vs Geneviève", "18h45 à 19h30 — Geneviève vs Félix", "19h30 à 20h15 — Carbe en Bikini vs Fireballs", "20h15 à 21h00 — Fireballs vs Félix"]],
+    ],
+  };
+
+  const selection = horaires[categorie];
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Saison 2026
+      </p>
+
+      <h1 className="mt-2 text-5xl font-black">Calendrier</h1>
+
+      <div className="mt-8 flex gap-3">
+        <button
+          onClick={() => setCategorie("recreatif")}
+          className={`rounded-full px-6 py-3 font-bold ${
+            categorie === "recreatif"
+              ? "bg-amber-400 text-slate-950"
+              : "border border-white/15 text-white"
+          }`}
+        >
+          Récréatif
+        </button>
+
+        <button
+          onClick={() => setCategorie("competitif")}
+          className={`rounded-full px-6 py-3 font-bold ${
+            categorie === "competitif"
+              ? "bg-amber-400 text-slate-950"
+              : "border border-white/15 text-white"
+          }`}
+        >
+          Compétitif
+        </button>
+      </div>
+
+      <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {selection.map(([date, matchs]) => (
+          <div
+            key={date}
+            className="rounded-3xl border border-white/10 bg-white/5 p-6"
+          >
+            <h2 className="text-2xl font-black text-amber-300">
+              {date}
+            </h2>
+
+            <div className="mt-5 space-y-3">
+              {matchs.map((match, index) => (
+                <div
+                  key={index}
+                  className="rounded-2xl bg-black/20 p-4 text-slate-200"
+                >
+                  {match}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function Footer() {
