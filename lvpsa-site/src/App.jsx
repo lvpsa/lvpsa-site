@@ -25,6 +25,7 @@ import {
   LogIn,
 } from "lucide-react";
 import "./index.css";
+import emailjs from "@emailjs/browser";
 
 const email = "liguevpsa@gmail.com";
 const tournoiLink = "https://forms.gle/csLUt6NmcjNADcBm7";
@@ -1104,6 +1105,29 @@ Notes :
 ${commande.notes}`
   );
 
+  const envoyerCommande = () => {
+  const resumeCommande = commande.articles
+    .map(
+      (article, index) =>
+        `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} | Taille ${article.taille} | Couleur ${article.couleur} | Quantité ${article.quantite}`
+    )
+    .join("\n");
+
+  emailjs.send(
+    "service_f4h3rii",
+    "template_nwl643g",
+    {
+      nom: commande.nom,
+      courriel: commande.courriel,
+      telephone: commande.telephone,
+      commande: resumeCommande,
+      notes: commande.notes,
+    },
+    "ZooBSx9i6qVl5HI8T"
+  );
+
+  alert("Commande envoyée avec succès!");
+};
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -1289,12 +1313,13 @@ ${commande.notes}`
           />
         </div>
 
-        <a
-          href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
-          className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-        >
-          Envoyer ma commande
-        </a>
+        <button
+  type="button"
+  onClick={envoyerCommande}
+  className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+>
+  Envoyer ma commande
+</button>
       </div>
     </div>
 
