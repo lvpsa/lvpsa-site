@@ -100,22 +100,26 @@ function Header() {
               Ligue
             </button>
 
-            <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
-              <Link
-                to="/classements"
-                className="block rounded-xl px-3 py-2 hover:bg-white/10"
-              >
-                Classements
-              </Link>
-           <Link to="/calendrier"className="block rounded-xl px-3 py-2 hover:bg-white/10">
-                Calendrier
-              </Link>
-              <Link
-                to="/reglements"
-                className="block rounded-xl px-3 py-2 hover:bg-white/10"
-              >
-                Règlements
-              </Link>
+            <Link
+  to="/calendrier"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Calendrier
+</Link>
+
+<Link
+  to="/classements"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Classements
+</Link>
+
+<Link
+  to="/reglements"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Règlements
+</Link>
             </div>
           </div>
 
