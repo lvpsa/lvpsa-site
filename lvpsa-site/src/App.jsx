@@ -1105,7 +1105,7 @@ Notes :
 ${commande.notes}`
   );
 
-  const envoyerCommande = () => {
+const envoyerCommande = () => {
   const resumeCommande = commande.articles
     .map(
       (article, index) =>
@@ -1113,20 +1113,26 @@ ${commande.notes}`
     )
     .join("\n");
 
-  emailjs.send(
-    "service_f4h3rii",
-    "template_nwl643g",
-    {
-      nom: commande.nom,
-      courriel: commande.courriel,
-      telephone: commande.telephone,
-      commande: resumeCommande,
-      notes: commande.notes,
-    },
-    "ZooBSx9i6qVl5HI8T"
-  );
-
-  alert("Commande envoyée avec succès!");
+  emailjs
+    .send(
+      "service_f4h3rii",
+      "template_nwl643g",
+      {
+        nom: commande.nom,
+        courriel: commande.courriel,
+        telephone: commande.telephone,
+        commande: resumeCommande,
+        notes: commande.notes,
+      },
+      "ZooBSx9i6qVl5HI8T"
+    )
+    .then(() => {
+      alert("Commande envoyée avec succès!");
+    })
+    .catch((error) => {
+      alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
+      console.error(error);
+    });
 };
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
