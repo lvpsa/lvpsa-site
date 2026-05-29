@@ -1305,7 +1305,28 @@ ${commande.notes}`
     Envoyer ma commande
   </a>
 </div>
-</div>
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 h-fit">
+  <h3 className="text-2xl font-black">
+    Résumé de la commande
+  </h3>
+
+  <div className="mt-5 space-y-4">
+    {commande.articles.map((article, index) => (
+      <div
+        key={index}
+        className="rounded-2xl border border-white/10 bg-black/20 p-4"
+      >
+        <p className="font-bold text-amber-300">
+          Article #{index + 1}
+        </p>
+
+        <p className="mt-2 text-slate-300">
+          {article.categorie} | Modèle {article.modele} | Taille {article.taille} | {article.couleur} | Qté : {article.quantite}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>        
 </div>
 </div>
 </section>
