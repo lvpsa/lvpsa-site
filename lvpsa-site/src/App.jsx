@@ -1248,77 +1248,60 @@ ${commande.notes}`
 >
   Ajouter un article
 </button>
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Votre nom"
-  value={commande.nom}
-  onChange={(e) =>
-    setCommande({ ...commande, nom: e.target.value })
-  }
-/>
+<div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6">
+  <h3 className="text-2xl font-black">
+    Informations du client
+  </h3>
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Votre courriel"
-  value={commande.courriel}
-  onChange={(e) =>
-    setCommande({ ...commande, courriel: e.target.value })
-  }
-/>
+  <div className="mt-5 grid gap-4 md:grid-cols-2">
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Téléphone"
-  value={commande.telephone}
-  onChange={(e) =>
-    setCommande({ ...commande, telephone: e.target.value })
-  }
-/>
-            
-           </div>
+    <input
+      className="rounded-2xl px-4 py-3 text-slate-950"
+      placeholder="Votre nom"
+      value={commande.nom}
+      onChange={(e) =>
+        setCommande({ ...commande, nom: e.target.value })
+      }
+    />
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-  <h2 className="text-3xl font-black">
-    Résumé de la commande
-  </h2>
+    <input
+      className="rounded-2xl px-4 py-3 text-slate-950"
+      placeholder="Votre courriel"
+      value={commande.courriel}
+      onChange={(e) =>
+        setCommande({ ...commande, courriel: e.target.value })
+      }
+    />
 
-  <div className="mt-6 space-y-5">
-    {commande.articles.map((article, index) => (
-      <div
-        key={index}
-        className="rounded-2xl border border-white/10 bg-black/20 p-5"
-      >
-        <h3 className="text-xl font-bold text-amber-300">
-          Article #{index + 1}
-        </h3>
+    <input
+      className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+      placeholder="Téléphone"
+      value={commande.telephone}
+      onChange={(e) =>
+        setCommande({ ...commande, telephone: e.target.value })
+      }
+    />
 
-        <div className="mt-3 space-y-1 text-slate-300">
-          <p><strong>Catégorie :</strong> {article.categorie}</p>
-          <p><strong>Modèle :</strong> {article.modele}</p>
-          <p><strong>Taille :</strong> {article.taille}</p>
-          <p><strong>Couleur :</strong> {article.couleur}</p>
-          <p><strong>Quantité :</strong> {article.quantite}</p>
-        </div>
-      </div>
-    ))}
+    <textarea
+      className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+      placeholder="Notes ou demandes spéciales"
+      value={commande.notes}
+      onChange={(e) =>
+        setCommande({ ...commande, notes: e.target.value })
+      }
+    />
+
   </div>
-</div>
-   <textarea
-  className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-  placeholder="Notes ou demandes spéciales"
-  value={commande.notes}
-  onChange={(e) => setCommande({ ...commande, notes: e.target.value })}
-/>
-<a
-  href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
-  className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
->
-  Envoyer ma commande
-</a>
 
+  <a
+    href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
+    className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+  >
+    Envoyer ma commande
+  </a>
 </div>
 </div>
-
+</div>
 </section>
 );
 }
