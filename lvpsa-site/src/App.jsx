@@ -1154,6 +1154,16 @@ ${commande.notes}`
       Article #{index + 1}
     </h3>
 
+{commande.articles.length > 1 && (
+  <button
+    type="button"
+    onClick={() => retirerArticle(index)}
+    className="mb-4 rounded-full border border-red-400/40 px-4 py-2 text-sm font-bold text-red-300 hover:bg-red-400/10"
+  >
+    Retirer cet article
+  </button>
+)}
+    
     <select
       className="w-full rounded-2xl px-4 py-3 text-slate-950"
       value={article.categorie}
@@ -1259,15 +1269,13 @@ ${commande.notes}`
     setCommande({ ...commande, telephone: e.target.value })
   }
 />
-          
-            <a
-  href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
-  className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
->
-  Envoyer ma commande
-</a>
 
-</div>
+const retirerArticle = (index) => {
+  const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
+  setCommande({ ...commande, articles: nouveauxArticles });
+};
+            
+           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
   <h2 className="text-3xl font-black">
