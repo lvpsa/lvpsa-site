@@ -1215,17 +1215,22 @@ ${commande.notes}`
       }}
     />
 
-    <input
-      type="text"
-      placeholder="Couleur"
-      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
-      value={article.couleur}
-      onChange={(e) => {
-        const nouveauxArticles = [...commande.articles];
-        nouveauxArticles[index].couleur = e.target.value;
-        setCommande({ ...commande, articles: nouveauxArticles });
-      }}
-    />
+<select
+  className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+  value={article.couleur}
+  onChange={(e) => {
+    const nouveauxArticles = [...commande.articles];
+    nouveauxArticles[index].couleur = e.target.value;
+    setCommande({ ...commande, articles: nouveauxArticles });
+  }}
+>
+  <option value="">Choisir une couleur</option>
+  <option value="Noir">Noir</option>
+  <option value="Jaune">Jaune</option>
+  <option value="Blanc">Blanc</option>
+  <option value="Sable">Sable</option>
+  <option value="Bleu">Bleu</option>
+</select>
 
     <input
       type="number"
