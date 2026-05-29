@@ -1329,6 +1329,7 @@ ${commande.notes}`
 </div>        
 </div>
 </div>
+</div>
 </section>
 );
 }
