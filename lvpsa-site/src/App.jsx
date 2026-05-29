@@ -1145,190 +1145,189 @@ ${commande.notes}`
         ))}
       </div>
 
-      <div className="mt-14 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h2 className="text-3xl font-black">Passer une commande</h2>
+<div className="mt-14 rounded-3xl border border-white/10 bg-white/5 p-8">
+  <h2 className="text-3xl font-black">Passer une commande</h2>
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-2">
-          <div>
-          {commande.articles.map((article, index) => (
-  <div
-    key={index}
-    className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5"
-  >
-    <h3 className="mb-4 text-xl font-bold">
-      Article #{index + 1}
-    </h3>
-
-{commande.articles.length > 1 && (
-  <button
-    type="button"
-    onClick={() => retirerArticle(index)}
-    className="mb-4 rounded-full border border-red-400/40 px-4 py-2 text-sm font-bold text-red-300 hover:bg-red-400/10"
-  >
-    Retirer cet article
-  </button>
-)}
-    
-    <select
-      className="w-full rounded-2xl px-4 py-3 text-slate-950"
-      value={article.categorie}
-      onChange={(e) => {
-        const nouveauxArticles = [...commande.articles];
-        nouveauxArticles[index].categorie = e.target.value;
-        setCommande({ ...commande, articles: nouveauxArticles });
-      }}
-    >
-      {produits.map((produit) => (
-        <option
-          key={produit.categorie}
-          value={produit.categorie}
+  <div className="mt-8 grid gap-10 lg:grid-cols-2">
+    {/* COLONNE GAUCHE */}
+    <div>
+      {commande.articles.map((article, index) => (
+        <div
+          key={index}
+          className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5"
         >
-          {produit.categorie}
-        </option>
+          <h3 className="mb-4 text-xl font-bold">
+            Article #{index + 1}
+          </h3>
+
+          <select
+            className="w-full rounded-2xl px-4 py-3 text-slate-950"
+            value={article.categorie}
+            onChange={(e) => {
+              const nouveauxArticles = [...commande.articles];
+              nouveauxArticles[index].categorie = e.target.value;
+              setCommande({ ...commande, articles: nouveauxArticles });
+            }}
+          >
+            {produits.map((produit) => (
+              <option key={produit.categorie} value={produit.categorie}>
+                {produit.categorie}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+            value={article.modele}
+            onChange={(e) => {
+              const nouveauxArticles = [...commande.articles];
+              nouveauxArticles[index].modele = e.target.value;
+              setCommande({ ...commande, articles: nouveauxArticles });
+            }}
+          >
+            <option value="1">Modèle 1</option>
+            <option value="2">Modèle 2</option>
+            <option value="3">Modèle 3</option>
+            <option value="4">Modèle 4</option>
+          </select>
+
+          <select
+            className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+            value={article.taille}
+            onChange={(e) => {
+              const nouveauxArticles = [...commande.articles];
+              nouveauxArticles[index].taille = e.target.value;
+              setCommande({ ...commande, articles: nouveauxArticles });
+            }}
+          >
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+          </select>
+
+          <select
+            className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+            value={article.couleur}
+            onChange={(e) => {
+              const nouveauxArticles = [...commande.articles];
+              nouveauxArticles[index].couleur = e.target.value;
+              setCommande({ ...commande, articles: nouveauxArticles });
+            }}
+          >
+            <option value="">Choisir une couleur</option>
+            <option value="Noir">Noir</option>
+            <option value="Jaune">Jaune</option>
+            <option value="Blanc">Blanc</option>
+            <option value="Sable">Sable</option>
+            <option value="Bleu">Bleu</option>
+          </select>
+
+          <input
+            type="number"
+            min="1"
+            placeholder="Quantité"
+            className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
+            value={article.quantite}
+            onChange={(e) => {
+              const nouveauxArticles = [...commande.articles];
+              nouveauxArticles[index].quantite = e.target.value;
+              setCommande({ ...commande, articles: nouveauxArticles });
+            }}
+          />
+        </div>
       ))}
-    </select>
 
-    <select
-      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
-      value={article.modele}
-      onChange={(e) => {
-        const nouveauxArticles = [...commande.articles];
-        nouveauxArticles[index].modele = e.target.value;
-        setCommande({ ...commande, articles: nouveauxArticles });
-      }}
-    >
-      <option value="1">Modèle 1</option>
-      <option value="2">Modèle 2</option>
-      <option value="3">Modèle 3</option>
-      <option value="4">Modèle 4</option>
-    </select>
-
-    <input
-      type="text"
-      placeholder="Taille"
-      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
-      value={article.taille}
-      onChange={(e) => {
-        const nouveauxArticles = [...commande.articles];
-        nouveauxArticles[index].taille = e.target.value;
-        setCommande({ ...commande, articles: nouveauxArticles });
-      }}
-    />
-
-<select
-  className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
-  value={article.couleur}
-  onChange={(e) => {
-    const nouveauxArticles = [...commande.articles];
-    nouveauxArticles[index].couleur = e.target.value;
-    setCommande({ ...commande, articles: nouveauxArticles });
-  }}
->
-  <option value="">Choisir une couleur</option>
-  <option value="Noir">Noir</option>
-  <option value="Jaune">Jaune</option>
-  <option value="Blanc">Blanc</option>
-  <option value="Sable">Sable</option>
-  <option value="Bleu">Bleu</option>
-</select>
-
-    <input
-      type="number"
-      placeholder="Quantité"
-      className="mt-3 w-full rounded-2xl px-4 py-3 text-slate-950"
-      value={article.quantite}
-      onChange={(e) => {
-        const nouveauxArticles = [...commande.articles];
-        nouveauxArticles[index].quantite = e.target.value;
-        setCommande({ ...commande, articles: nouveauxArticles });
-      }}
-    />
-  </div>
-))}
-
-          <button
-  type="button"
-  onClick={ajouterArticle}
-  className="mt-6 w-full rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950 md:w-auto md:self-start"
->
-  Ajouter un article
-</button>
-<div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6">
-  <h3 className="text-2xl font-black">
-    Informations du client
-  </h3>
-
-  <div className="mt-5 grid gap-4 md:grid-cols-2">
-
-    <input
-      className="rounded-2xl px-4 py-3 text-slate-950"
-      placeholder="Votre nom"
-      value={commande.nom}
-      onChange={(e) =>
-        setCommande({ ...commande, nom: e.target.value })
-      }
-    />
-
-    <input
-      className="rounded-2xl px-4 py-3 text-slate-950"
-      placeholder="Votre courriel"
-      value={commande.courriel}
-      onChange={(e) =>
-        setCommande({ ...commande, courriel: e.target.value })
-      }
-    />
-
-    <input
-      className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-      placeholder="Téléphone"
-      value={commande.telephone}
-      onChange={(e) =>
-        setCommande({ ...commande, telephone: e.target.value })
-      }
-    />
-
-    <textarea
-      className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-      placeholder="Notes ou demandes spéciales"
-      value={commande.notes}
-      onChange={(e) =>
-        setCommande({ ...commande, notes: e.target.value })
-      }
-    />
-
-  </div>
-
-  <a
-    href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
-    className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-  >
-    Envoyer ma commande
-  </a>
-</div>
-    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 h-fit">
-  <h3 className="text-2xl font-black">
-    Résumé de la commande
-  </h3>
-
-  <div className="mt-5 space-y-4">
-    {commande.articles.map((article, index) => (
-      <div
-        key={index}
-        className="rounded-2xl border border-white/10 bg-black/20 p-4"
+      <button
+        type="button"
+        onClick={ajouterArticle}
+        className="mt-6 rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950 hover:bg-amber-300"
       >
-        <p className="font-bold text-amber-300">
-          Article #{index + 1}
-        </p>
+        Ajouter un article
+      </button>
 
-        <p className="mt-2 text-slate-300">
-          {article.categorie} | Modèle {article.modele} | Taille {article.taille} | {article.couleur} | Qté : {article.quantite}
-        </p>
+      <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h3 className="text-2xl font-black">Informations du client</h3>
+
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            placeholder="Votre nom"
+            value={commande.nom}
+            onChange={(e) =>
+              setCommande({ ...commande, nom: e.target.value })
+            }
+          />
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950"
+            placeholder="Votre courriel"
+            value={commande.courriel}
+            onChange={(e) =>
+              setCommande({ ...commande, courriel: e.target.value })
+            }
+          />
+
+          <input
+            className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+            placeholder="Téléphone"
+            value={commande.telephone}
+            onChange={(e) =>
+              setCommande({ ...commande, telephone: e.target.value })
+            }
+          />
+
+          <textarea
+            className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+            placeholder="Notes ou demandes spéciales"
+            value={commande.notes}
+            onChange={(e) =>
+              setCommande({ ...commande, notes: e.target.value })
+            }
+          />
+        </div>
+
+        <a
+          href={`mailto:liguevpsa@gmail.com?subject=${sujet}&body=${corps}`}
+          className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+        >
+          Envoyer ma commande
+        </a>
       </div>
-    ))}
+    </div>
+
+    {/* COLONNE DROITE */}
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6 h-fit lg:sticky lg:top-6">
+      <h3 className="text-2xl font-black">Résumé de la commande</h3>
+
+      <div className="mt-5 space-y-4">
+        {commande.articles.map((article, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => retirerArticle(index)}
+            className="w-full rounded-2xl border border-white/10 bg-black/20 p-4 text-left hover:border-red-400/50 hover:bg-red-400/10"
+          >
+            <p className="font-bold text-amber-300">
+              Article #{index + 1}
+            </p>
+
+            <p className="mt-2 text-sm text-slate-300">
+              {article.categorie} | Modèle {article.modele} | Taille{" "}
+              {article.taille} | {article.couleur || "Couleur à choisir"} |
+              Qté : {article.quantite}
+            </p>
+
+            <p className="mt-2 text-xs text-red-300">
+              Cliquer pour retirer cet article
+            </p>
+          </button>
+        ))}
+      </div>
+    </div>
   </div>
-</div>        
-</div>
-</div>
 </div>
 </section>
 );
