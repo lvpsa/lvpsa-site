@@ -95,33 +95,34 @@ function Header() {
             Accueil
           </Link>
 
-          <div className="group relative">
-            <button className="flex items-center gap-1 hover:text-amber-300">
-              Ligue
-            </button>
+<div className="group relative">
+  <button className="flex items-center gap-1 hover:text-amber-300">
+    Ligue
+  </button>
 
-            <Link
-  to="/calendrier"
-  className="block rounded-xl px-3 py-2 hover:bg-white/10"
->
-  Calendrier
-</Link>
+  <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
+    <Link
+      to="/calendrier"
+      className="block rounded-xl px-3 py-2 hover:bg-white/10"
+    >
+      Calendrier
+    </Link>
 
-<Link
-  to="/classements"
-  className="block rounded-xl px-3 py-2 hover:bg-white/10"
->
-  Classements
-</Link>
+    <Link
+      to="/classements"
+      className="block rounded-xl px-3 py-2 hover:bg-white/10"
+    >
+      Classements
+    </Link>
 
-<Link
-  to="/reglements"
-  className="block rounded-xl px-3 py-2 hover:bg-white/10"
->
-  Règlements
-</Link>
-            </div>
-          </div>
+    <Link
+      to="/reglements"
+      className="block rounded-xl px-3 py-2 hover:bg-white/10"
+    >
+      Règlements
+    </Link>
+  </div>
+</div>
 
           <div className="group relative">
             <button className="flex items-center gap-1 hover:text-amber-300">
