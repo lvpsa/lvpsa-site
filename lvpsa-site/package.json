@@ -17,6 +17,7 @@
     "lucide-react": "latest",
     "react-router-dom": "^6.26.0",
     "firebase": "^11.0.0"
+    "@emailjs/browser": "^4.4.1"
   },
   "devDependencies": {
     "tailwindcss": "latest",
