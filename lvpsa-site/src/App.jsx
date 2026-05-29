@@ -180,14 +180,14 @@ function Header() {
               Accueil
             </Link>
 
+                        <Link to="/calendrier" onClick={() => setMenuOpen(false)}>
+              Calendrier
+            </Link>
+            
             <Link to="/classements" onClick={() => setMenuOpen(false)}>
               Classements
             </Link>
 
-            <Link to="/calendrier" onClick={() => setMenuOpen(false)}>
-              Calendrier
-            </Link>
-            
             <Link to="/reglements" onClick={() => setMenuOpen(false)}>
               Règlements Ligue
             </Link>
