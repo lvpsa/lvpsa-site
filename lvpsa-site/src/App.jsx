@@ -1081,6 +1081,11 @@ const produits = [
   });
 };
 
+  const retirerArticle = (index) => {
+  const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
+  setCommande({ ...commande, articles: nouveauxArticles });
+};
+  
   const sujet = encodeURIComponent("Commande boutique LVPSA");
   const corps = encodeURIComponent(
     `Nouvelle commande boutique LVPSA
@@ -1269,11 +1274,6 @@ ${commande.notes}`
     setCommande({ ...commande, telephone: e.target.value })
   }
 />
-
-const retirerArticle = (index) => {
-  const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
-  setCommande({ ...commande, articles: nouveauxArticles });
-};
             
            </div>
 
