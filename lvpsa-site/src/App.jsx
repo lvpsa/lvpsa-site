@@ -899,7 +899,7 @@ function Contact() {
 
   <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
    <img
-  src="/ville.png"
+  src="/VSAD.png"
   alt="Ville de Saint-Augustin-de-Desmaures"
   className="max-h-40 w-full object-contain"
 />
