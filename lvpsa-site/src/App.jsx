@@ -1411,7 +1411,7 @@ function Calendrier() {
       ["9 juin", ["18h00 à 18h45 — Carbe en Bikini vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Fireballs", "19h30 à 20h15 — Geneviève vs Félix", "20h15 à 21h00 — Fireballs vs Geneviève"]],
       ["16 juin", ["18h00 à 18h45 — Fireballs vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Félix", "19h30 à 20h15 — Fireballs vs Geneviève", "20h15 à 21h00 — Carbe en Bikini vs Geneviève"]],
       ["23 juin", ["18h00 à 18h45 — Carbe en Bikini vs Geneviève", "18h45 à 19h30 — Geneviève vs Félix", "19h30 à 20h15 — Carbe en Bikini vs Fireballs", "20h15 à 21h00 — Fireballs vs Félix"]],
-      ["30 juin", ["18h00 à 18h45 — Carbe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Geneviève", "19h30 à 20h15 — Carbe en Bikini vs Félix", "20h15 à 21h00 — Geneviève vs Félix"]],
+      ["30 juin", ["18h00 à 18h45 — Carbe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Geneviève", "19h30 à 20h15 — Carbe en Bikini vs Félix", "20h15 à 21h00 — Geneviève vs Félix", "21h00 à 21h45 — Carbe en Bikini vs Geneviève"]],
       ["7 juil.", ["18h00 à 18h45 — Fireballs vs Geneviève", "18h45 à 19h30 — Carbe en Bikini vs Geneviève", "19h30 à 20h15 — Fireballs vs Félix", "20h15 à 21h00 — Carbe en Bikini vs Félix"]],
       ["14 juil.", ["18h00 à 18h45 — Geneviève vs Félix", "18h45 à 19h30 — Fireballs vs Félix", "19h30 à 20h15 — Carbe en Bikini vs Geneviève", "20h15 à 21h00 — Carbe en Bikini vs Fireballs"]],
       ["4 août", ["18h00 à 18h45 — Carbe en Bikini vs Félix", "18h45 à 19h30 — Carbe en Bikini vs Fireballs", "19h30 à 20h15 — Geneviève vs Félix", "20h15 à 21h00 — Fireballs vs Geneviève"]],
