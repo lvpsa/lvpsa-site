@@ -1080,16 +1080,7 @@ const produits = [
   const ajouterArticle = () => {
   setCommande({
     ...commande,
-    articles: [
-      ...commande.articles,
-      {
-        categorie: "T-shirts homme",
-        modele: "1",
-        taille: "M",
-        couleur: "",
-        quantite: 1,
-      },
-    ],
+    articles: [],
   });
 };
 
