@@ -856,8 +856,9 @@ function Contact() {
           </h2>
 
           <p className="mt-4 text-slate-300">
-            Vous souhaitez devenir commanditaire ou soutenir la croissance de la
-            ligue? Nous sommes toujours ouverts aux collaborations locales.
+           Vous souhaitez devenir commanditaire et contribuer à promouvoir l’activité physique,
+            les saines habitudes de vie et le volleyball de plage auprès des gens de notre région?
+            Nous sommes toujours ouverts aux partenariats qui permettent de faire grandir notrecommunauté sportive.
           </p>
 
           <a
@@ -897,11 +898,11 @@ function Contact() {
   </div>
 
   <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
-    <img
-      src="/VSAD.png"
-      alt="Ville de Saint-Augustin-de-Desmaures"
-      className="max-h-28 object-contain"
-    />
+   <img
+  src="/ville.png"
+  alt="Ville de Saint-Augustin-de-Desmaures"
+  className="max-h-40 w-full object-contain"
+/>
           </div>
  <div className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-r from-blue-600/20 to-blue-400/10 p-10 text-center">
   <h2 className="text-3xl font-black">
@@ -909,8 +910,7 @@ function Contact() {
   </h2>
 
   <p className="mt-4 max-w-2xl mx-auto text-slate-300">
-    Consultez les horaires, les classements, les photos, les nouvelles de la ligue
-    et toutes les informations importantes concernant la saison.
+    Pour ne rien manquer!
   </p>
 
   <a
