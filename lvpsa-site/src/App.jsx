@@ -1168,13 +1168,10 @@ const envoyerCommande = () => {
 
   <p className="mt-3 text-slate-300">
     Cliquez simplement sur le vêtement désiré pour l'ajouter à votre commande.
-    Une fenêtre s'ouvrira afin de sélectionner la taille, la couleur et la quantité.
+    Une fenêtre s'ouvrira afin de sélectionner la taille et la quantité.
     Les articles sélectionnés apparaîtront automatiquement dans le résumé de la commande.
   </p>
 
-  <p className="mt-2 text-sm text-slate-400">
-    Couleurs disponibles : Noir, Jaune, Blanc, Sable et Bleu.
-  </p>
 </div>
       
       <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
@@ -1184,11 +1181,6 @@ const envoyerCommande = () => {
     className="w-full object-cover"
   />
 </div>
-      
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        Commandez vos vêtements LVPSA directement en ligne. Votre commande sera
-        envoyée à l’équipe LVPSA par courriel.
-      </p>
 
      <div className="mt-12 space-y-10">
   {[
