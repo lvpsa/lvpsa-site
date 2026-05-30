@@ -817,8 +817,7 @@ function Contact() {
       </h1>
 
       <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        Pour toute question concernant la ligue, les horaires, les remplacements,
-        les inscriptions ou les partenariats, communiquez avec l’équipe LVPSA.
+        Pour toute question concernant la ligue, les horaires, les remplacements, les inscriptions ou les partenariats, communiquez avec l’équipe LVPSA.
       </p>
 
       <div className="mt-12 grid gap-8 lg:grid-cols-2">
@@ -914,7 +913,7 @@ function Contact() {
   </p>
 
   <a
-    href="https://sites.google.com/cssportneuf.gouv.qc.ca/lvpsa/accueil"
+    href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
     target="_blank"
     rel="noreferrer"
     className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
