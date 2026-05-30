@@ -1061,26 +1061,26 @@ const produits = [
 ];
 
   const [commande, setCommande] = useState({
-  articles: [
-    {
-      categorie: "T-shirts homme",
-      modele: "1",
-      taille: "M",
-      couleur: "",
-      quantite: 1,
-    },
-  ],
-
+  articles: [],
   nom: "",
   courriel: "",
   telephone: "",
   notes: "",
 });
 
-  const ajouterArticle = () => {
+const ajouterArticle = () => {
   setCommande({
     ...commande,
-    articles: [],
+    articles: [
+      ...commande.articles,
+      {
+        categorie: "T-shirts homme",
+        modele: "1",
+        taille: "M",
+        couleur: "",
+        quantite: 1,
+      },
+    ],
   });
 };
 
@@ -1089,8 +1089,6 @@ const produits = [
   setCommande({ ...commande, articles: nouveauxArticles });
 };
   
-  const sujet = encodeURIComponent("Commande boutique LVPSA");
-  const corps = encodeURIComponent(
     `Nouvelle commande boutique LVPSA
 
 Catégorie : ${commande.categorie}
