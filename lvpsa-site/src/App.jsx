@@ -1074,11 +1074,11 @@ const ajouterArticle = () => {
     articles: [
       ...commande.articles,
       {
-        categorie: "T-shirts homme",
-        modele: "1",
-        taille: "M",
+        categorie: "",
+        modele: "",
+        taille: "",
         couleur: "",
-        quantite: 1,
+        quantite: "",
       },
     ],
   });
