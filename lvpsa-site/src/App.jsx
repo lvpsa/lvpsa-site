@@ -878,18 +878,50 @@ function Contact() {
           Merci à nos partenaires qui contribuent au développement de la LVPSA.
         </p>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          <div className="rounded-3xl border border-white/10 bg-white p-8 text-center text-slate-950">
-            <p className="text-2xl font-black">Commanditaire 1</p>
-          </div>
+<div className="mt-8 grid gap-6 md:grid-cols-3">
 
-          <div className="rounded-3xl border border-white/10 bg-white p-8 text-center text-slate-950">
-            <p className="text-2xl font-black">Commanditaire 2</p>
-          </div>
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/Applied.png"
+      alt="Applied Industrial Technologies"
+      className="max-h-28 object-contain"
+    />
+  </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white p-8 text-center text-slate-950">
-            <p className="text-2xl font-black">Commanditaire 3</p>
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/Canac.png"
+      alt="Canac"
+      className="max-h-28 object-contain"
+    />
+  </div>
+
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/VSAD.png"
+      alt="Ville de Saint-Augustin-de-Desmaures"
+      className="max-h-28 object-contain"
+    />
           </div>
+ <div className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-r from-blue-600/20 to-blue-400/10 p-10 text-center">
+  <h2 className="text-3xl font-black">
+    Suivez la LVPSA
+  </h2>
+
+  <p className="mt-4 max-w-2xl mx-auto text-slate-300">
+    Consultez les horaires, les classements, les photos, les nouvelles de la ligue
+    et toutes les informations importantes concernant la saison.
+  </p>
+
+  <a
+    href="https://sites.google.com/cssportneuf.gouv.qc.ca/lvpsa/accueil"
+    target="_blank"
+    rel="noreferrer"
+    className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+  >
+    Visiter la page LVPSA
+  </a>
+</div>
         </div>
       </div>
     </section>
