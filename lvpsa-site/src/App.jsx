@@ -1089,22 +1089,6 @@ const ajouterArticle = () => {
   setCommande({ ...commande, articles: nouveauxArticles });
 };
   
-    `Nouvelle commande boutique LVPSA
-
-Catégorie : ${commande.categorie}
-Modèle : ${commande.modele}
-Taille : ${commande.taille}
-Couleur : ${commande.couleur}
-Quantité : ${commande.quantite}
-
-Nom : ${commande.nom}
-Courriel : ${commande.courriel}
-Téléphone : ${commande.telephone}
-
-Notes :
-${commande.notes}`
-  );
-
 const envoyerCommande = () => {
   const resumeCommande = commande.articles
     .map(
