@@ -1422,6 +1422,28 @@ function Calendrier() {
 
   const selection = horaires[categorie];
 
+  const aujourdHui = new Date();
+
+const semaineActive = selection.find(([date]) => {
+  const mois = {
+    mai: 4,
+    juin: 5,
+    "juil.": 6,
+    août: 7,
+  };
+
+  const [jour, moisTexte] = date.split(" ");
+  const dateMatch = new Date(2026, mois[moisTexte], Number(jour));
+
+  const debut = new Date(dateMatch);
+  debut.setDate(dateMatch.getDate() - 1);
+
+  const fin = new Date(dateMatch);
+  fin.setDate(dateMatch.getDate() + 6);
+
+  return aujourdHui >= debut && aujourdHui <= fin;
+});
+  
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -1429,7 +1451,11 @@ function Calendrier() {
       </p>
 
       <h1 className="mt-2 text-5xl font-black">Calendrier</h1>
-
+{semaineActive && (
+  <div className="mt-6 inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-3 text-sm font-bold text-emerald-300">
+    Semaine en cours : {semaineActive[0]}
+  </div>
+)}
       <div className="mt-8 flex gap-3">
         <button
           onClick={() => setCategorie("recreatif")}
