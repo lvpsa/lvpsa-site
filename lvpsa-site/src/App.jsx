@@ -808,19 +808,89 @@ function Membres() {
 function Contact() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black">Contact</h1>
-      <p className="mt-4 text-slate-300">
-        Valérie Thomassin, Michael Théroux et Sylvain Arbour
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Nous joindre
       </p>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-        <a href={`mailto:${email}`} className="rounded-full border border-white/15 px-6 py-3">
-          <Mail className="mr-2 inline" size={18} /> {email}
-        </a>
+      <h1 className="mt-2 text-5xl font-black">
+        Contact LVPSA
+      </h1>
 
-        <a href={meteoLink} target="_blank" rel="noreferrer" className="rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950">
-          <CloudSun className="mr-2 inline" size={18} /> Météo
-        </a>
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+        Pour toute question concernant la ligue, les horaires, les remplacements,
+        les inscriptions ou les partenariats, communiquez avec l’équipe LVPSA.
+      </p>
+
+      <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Coordonnées
+          </h2>
+
+          <div className="mt-6 space-y-5 text-slate-300">
+            <p>
+              <span className="font-bold text-white">Courriel : </span>
+              <a
+                href="mailto:liguevpsa@gmail.com"
+                className="text-amber-300 hover:underline"
+              >
+                liguevpsa@gmail.com
+              </a>
+            </p>
+
+            <p>
+              <span className="font-bold text-white">Lieu : </span>
+              Parc Portneuf, Saint-Augustin-de-Desmaures
+            </p>
+
+            <p>
+              <span className="font-bold text-white">Saison : </span>
+              Mai à août 2026
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Partenariats
+          </h2>
+
+          <p className="mt-4 text-slate-300">
+            Vous souhaitez devenir commanditaire ou soutenir la croissance de la
+            ligue? Nous sommes toujours ouverts aux collaborations locales.
+          </p>
+
+          <a
+            href="mailto:liguevpsa@gmail.com?subject=Partenariat%20LVPSA"
+            className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+          >
+            Devenir partenaire
+          </a>
+        </div>
+      </div>
+
+      <div className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-3xl font-black">
+          Nos commanditaires
+        </h2>
+
+        <p className="mt-3 text-slate-300">
+          Merci à nos partenaires qui contribuent au développement de la LVPSA.
+        </p>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <div className="rounded-3xl border border-white/10 bg-white p-8 text-center text-slate-950">
+            <p className="text-2xl font-black">Commanditaire 1</p>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white p-8 text-center text-slate-950">
+            <p className="text-2xl font-black">Commanditaire 2</p>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white p-8 text-center text-slate-950">
+            <p className="text-2xl font-black">Commanditaire 3</p>
+          </div>
+        </div>
       </div>
     </section>
   );
