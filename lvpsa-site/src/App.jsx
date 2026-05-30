@@ -1417,17 +1417,11 @@ const envoyerCommande = () => {
       </button>
     </div>
   </div>
-
 </div>
-             <button
-  type="button"
-  onClick={envoyerCommande}
-  className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
->
-  Envoyer ma commande
-</button>
-      </div>
-    </div>
+
+      </section>
+);
+}
 
 function Calendrier() {
   const [categorie, setCategorie] = useState("recreatif");
