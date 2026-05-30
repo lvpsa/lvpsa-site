@@ -1103,7 +1103,7 @@ const envoyerCommande = () => {
   const resumeCommande = commande.articles
     .map(
       (article, index) =>
-        `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} | Taille ${article.taille} | Couleur ${article.couleur} | Quantité ${article.quantite}`
+        `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} | Taille ${article.taille} | Quantité ${article.quantite}`
     )
     .join("\n");
 
@@ -1261,7 +1261,7 @@ const envoyerCommande = () => {
         className="mt-6 h-72 w-full rounded-2xl object-contain bg-white"
       />
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
         <select
           className="rounded-2xl px-4 py-3 text-slate-950"
           value={popupCommande.taille}
@@ -1275,20 +1275,6 @@ const envoyerCommande = () => {
           <option>L</option>
           <option>XL</option>
           <option>XXL</option>
-        </select>
-
-        <select
-          className="rounded-2xl px-4 py-3 text-slate-950"
-          value={popupCommande.couleur}
-          onChange={(e) =>
-            setPopupCommande({ ...popupCommande, couleur: e.target.value })
-          }
-        >
-          <option>Noir</option>
-          <option>Jaune</option>
-          <option>Blanc</option>
-          <option>Sable</option>
-          <option>Bleu</option>
         </select>
 
         <input
@@ -1310,12 +1296,11 @@ const envoyerCommande = () => {
             articles: [
               ...commande.articles,
               {
-                categorie: produitSelectionne.categorie,
-                modele: produitSelectionne.modele,
-                taille: popupCommande.taille,
-                couleur: popupCommande.couleur,
-                quantite: popupCommande.quantite,
-              },
+  categorie: produitSelectionne.categorie,
+  modele: produitSelectionne.modele,
+  quantite: popupCommande.quantite,
+  taille: popupCommande.taille,
+}
             ],
           });
 
@@ -1354,7 +1339,7 @@ const envoyerCommande = () => {
             </div>
 
             <div className="text-sm text-slate-300">
-              Modèle {article.modele} • Taille {article.taille} • {article.couleur} • Qté {article.quantite}
+              Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite}
             </div>
 
             <div className="mt-2 text-xs text-red-300">
