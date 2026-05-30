@@ -1131,9 +1131,19 @@ const envoyerCommande = () => {
       "ZooBSx9i6qVl5HI8T"
     ),
   ])
-    .then(() => {
-      alert("Commande envoyée avec succès! Un courriel de confirmation a été envoyé.");
-    })
+   .then(() => {
+  alert("Commande envoyée avec succès !");
+
+  setCommande({
+    articles: [],
+    nom: "",
+    courriel: "",
+    telephone: "",
+    notes: "",
+  });
+
+  setProduitSelectionne(null);
+})
     .catch((error) => {
       alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
       console.error(error);
