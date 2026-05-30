@@ -1481,27 +1481,35 @@ const semaineActive = selection.find(([date]) => {
       </div>
 
       <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {selection.map(([date, matchs]) => (
-          <div
-            key={date}
-            className="rounded-3xl border border-white/10 bg-white/5 p-6"
-          >
-            <h2 className="text-2xl font-black text-amber-300">
-              {date}
-            </h2>
+{selection.map(([date, matchs]) => {
+  const estSemaineActive = semaineActive && semaineActive[0] === date;
 
-            <div className="mt-5 space-y-3">
-              {matchs.map((match, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl bg-black/20 p-4 text-slate-200"
-                >
-                  {match}
-                </div>
-              ))}
-            </div>
+  return (
+    <div
+      key={date}
+      className={`rounded-3xl border p-6 ${
+        estSemaineActive
+          ? "border-emerald-400 bg-emerald-400/10 shadow-2xl shadow-emerald-400/20"
+          : "border-white/10 bg-white/5"
+      }`}
+    >
+      <h2 className="text-2xl font-black text-amber-300">
+        {date}
+      </h2>
+
+      <div className="mt-5 space-y-3">
+        {matchs.map((match, index) => (
+          <div
+            key={index}
+            className="rounded-2xl bg-black/20 p-4 text-slate-200"
+          >
+            {match}
           </div>
         ))}
+      </div>
+    </div>
+  );
+})}
       </div>
     </section>
   );
