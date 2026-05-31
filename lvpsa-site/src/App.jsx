@@ -430,6 +430,7 @@ useEffect(() => {
                   className="w-full h-auto"
                 />
 
+              
                 <div className="flex gap-4 p-5">
 
                   <a
@@ -649,7 +650,7 @@ function Tournoi() {
           </a>
         </div>
 
-        <img src="/lvpsa-site/public/tournoi-lvpsa-2026.png" className="w-full rounded-3xl shadow-2xl" />
+        <img src="/tournoi-lvpsa-2026.png" className="w-full rounded-3xl shadow-2xl" />
       </div>
     </section>
   );
