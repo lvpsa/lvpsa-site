@@ -762,7 +762,6 @@ function Tournoi() {
           célébrer le volleyball de plage à Saint-Augustin.
         </p>
       </div>
-    </div>
     </section>
   );
 }
