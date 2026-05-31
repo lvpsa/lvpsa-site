@@ -664,7 +664,7 @@ function Tournoi() {
               <p className="mt-2 text-sm font-bold uppercase text-amber-300">
                 Parc Portneuf
               </p>
-              <p className="font-bold">St-Augustin-de-Desmaures</p>
+              <p className="mt-2 text-3xl font-black">St-Augustin-de-Desmaure</p>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
@@ -672,8 +672,8 @@ function Tournoi() {
               <p className="mt-2 text-sm font-bold uppercase text-amber-300">
                 Bourses
               </p>
-              <p className="mt-2 text-3xl font-black">prix de</p>
-              <p className="font-bold">présence</p>
+              <p className="mt-2 text-3xl font-black">prix</p>
+              <p className="font-bold">de présence</p>
             </div>
           </div>
 
