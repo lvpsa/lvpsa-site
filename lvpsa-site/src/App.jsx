@@ -425,7 +425,7 @@ useEffect(() => {
               <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
 
                 <img
-                  src="/lvpsa-site/public/tournoi-lvpsa-2026.png"
+                  src="tournoi-lvpsa-2026.png"
                   alt="Tournoi LVPSA"
                   className="h-80 w-full object-cover"
                 />
