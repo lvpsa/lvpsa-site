@@ -50,7 +50,7 @@ export default function App() {
           <Route path="/ligue" element={<Ligue />} />
           <Route path="/inscription-ligue" element={<InscriptionLigue />} />
           <Route path="/gestion-equipe" element={<GestionEquipe />} />
-          <Route path="/reglements/tournoi" element={<ReglementsTournoi />} />
+          <Route path="/reglements-tournoi" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Membres />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/contact" element={<Contact />} />
@@ -138,7 +138,7 @@ function Header() {
               </Link>
 
               <Link
-                to="/tournoi/reglements"
+                to="/tournoi-reglements"
                 className="block rounded-xl px-3 py-2 hover:bg-white/10"
               >
                 Règlements
@@ -198,7 +198,7 @@ function Header() {
             </Link>
 
             <Link
-              to="/tournoi/reglements"
+              to="/tournoi-reglements"
               onClick={() => setMenuOpen(false)}
             >
               Règlements Tournoi
@@ -688,7 +688,7 @@ function Tournoi() {
   </a>
 
   <Link
-    to="/tournoi/reglements"
+    to="/tournoi-reglements"
     className="inline-flex items-center rounded-full border border-white/15 px-10 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
   >
     Règlements du tournoi
