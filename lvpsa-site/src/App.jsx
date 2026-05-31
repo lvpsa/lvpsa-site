@@ -427,7 +427,7 @@ useEffect(() => {
                 <img
                   src="/tournoi-lvpsa-2026.jpg"
                   alt="Tournoi LVPSA"
-                  className="w-full"
+                  className="h-80 w-full object-cover"
                 />
 
                 <div className="flex gap-4 p-5">
