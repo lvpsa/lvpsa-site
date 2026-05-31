@@ -660,21 +660,21 @@ function Tournoi() {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">💵</div>
+              <div className="text-amber-300">🗺</div>
               <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Inscription
+                Parc Portneuf
               </p>
               <p className="mt-2 text-3xl font-black">100 $</p>
-              <p className="font-bold">par équipe</p>
+              <p className="font-bold">St-Augustin-de-Desmaures</p>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">👥</div>
+              <div className="text-amber-300">🎁</div>
               <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Mixte
+                Bourses
               </p>
-              <p className="mt-2 text-3xl font-black">1 fille</p>
-              <p className="font-bold">minimum sur le terrain</p>
+              <p className="mt-2 text-3xl font-black">prix de</p>
+              <p className="font-bold">présence</p>
             </div>
           </div>
 
