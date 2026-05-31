@@ -517,7 +517,7 @@ useEffect(() => {
               </h3>
 
               <p className="mt-3 text-slate-300">
-                Le Parc Portneuf, un terrain de jeu unique au bord de l’eau.
+                Le Parc Portneuf, modules et jeux d'eau pour petits et grands, terrain de volleyball de plage, pickelball et basketball.
               </p>
             </div>
           </div>
@@ -677,15 +677,23 @@ function Tournoi() {
             </div>
           </div>
 
-          <a
-            href="https://forms.gle/csLUt6NmcjNADcBm7"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex rounded-full bg-amber-400 px-10 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-          >
-            S’inscrire maintenant ↗
-          </a>
-        </div>
+          <div className="mt-8 flex flex-wrap gap-4">
+  <a
+    href="https://forms.gle/csLUt6NmcjNADcBm7"
+    target="_blank"
+    rel="noreferrer"
+    className="inline-flex items-center rounded-full bg-amber-400 px-10 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+  >
+    S’inscrire maintenant ↗
+  </a>
+
+  <Link
+    to="/tournoi/reglements"
+    className="inline-flex items-center rounded-full border border-white/15 px-10 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
+  >
+    Règlements du tournoi
+  </Link>
+</div>
 
         <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
           <img
