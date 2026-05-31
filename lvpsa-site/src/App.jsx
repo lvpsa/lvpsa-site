@@ -631,26 +631,128 @@ function ClassementDetail({ titre }) {
 
 function Tournoi() {
   return (
-    <section className="bg-white py-16 text-slate-950">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 md:grid-cols-2 md:items-center">
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <div className="grid items-center gap-10 lg:grid-cols-2">
         <div>
-          <p className="font-bold uppercase tracking-wider text-amber-600">Tournoi LVPSA</p>
-          <h1 className="mt-2 text-4xl font-black">18 juillet 2026</h1>
-          <p className="mt-5 text-lg leading-8 text-slate-700">
-            Tournoi de volleyball de plage avec catégories compétitif et récréatif.
+          <div className="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
+            🏆 Tournoi LVPSA 2026
+          </div>
+
+          <h1 className="mt-8 text-6xl font-black leading-tight text-white md:text-7xl">
+            Tournoi de
+            <span className="block text-amber-300">volleyball</span>
+            <span className="block">de plage</span>
+          </h1>
+
+          <p className="mt-6 max-w-xl text-xl leading-8 text-slate-300">
+            Rejoignez-nous pour une journée de compétition, de plaisir et
+            d’ambiance estivale sur le sable.
           </p>
 
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
+              <div className="text-amber-300">📅</div>
+              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
+                Date
+              </p>
+              <p className="mt-2 text-3xl font-black">18</p>
+              <p className="font-bold">juillet 2026</p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
+              <div className="text-amber-300">💵</div>
+              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
+                Inscription
+              </p>
+              <p className="mt-2 text-3xl font-black">100 $</p>
+              <p className="font-bold">par équipe</p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
+              <div className="text-amber-300">👥</div>
+              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
+                Mixte
+              </p>
+              <p className="mt-2 text-3xl font-black">1 fille</p>
+              <p className="font-bold">minimum sur le terrain</p>
+            </div>
+          </div>
+
           <a
-            href={tournoiLink}
+            href="https://forms.gle/csLUt6NmcjNADcBm7"
             target="_blank"
             rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950"
+            className="mt-8 inline-flex rounded-full bg-amber-400 px-10 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
           >
-            Inscription tournoi <ExternalLink size={18} />
+            S’inscrire maintenant ↗
           </a>
         </div>
 
-        <img src="/tournoi-lvpsa-2026.png" className="w-full rounded-3xl shadow-2xl" />
+        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
+          <img
+            src="/tournoi-lvpsa-2026.png"
+            alt="Tournoi LVPSA"
+            className="w-full h-auto"
+          />
+        </div>
+      </div>
+
+      <div className="mt-20 grid gap-8 lg:grid-cols-3">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            2 catégories
+          </h2>
+
+          <div className="mt-6 space-y-4 text-slate-300">
+            <p>
+              🏆 <span className="font-bold text-white">Compétitif :</span>{" "}
+              pour les équipes qui veulent se dépasser et jouer pour gagner.
+            </p>
+
+            <p>
+              😎 <span className="font-bold text-white">Récréatif :</span>{" "}
+              pour le plaisir, l’ambiance et le jeu sans pression.
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Format du tournoi
+          </h2>
+
+          <ul className="mt-6 space-y-3 text-slate-300">
+            <li>✅ Tournoi sur 1 journée</li>
+            <li>✅ Matchs en continu de 8 h à 20 h</li>
+            <li>✅ Phase préliminaire : 2 sets de 15 points</li>
+            <li>✅ Séries éliminatoires : 2 sets de 21 points</li>
+          </ul>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+          <h2 className="text-3xl font-black text-amber-300">
+            Sur place
+          </h2>
+
+          <ul className="mt-6 space-y-3 text-slate-300">
+            <li>🍔 BBQ et nourriture</li>
+            <li>🥤 Boissons froides</li>
+            <li>🍉 Collations et fruits</li>
+            <li>🎵 Musique d’ambiance</li>
+            <li>🏖️ Zone détente</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/10 p-8 text-center">
+        <h2 className="text-3xl font-black text-amber-300">
+          Bourses aux équipes gagnantes
+        </h2>
+
+        <p className="mt-3 text-lg text-slate-300">
+          Une journée complète pour jouer, encourager, profiter de l’ambiance et
+          célébrer le volleyball de plage à Saint-Augustin.
+        </p>
       </div>
     </section>
   );
