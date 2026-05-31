@@ -1808,20 +1808,20 @@ function ReglementsTournoi() {
         Règlements du tournoi
       </h1>
 
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        Règlements officiels du tournoi LVPSA du 18 juillet 2026.
+      <p className="mt-4 text-xl text-slate-300">
+        Tournoi du 18 juillet 2026
       </p>
 
-      <div className="mt-14 grid gap-8 lg:grid-cols-2">
+      <div className="mt-12 grid gap-8 lg:grid-cols-2">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
           <h2 className="text-3xl font-black text-amber-300">
-            Format des équipes
+            Format de jeu
           </h2>
+
           <ul className="mt-6 space-y-4 text-slate-300">
-            <li>• 4 contre 4 avec au moins une fille sur le terrain en tout temps</li>
-            <li>• Une équipe peut avoir plus de 4 joueurs</li>
-            <li>• Seulement 4 joueurs sur le terrain à la fois</li>
-            <li>• Si l’équipe n’a que 3 joueurs, un joueur fantôme perdra un point à sa rotation au service</li>
+            <li>🏐 4 contre 4 avec au moins une fille sur le terrain en tout temps.</li>
+            <li>👥 Une équipe peut avoir plus de 4 joueurs, mais seulement 4 joueurs sur le terrain.</li>
+            <li>⚠️ Si une équipe joue à 3, un joueur fantôme perdra un point à sa rotation au service.</li>
           </ul>
         </div>
 
@@ -1829,13 +1829,13 @@ function ReglementsTournoi() {
           <h2 className="text-3xl font-black text-amber-300">
             Interdictions
           </h2>
+
           <ul className="mt-6 space-y-4 text-slate-300">
-            <li>• Bloquer une femme à l’attaque pour les hommes</li>
-            <li>• Renvoyer en touche ou en tip</li>
-            <li>• Les touches sont acceptées pour le volet récréatif</li>
-            <li>• Toucher le filet</li>
-            <li>• Traverser de l’autre côté</li>
-            <li>• Faire un transport</li>
+            <li>❌ Bloquer une femme sur une action à l’attaque pour les hommes.</li>
+            <li>❌ Renvoyer en touche ou en tip, sauf pour le volet récréatif.</li>
+            <li>❌ Toucher le filet.</li>
+            <li>❌ Traverser de l’autre côté.</li>
+            <li>❌ Faire un transport.</li>
           </ul>
         </div>
 
@@ -1843,50 +1843,52 @@ function ReglementsTournoi() {
           <h2 className="text-3xl font-black text-amber-300">
             Rotation
           </h2>
-          <ul className="mt-6 space-y-4 text-slate-300">
-            <li>• L’ordre des serveurs doit être respecté en tout temps</li>
-            <li>• Il n’y a aucune erreur de position</li>
-            <li>• Tous les joueurs peuvent attaquer au filet en tout temps</li>
-          </ul>
+
+          <p className="mt-6 text-slate-300 leading-8">
+            L’ordre des serveurs doit être respecté en tout temps. Il n’y a
+            toutefois aucune erreur de position : tous les joueurs peuvent
+            attaquer au filet en tout temps.
+          </p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
           <h2 className="text-3xl font-black text-amber-300">
-            Arbitrage / Marqueur
+            Arbitrage et marqueur
           </h2>
-          <ul className="mt-6 space-y-4 text-slate-300">
-            <li>• Un arbitre/marqueur non officiel sera attitré</li>
-            <li>• Toutes les équipes devront fournir un arbitre/marqueur pendant la journée</li>
-            <li>• En cas de doute, le point sera repris</li>
-          </ul>
+
+          <p className="mt-6 text-slate-300 leading-8">
+            Un arbitre/marqueur non officiel sera attitré. Toutes les équipes
+            devront fournir un arbitre/marqueur pendant la journée. En cas de
+            doute, le point sera repris.
+          </p>
         </div>
       </div>
 
-      <div className="mt-10 rounded-3xl border border-sky-400/20 bg-sky-400/10 p-8">
-        <h2 className="text-3xl font-black text-sky-300">
+      <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/10 p-8">
+        <h2 className="text-3xl font-black text-amber-300">
           Météo
         </h2>
 
-        <p className="mt-5 max-w-3xl leading-8 text-slate-300">
-          En cas de mauvais temps, le tournoi sera remis au 19 juillet.
+        <p className="mt-4 text-lg text-slate-300">
+          En cas de mauvais temps, le tournoi sera remis au 19 juillet 2026.
         </p>
       </div>
 
-      <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h2 className="text-3xl font-black text-amber-300">
+      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
+        <h2 className="text-3xl font-black">
           Organisateurs
         </h2>
 
-        <p className="mt-5 text-slate-300">
+        <p className="mt-4 text-slate-300">
           Valérie Thomassin et Michael Théroux
         </p>
 
-        <p className="mt-3 text-slate-300">
-          Pour nous joindre :{" "}
-          <a className="font-bold text-amber-300" href="mailto:liguevpsa@gmail.com">
-            Liguevpsa@gmail.com
-          </a>
-        </p>
+        <a
+          href="mailto:liguevpsa@gmail.com"
+          className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+        >
+          Nous joindre
+        </a>
       </div>
     </section>
   );
