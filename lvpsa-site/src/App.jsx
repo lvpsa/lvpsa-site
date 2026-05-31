@@ -632,7 +632,7 @@ function ClassementDetail({ titre }) {
 function Tournoi() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="grid items-center gap-10 lg:grid-cols-2">
+      <div className="grid gap-10 lg:grid-cols-2">
         <div>
           <div className="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
             🏆 Tournoi LVPSA 2026
