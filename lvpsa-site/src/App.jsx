@@ -694,6 +694,7 @@ function Tournoi() {
     Règlements du tournoi
   </Link>
 </div>
+          </div>
 
         <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
           <img
