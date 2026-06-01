@@ -1328,6 +1328,21 @@ const envoyerCommande = () => {
     to_email: commande.courriel,
   };
 
+fetch("https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec", {
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    nom: commande.nom,
+    courriel: commande.courriel,
+    telephone: commande.telephone,
+    notes: commande.notes,
+    articles: commande.articles,
+  }),
+});
+  
   Promise.all([
     emailjs.send(
       "service_f4h3rii",
