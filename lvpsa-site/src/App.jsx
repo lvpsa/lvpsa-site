@@ -1328,28 +1328,29 @@ const envoyerCommande = () => {
     to_email: commande.courriel,
   };
   
-fetch("https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec", {
-  method: "POST",
-  mode: "no-cors",
-  headers: {
-    "Content-Type": "text/plain;charset=utf-8",
-  },
-  body: JSON.stringify({
-    nom: commande.nom,
-    courriel: commande.courriel,
-    telephone: commande.telephone,
-    notes: commande.notes,
-    articles: commande.articles.map((article) => ({
-      modele: `${article.categorie} - Modèle ${article.modele}`,
-      taille: article.taille,
-      quantite: article.quantite,
-    })),
-  }),
-});
+const googleSheetPromise = fetch(
+  "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec",
+  {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      nom: commande.nom,
+      courriel: commande.courriel,
+      telephone: commande.telephone,
+      notes: commande.notes,
+      articles: commande.articles.map((article) => ({
+        modele: `${article.categorie} - Modèle ${article.modele}`,
+        taille: article.taille,
+        quantite: article.quantite,
+      })),
+    }),
+  }
+);
 
 console.log("Envoi vers Google Sheet", commande);
-  
-  Promise.all([
+
+Promise.all([
+  googleSheetPromise,
     emailjs.send(
       "service_f4h3rii",
       "template_nwl643g",
