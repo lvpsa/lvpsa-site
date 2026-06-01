@@ -1332,14 +1332,18 @@ fetch("https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0
   method: "POST",
   mode: "no-cors",
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "text/plain;charset=utf-8",
   },
   body: JSON.stringify({
     nom: commande.nom,
     courriel: commande.courriel,
     telephone: commande.telephone,
     notes: commande.notes,
-    articles: commande.articles,
+    articles: commande.articles.map((article) => ({
+      modele: `${article.categorie} - Modèle ${article.modele}`,
+      taille: article.taille,
+      quantite: article.quantite,
+    })),
   }),
 });
   
