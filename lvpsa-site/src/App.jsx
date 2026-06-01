@@ -1343,6 +1343,8 @@ fetch("TON_URL_APPS_SCRIPT_ICI", {
     })),
   }),
 });
+
+console.log("Envoi vers Google Sheet", commande);
   
   Promise.all([
     emailjs.send(
@@ -1351,9 +1353,7 @@ fetch("TON_URL_APPS_SCRIPT_ICI", {
       params,
       "ZooBSx9i6qVl5HI8T"
     ),
-
-    console.log("Envoi vers Google Sheet", commande);
-  
+ 
     emailjs.send(
       "service_f4h3rii",
       "template_c5ab7bt",
