@@ -1327,13 +1327,10 @@ const envoyerCommande = () => {
     notes: commande.notes,
     to_email: commande.courriel,
   };
-
-fetch("https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec", {
+  
+fetch("TON_URL_APPS_SCRIPT_ICI", {
   method: "POST",
   mode: "no-cors",
-  headers: {
-    "Content-Type": "text/plain;charset=utf-8",
-  },
   body: JSON.stringify({
     nom: commande.nom,
     courriel: commande.courriel,
@@ -1355,6 +1352,8 @@ fetch("https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0
       "ZooBSx9i6qVl5HI8T"
     ),
 
+    console.log("Envoi vers Google Sheet", commande);
+  
     emailjs.send(
       "service_f4h3rii",
       "template_c5ab7bt",
