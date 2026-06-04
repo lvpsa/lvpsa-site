@@ -1331,13 +1331,14 @@ const envoyerCommande = () => {
     .join("\n");
 
      const params = {
-    nom: commande.nom,
-    courriel: commande.courriel,
-    telephone: commande.telephone,
-    commande: resumeCommande,
-    notes: commande.notes,
-    to_email: commande.courriel,
-  };
+  nom: commande.nom,
+  courriel: commande.courriel,
+  telephone: commande.telephone,
+  commande: resumeCommande,
+  notes: commande.notes,
+  total_commande: totalCommande,
+  to_email: commande.courriel,
+};
   
 const googleSheetPromise = fetch(
   "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec",
