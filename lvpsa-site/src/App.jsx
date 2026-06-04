@@ -1326,17 +1326,11 @@ const envoyerCommande = () => {
   const resumeCommande = commande.articles
     .map(
       (article, index) =>
-        `Article #${index + 1} : ${article.categorie} | Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite} • {prixArticle(article.categorie)} $
+        `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} • Taille ${article.taille} • Qté ${article.quantite} • ${prixArticle(article.categorie)} $`
     )
     .join("\n");
 
-    {commande.articles.length > 0 && (
-  <div className="mt-6 rounded-2xl bg-amber-400 p-4 text-right text-xl font-black text-slate-950">
-    Total : {totalCommande} $
-  </div>
-)}
-
-  const params = {
+     const params = {
     nom: commande.nom,
     courriel: commande.courriel,
     telephone: commande.telephone,
@@ -1594,7 +1588,7 @@ Promise.all([
             </div>
 
             <div className="text-sm text-slate-300">
-              Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite}
+              Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite} • Total : {prixArticle(article.categorie) * Number(article.quantite)} $
             </div>
 
             <div className="mt-2 text-xs text-red-300">
@@ -1647,6 +1641,12 @@ Promise.all([
           setCommande({ ...commande, notes: e.target.value })
         }
       />
+
+       {commande.articles.length > 0 && (
+  <div className="mt-6 rounded-2xl bg-amber-400 p-4 text-right text-xl font-black text-slate-950">
+    Total : {totalCommande} $
+  </div>
+)}
 
       <button
         type="button"
