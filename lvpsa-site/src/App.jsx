@@ -1323,12 +1323,14 @@ const totalCommande = commande.articles.reduce(
 );
                                                     
 const envoyerCommande = () => {
-  const resumeCommande = commande.articles
+const resumeCommande =
+  commande.articles
     .map(
       (article, index) =>
         `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} • Taille ${article.taille} • Qté ${article.quantite} • ${prixArticle(article.categorie)} $`
     )
-    .join("\n");
+    .join("\n") +
+  `\n\nTOTAL : ${totalCommande} $`;
 
      const params = {
   nom: commande.nom,
