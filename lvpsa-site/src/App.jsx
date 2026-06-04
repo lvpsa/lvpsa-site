@@ -1310,14 +1310,31 @@ const produits = [
   const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
   setCommande({ ...commande, articles: nouveauxArticles });
 };
-  
+
+const prixArticle = (categorie) => {
+  if (categorie.toLowerCase().includes("hoodie")) return 40;
+  return 20;
+};
+
+const totalCommande = commande.articles.reduce(
+  (total, article) =>
+    total + prixArticle(article.categorie) * Number(article.quantite),
+  0
+);
+                                                    
 const envoyerCommande = () => {
   const resumeCommande = commande.articles
     .map(
       (article, index) =>
-        `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} | Taille ${article.taille} | Quantité ${article.quantite}`
+        `Article #${index + 1} : ${article.categorie} | Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite} • {prixArticle(article.categorie)} $
     )
     .join("\n");
+
+    {commande.articles.length > 0 && (
+  <div className="mt-6 rounded-2xl bg-amber-400 p-4 text-right text-xl font-black text-slate-950">
+    Total : {totalCommande} $
+  </div>
+)}
 
   const params = {
     nom: commande.nom,
@@ -1339,9 +1356,11 @@ const googleSheetPromise = fetch(
       telephone: commande.telephone,
       notes: commande.notes,
       articles: commande.articles.map((article) => ({
-        modele: `${article.categorie} - Modèle ${article.modele}`,
-        taille: article.taille,
-        quantite: article.quantite,
+      modele: `${article.categorie} - Modèle ${article.modele}`,
+      taille: article.taille,
+      quantite: article.quantite,
+      prix: prixArticle(article.categorie),
+      total: prixArticle(article.categorie) * Number(article.quantite),
       })),
     }),
   }
