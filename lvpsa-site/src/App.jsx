@@ -1373,7 +1373,10 @@ Promise.all([
       params,
       "ZooBSx9i6qVl5HI8T"
     ),
- 
+
+console.log("TOTAL =", totalCommande);
+console.log(params);
+  
     emailjs.send(
       "service_f4h3rii",
       "template_c5ab7bt",
