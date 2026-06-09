@@ -1373,8 +1373,6 @@ Promise.all([
       params,
       "ZooBSx9i6qVl5HI8T"
     ),
-
-console.log(params);
   
     emailjs.send(
       "service_f4h3rii",
