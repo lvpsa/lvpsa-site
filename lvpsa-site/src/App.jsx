@@ -1374,7 +1374,6 @@ Promise.all([
       "ZooBSx9i6qVl5HI8T"
     ),
 
-console.log("TOTAL =", totalCommande);
 console.log(params);
   
     emailjs.send(
