@@ -116,6 +116,20 @@ function Header() {
     </Link>
 
     <Link
+  to="/inscription-ligue"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Inscriptions
+</Link>
+
+<Link
+  to="/gestion-equipe"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Gestion d'équipe
+</Link>
+    
+    <Link
       to="/reglements"
       className="block rounded-xl px-3 py-2 hover:bg-white/10"
     >
