@@ -1367,51 +1367,48 @@ const googleSheetPromise = fetch(
       telephone: commande.telephone,
       notes: commande.notes,
       articles: commande.articles.map((article) => ({
-      modele: `${article.categorie} - Modèle ${article.modele}`,
-      taille: article.taille,
-      quantite: article.quantite,
-      prix: prixArticle(article.categorie),
-      total: prixArticle(article.categorie) * Number(article.quantite),
+        modele: `${article.categorie} - Modèle ${article.modele}`,
+        taille: article.taille,
+        quantite: article.quantite,
+        prix: prixArticle(article.categorie),
+        total: prixArticle(article.categorie) * Number(article.quantite),
       })),
     }),
   }
 );
 
-console.log("Envoi vers Google Sheet", commande);
-
 Promise.all([
   googleSheetPromise,
-    emailjs.send(
-      "service_f4h3rii",
-      "template_nwl643g",
-      params,
-      "ZooBSx9i6qVl5HI8T"
-    ),
-  
-    emailjs.send(
-      "service_f4h3rii",
-      "template_c5ab7bt",
-      params,
-      "ZooBSx9i6qVl5HI8T"
-    ),
-  ])
-   .then(() => {
-  alert("Commande envoyée avec succès !");
+  emailjs.send(
+    "service_f4h3rii",
+    "template_nwl643g",
+    params,
+    "ZooBSx9i6qVl5HI8T"
+  ),
+  emailjs.send(
+    "service_f4h3rii",
+    "template_c5ab7bt",
+    params,
+    "ZooBSx9i6qVl5HI8T"
+  ),
+])
+  .then(() => {
+    alert("Commande envoyée avec succès !");
 
-  setCommande({
-    articles: [],
-    nom: "",
-    courriel: "",
-    telephone: "",
-    notes: "",
-  });
-
-  setProduitSelectionne(null);
-})
-    .catch((error) => {
-      alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
-      console.error(error);
+    setCommande({
+      articles: [],
+      nom: "",
+      courriel: "",
+      telephone: "",
+      notes: "",
     });
+
+    setProduitSelectionne(null);
+  })
+  .catch((error) => {
+    alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
+    console.error(error);
+  });
 };
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
