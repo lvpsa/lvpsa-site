@@ -2016,12 +2016,6 @@ const [joueur, setJoueur] = useState({
               <option>Compétitif</option>
             </select>
 
-            <select className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2">
-              <option>Lundi seulement</option>
-              <option>Mardi seulement</option>
-              <option>Les deux</option>
-            </select>
-
             <textarea
               className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
               placeholder="Expérience, position préférée ou disponibilités particulières"
