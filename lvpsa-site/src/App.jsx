@@ -1828,18 +1828,214 @@ function Ligue() {
 }
 
 function InscriptionLigue() {
+  const [type, setType] = useState(null);
+
+  const [equipe, setEquipe] = useState({
+  capitaine: "",
+  courriel: "",
+  telephone: "",
+  nomEquipe: "",
+  categorie: "Récréatif",
+  joueurs: ["", "", "", "", "", "", "", ""],
+  notes: "",
+});
+
+const [joueur, setJoueur] = useState({
+  nom: "",
+  courriel: "",
+  telephone: "",
+  niveau: "Récréatif",
+  disponibilites: "Les deux",
+  notes: "",
+});
+
+  const inscriptionUrl =
+  "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec";
+
+  const envoyerEquipe = () => {
+  fetch(inscriptionUrl, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      type: "equipe",
+      capitaine: equipe.capitaine,
+      courriel: equipe.courriel,
+      telephone: equipe.telephone,
+      nomEquipe: equipe.nomEquipe,
+      categorie: equipe.categorie,
+      joueurs: equipe.joueurs.filter((j) => j.trim() !== ""),
+      notes: equipe.notes,
+    }),
+  });
+
+  alert("Inscription envoyée avec succès !");
+
+  setEquipe({
+    capitaine: "",
+    courriel: "",
+    telephone: "",
+    nomEquipe: "",
+    categorie: "Récréatif",
+    joueurs: ["", "", "", "", "", "", "", ""],
+    notes: "",
+  });
+
+  setType(null);
+};
+  
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black">Inscription à la ligue</h1>
-      <p className="mt-4 text-slate-300">
-        Les inscriptions pour la saison 2026 sont maintenant terminées.
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Ligue LVPSA
       </p>
-      <p className="mt-4 text-slate-300">
-        Pour donner votre nom comme remplaçant, écrivez à{" "}
-        <a className="font-bold text-amber-300" href="mailto:liguevpsa@gmail.com">
-          liguevpsa@gmail.com
-        </a>.
+
+      <h1 className="mt-2 text-5xl font-black">Inscriptions</h1>
+
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+        Inscrivez une équipe complète comme capitaine ou ajoutez votre nom à la
+        liste des joueurs indépendants pour les remplacements ou les équipes à compléter.
       </p>
+
+      {!type && (
+        <div className="mt-12 grid gap-8 md:grid-cols-2">
+          <button
+            onClick={() => setType("equipe")}
+            className="rounded-3xl border border-white/10 bg-white/5 p-8 text-left hover:border-amber-300"
+          >
+            <h2 className="text-3xl font-black text-amber-300">
+              Inscrire une équipe
+            </h2>
+            <p className="mt-4 text-slate-300">
+              Je suis capitaine et je veux inscrire mon équipe complète.
+            </p>
+          </button>
+
+          <button
+            onClick={() => setType("joueur")}
+            className="rounded-3xl border border-white/10 bg-white/5 p-8 text-left hover:border-amber-300"
+          >
+            <h2 className="text-3xl font-black text-amber-300">
+              Joueur indépendant
+            </h2>
+            <p className="mt-4 text-slate-300">
+              Je veux être disponible comme remplaçant ou pour compléter une équipe.
+            </p>
+          </button>
+        </div>
+      )}
+
+      {type === "equipe" && (
+        <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+          <button onClick={() => setType(null)} className="mb-6 text-amber-300">
+            ← Retour
+          </button>
+
+          <h2 className="text-3xl font-black">Inscription d’équipe</h2>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Nom du capitaine"
+  value={equipe.capitaine}
+  onChange={(e) => setEquipe({ ...equipe, capitaine: e.target.value })}
+/>
+
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Courriel"
+  value={equipe.courriel}
+  onChange={(e) => setEquipe({ ...equipe, courriel: e.target.value })}
+/>
+
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Téléphone"
+  value={equipe.telephone}
+  onChange={(e) => setEquipe({ ...equipe, telephone: e.target.value })}
+/>
+
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Nom de l’équipe"
+  value={equipe.nomEquipe}
+  onChange={(e) => setEquipe({ ...equipe, nomEquipe: e.target.value })}
+/>
+
+<select
+  className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+  value={equipe.categorie}
+  onChange={(e) => setEquipe({ ...equipe, categorie: e.target.value })}
+>
+  <option>Récréatif</option>
+  <option>Compétitif</option>
+</select>
+
+{equipe.joueurs.map((joueurNom, index) => (
+  <input
+    key={index}
+    className="rounded-2xl px-4 py-3 text-slate-950"
+    placeholder={`Joueur ${index + 1}${index > 3 ? " optionnel" : ""}`}
+    value={joueurNom}
+    onChange={(e) => {
+      const nouveauxJoueurs = [...equipe.joueurs];
+      nouveauxJoueurs[index] = e.target.value;
+      setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
+    }}
+  />
+))}
+
+<textarea
+  className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+  placeholder="Notes ou informations supplémentaires"
+  value={equipe.notes}
+  onChange={(e) => setEquipe({ ...equipe, notes: e.target.value })}
+/>
+          </div>
+
+<button
+  type="button"
+  onClick={envoyerEquipe}
+  className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300">
+  Envoyer l’inscription
+</button>
+        </div>
+      )}
+
+      {type === "joueur" && (
+        <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+          <button onClick={() => setType(null)} className="mb-6 text-amber-300">
+            ← Retour
+          </button>
+
+          <h2 className="text-3xl font-black">Joueur indépendant</h2>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <input className="rounded-2xl px-4 py-3 text-slate-950" placeholder="Nom complet" />
+            <input className="rounded-2xl px-4 py-3 text-slate-950" placeholder="Courriel" />
+            <input className="rounded-2xl px-4 py-3 text-slate-950" placeholder="Téléphone" />
+
+            <select className="rounded-2xl px-4 py-3 text-slate-950">
+              <option>Récréatif</option>
+              <option>Compétitif</option>
+            </select>
+
+            <select className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2">
+              <option>Lundi seulement</option>
+              <option>Mardi seulement</option>
+              <option>Les deux</option>
+            </select>
+
+            <textarea
+              className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+              placeholder="Expérience, position préférée ou disponibilités particulières"
+            />
+          </div>
+
+          <button className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950">
+            Envoyer mon inscription
+          </button>
+        </div>
+      )}
     </section>
   );
 }
