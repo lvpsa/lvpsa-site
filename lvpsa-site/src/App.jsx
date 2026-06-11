@@ -1895,18 +1895,27 @@ const [joueur, setJoueur] = useState({
 
       {!type && (
         <div className="mt-12 grid gap-8 md:grid-cols-2">
-         <button
+        <button
   type="button"
   onClick={() =>
     alert(
-      "Les inscriptions d'équipes pour la saison 2026 sont maintenant terminées. Merci de votre intérêt et à l'an prochain !"
+      "Les inscriptions d'équipes pour la saison 2026 sont maintenant terminées. Merci pour votre intérêt et restez à l'affût pour la saison prochaine !"
     )
   }
-  className="cursor-pointer"
+  className="rounded-3xl border border-amber-400/40 bg-amber-400 p-8 text-left text-slate-950 hover:bg-amber-300"
 >
-  <h2 className="text-3xl font-black">Inscrire une équipe</h2>
-</button>
+  <h2 className="text-3xl font-black">
+    Inscrire une équipe
+  </h2>
 
+  <p className="mt-4 text-lg font-semibold">
+    Je suis capitaine et je veux inscrire mon équipe complète.
+  </p>
+
+  <p className="mt-3 text-sm font-bold">
+    Inscriptions maintenant terminées.
+  </p>
+</button>
           <button
             onClick={() => setType("joueur")}
             className="rounded-3xl border border-white/10 bg-white/5 p-8 text-left hover:border-amber-300"
