@@ -1903,7 +1903,8 @@ const [joueur, setJoueur] = useState({
               Inscrire une équipe
             </h2>
             <p className="mt-4 text-slate-300">
-              Je suis capitaine et je veux inscrire mon équipe complète.
+              Merci à tous les joueurs pour leur enthousiasme et leur participation.
+    Restez à l'affût de notre site web et de nos réseaux sociaux pour les inscriptions de la saison prochaine !
             </p>
           </button>
 
