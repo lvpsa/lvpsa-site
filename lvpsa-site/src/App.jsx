@@ -1913,7 +1913,7 @@ const [joueur, setJoueur] = useState({
   </p>
 
   <p className="mt-3 text-sm font-bold">
-    Inscriptions maintenant terminées.
+    Inscriptions maintenant terminées, on se revoit en 2027.
   </p>
 </button>
           <button
