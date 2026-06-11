@@ -1904,7 +1904,7 @@ const [joueur, setJoueur] = useState({
   }
   className="cursor-pointer"
 >
-  Inscrire une équipe
+  <h2 className="text-3xl font-black">Inscrire une équipe</h2>
 </button>
 
           <button
