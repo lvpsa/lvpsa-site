@@ -1277,6 +1277,18 @@ function BoutiqueProtegee() {
 
 function Boutique() {
 
+ const formatTelephone = (value) => {
+  const chiffres = value.replace(/\D/g, "").substring(0, 10);
+
+  if (chiffres.length <= 3) return chiffres;
+
+  if (chiffres.length <= 6) {
+    return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
+  }
+
+  return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
+}; 
+
   const [produitSelectionne, setProduitSelectionne] = useState(null);
 const [popupCommande, setPopupCommande] = useState({
   taille: "M",
@@ -1642,8 +1654,9 @@ Promise.all([
         className="rounded-2xl px-4 py-3 text-slate-950"
         placeholder="Téléphone"
         value={commande.telephone}
+        maxLength={12}
         onChange={(e) =>
-          setCommande({ ...commande, telephone: e.target.value })
+          setCommande({...commande,telephone: formatTelephone(e.target.value),})
         }
       />
 
@@ -1814,6 +1827,7 @@ function Footer() {
   );
 }
 function Ligue() {
+  
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <h1 className="text-4xl font-black">Informations sur la ligue</h1>
@@ -1825,6 +1839,19 @@ function Ligue() {
 }
 
 function InscriptionLigue() {
+  
+const formatTelephone = (value) => {
+  const chiffres = value.replace(/\D/g, "").substring(0, 10);
+
+  if (chiffres.length <= 3) return chiffres;
+
+  if (chiffres.length <= 6) {
+    return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
+  }
+
+  return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
+};
+  
   const [type, setType] = useState(null);
 
   const [equipe, setEquipe] = useState({
@@ -1957,7 +1984,9 @@ const [joueur, setJoueur] = useState({
   className="rounded-2xl px-4 py-3 text-slate-950"
   placeholder="Téléphone"
   value={equipe.telephone}
-  onChange={(e) => setEquipe({ ...equipe, telephone: e.target.value })}
+  maxLength={12}
+  onChange={(e) =>setEquipe({ ...equipe, telephone: formatTelephone(e.target.value),})
+}
 />
 
 <input
@@ -2016,24 +2045,57 @@ const [joueur, setJoueur] = useState({
           <h2 className="text-3xl font-black">Joueur indépendant</h2>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <input className="rounded-2xl px-4 py-3 text-slate-950" placeholder="Nom complet" />
-            <input className="rounded-2xl px-4 py-3 text-slate-950" placeholder="Courriel" />
-            <input className="rounded-2xl px-4 py-3 text-slate-950" placeholder="Téléphone" />
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Nom complet"
+  value={joueur.nom}
+  onChange={(e) => setJoueur({ ...joueur, nom: e.target.value })}
+/>
 
-            <select className="rounded-2xl px-4 py-3 text-slate-950">
-              <option>Récréatif</option>
-              <option>Compétitif</option>
-            </select>
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Courriel"
+  value={joueur.courriel}
+  onChange={(e) => setJoueur({ ...joueur, courriel: e.target.value })}
+/>
+
+<input
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  placeholder="Téléphone"
+  value={joueur.telephone}
+  maxLength={12}
+  onChange={(e) =>
+    setJoueur({
+      ...joueur,
+      telephone: formatTelephone(e.target.value),
+    })
+  }
+/>
+
+           <select
+  className="rounded-2xl px-4 py-3 text-slate-950"
+  value={joueur.niveau}
+  onChange={(e) => setJoueur({ ...joueur, niveau: e.target.value })}
+>
+  <option>Récréatif</option>
+  <option>Compétitif</option>
+</select>
 
             <textarea
-              className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-              placeholder="Expérience, position préférée ou disponibilités particulières"
-            />
+  className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+  placeholder="Expérience, position préférée ou disponibilités particulières"
+  value={joueur.notes}
+  onChange={(e) => setJoueur({ ...joueur, notes: e.target.value })}
+/>
           </div>
 
-          <button className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950">
-            Envoyer mon inscription
-          </button>
+          <button
+  type="button"
+  onClick={envoyerJoueur}
+  className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+>
+  Envoyer mon inscription
+</button>
         </div>
       )}
     </section>
