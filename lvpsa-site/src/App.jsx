@@ -333,7 +333,20 @@ useEffect(() => {
       <section className="relative overflow-hidden px-6 py-16">
         <div className="mx-auto max-w-7xl">
 
-          <div className="grid gap-8 lg:grid-cols-2">
+  <div className="mb-8 animate-pulse rounded-3xl border-2 border-amber-300 bg-amber-400 p-5 text-center text-slate-950 shadow-xl">
+    <p className="text-xl font-black">
+      ⚠️ IMPORTANT – Horaire modifié
+    </p>
+
+    <p className="mt-2 font-semibold">
+      À compter de la semaine du 15 juin, toutes les parties débuteront à
+      <span className="font-black"> 18h30 </span>
+      plutôt qu'à
+      <span className="font-black"> 18h00</span>.
+    </p>
+  </div>
+
+  <div className="grid gap-8 lg:grid-cols-2">
 
             {/* COLONNE GAUCHE */}
             <div>
