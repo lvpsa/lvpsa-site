@@ -1906,7 +1906,35 @@ const [joueur, setJoueur] = useState({
 
   setType(null);
 };
-  
+
+  const envoyerJoueur = () => {
+  fetch(inscriptionUrl, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      type: "joueur",
+      nom: joueur.nom,
+      courriel: joueur.courriel,
+      telephone: joueur.telephone,
+      niveau: joueur.niveau,
+      disponibilites: joueur.disponibilites,
+      notes: joueur.notes,
+    }),
+  });
+
+  alert("Inscription envoyée avec succès !");
+
+  setJoueur({
+    nom: "",
+    courriel: "",
+    telephone: "",
+    niveau: "Récréatif",
+    disponibilites: "Les deux",
+    notes: "",
+  });
+
+  setType(null);
+};
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -2196,7 +2224,7 @@ function ReglementsTournoi() {
         </h2>
 
         <p className="mt-4 text-slate-300">
-          Valérie Thomassin et  Michael Théroux
+          Valérie Thomassin et Michael Théroux
         </p>
 
         <a
