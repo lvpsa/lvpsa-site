@@ -611,47 +611,145 @@ function ClassementTable({ url, titre }) {
     fetch(url)
       .then((res) => res.text())
       .then((csv) => {
-        const lignes = csv.trim().split("\n").map((l) => l.split(","));
-        setRows(lignes.slice(1));
+        const lignes = csv
+          .trim()
+          .split("\n")
+          .map((ligne) =>
+            ligne
+              .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+              .map((cell) => cell.replace(/^"|"$/g, "").trim())
+          );
+
+        setRows(lignes.slice(1).filter((row) => row[0] && row[1]));
       });
   }, [url]);
 
+  const medaille = (rang) => {
+    if (rang === "1") return "🥇";
+    if (rang === "2") return "🥈";
+    if (rang === "3") return "🥉";
+    return "";
+  };
+
+  const formatDiff = (value) => {
+    const nombre = Number(String(value).replace(",", "."));
+    if (Number.isNaN(nombre)) return value;
+    return nombre.toFixed(2);
+  };
+
+  const formatPoints = (value) => {
+    return String(value).replace(/"/g, "");
+  };
+
   return (
-    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
-      <div className="bg-amber-400 px-6 py-4 text-slate-950">
-        <h2 className="text-2xl font-black">{titre}</h2>
+    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 shadow-2xl">
+      <div className="bg-amber-400 px-8 py-6 text-slate-950">
+        <div className="flex items-center gap-4">
+          <span className="text-4xl">🏆</span>
+          <div>
+            <h2 className="text-4xl font-black uppercase">{titre}</h2>
+            <p className="mt-1 text-sm font-black uppercase tracking-widest">
+              Ligue de volleyball de plage de St-Augustin
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
-          <thead className="bg-slate-900 text-amber-300">
-            <tr>
-              {["Rang", "Équipe", "PJ", "SG", "SP", "PP", "PC", "Diff.", "Points"].map((h) => (
-                <th key={h} className="px-4 py-3">{h}</th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {rows.map((row, index) => (
-              <tr key={index} className="border-t border-white/10">
-                {row.slice(0, 9).map((cell, i) => (
-                  <td key={i} className="px-4 py-3">
-                    {i === 0 && index === 0 ? "🥇 " : ""}
-                    {i === 0 && index === 1 ? "🥈 " : ""}
-                    {i === 0 && index === 2 ? "🥉 " : ""}
-                    {cell}
-                  </td>
-                ))}
+      <div className="p-6">
+        <div className="overflow-x-auto rounded-3xl border border-white/10 bg-slate-900">
+          <table className="w-full min-w-[900px] text-left">
+            <thead>
+              <tr className="bg-slate-900 text-amber-300">
+                {["Rang", "Équipe", "PJ", "SG", "SP", "PP", "PC", "Diff.", "Points"].map(
+                  (header) => (
+                    <th key={header} className="px-6 py-5 text-lg font-black">
+                      {header}
+                    </th>
+                  )
+                )}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {rows.map((row, index) => {
+                const rang = row[0];
+                const equipe = row[1];
+                const pj = row[2];
+                const sg = row[3];
+                const sp = row[4];
+                const pp = row[5];
+                const pc = row[6];
+                const diff = row[7];
+                const points = row[8];
+
+                return (
+                  <tr
+                    key={`${equipe}-${index}`}
+                    className={`border-t border-white/10 text-white ${
+                      rang === "1"
+                        ? "bg-amber-400/10"
+                        : rang === "2"
+                        ? "bg-white/5"
+                        : rang === "3"
+                        ? "bg-orange-400/10"
+                        : "bg-slate-950/40"
+                    }`}
+                  >
+                    <td className="px-6 py-5 text-2xl font-black">
+                      <span className="mr-3">{medaille(rang)}</span>
+                      <span className={rang === "1" ? "text-amber-300" : ""}>
+                        {rang}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-5 text-xl font-bold">{equipe}</td>
+                    <td className="px-6 py-5 text-xl">{pj}</td>
+                    <td className="px-6 py-5 text-xl">{sg}</td>
+                    <td className="px-6 py-5 text-xl">{sp}</td>
+                    <td className="px-6 py-5 text-xl">{pp}</td>
+                    <td className="px-6 py-5 text-xl">{pc}</td>
+
+                    <td className="px-6 py-5 text-xl font-bold text-lime-400">
+                      {formatDiff(diff)}
+                    </td>
+
+                    <td className="px-6 py-5 text-2xl font-black text-amber-300">
+                      {formatPoints(points)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-6 grid gap-4 rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300 md:grid-cols-4">
+          <div>
+            <span className="font-black text-amber-300">PJ</span> : Parties jouées
+          </div>
+          <div>
+            <span className="font-black text-amber-300">SG</span> : Sets gagnés
+          </div>
+          <div>
+            <span className="font-black text-amber-300">SP</span> : Sets perdus
+          </div>
+          <div>
+            <span className="font-black text-amber-300">Points</span> : Points au classement
+          </div>
+          <div>
+            <span className="font-black text-amber-300">PP</span> : Points pour
+          </div>
+          <div>
+            <span className="font-black text-amber-300">PC</span> : Points contre
+          </div>
+          <div>
+            <span className="font-black text-amber-300">Diff.</span> : Différentiel
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
 function ClassementDetail({ titre }) {
   let lien = "";
 
