@@ -351,12 +351,6 @@ useEffect(() => {
   </p>
          
 </div>
-        
-  <div className="mt-2 flex items-center justify-center gap-4 text-4xl animate-pulse">
-    <span>🚨</span>
-    <span>🚨</span>
-    <span>🚨</span>
-  </div>
 
         <div className="mx-auto max-w-7xl">
   <div className="grid gap-8 lg:grid-cols-2">
