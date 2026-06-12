@@ -349,7 +349,9 @@ useEffect(() => {
     plutôt qu'à
     <span className="font-black text-yellow-300"> 18h00</span>.
   </p>
-
+         
+</div>
+        
   <div className="mt-2 flex items-center justify-center gap-4 text-4xl animate-pulse">
     <span>🚨</span>
     <span>🚨</span>
