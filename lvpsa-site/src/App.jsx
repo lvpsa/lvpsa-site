@@ -2196,7 +2196,7 @@ function ReglementsTournoi() {
         </h2>
 
         <p className="mt-4 text-slate-300">
-          Valérie Thomassin et Michael Théroux
+          Valérie Thomassin et  Michael Théroux
         </p>
 
         <a
