@@ -358,7 +358,9 @@ useEffect(() => {
     <span>🚨</span>
   </div>
 
-</div>
+        <div className="mx-auto max-w-7xl">
+  <div className="grid gap-8 lg:grid-cols-2">
+
 
             {/* COLONNE GAUCHE */}
             <div>
