@@ -203,6 +203,16 @@ function Header() {
               Classements
             </Link>
 
+            <Link to="/inscription-ligue"
+              className="block rounded-xl px-4 py-3 font-bold text-white hover:bg-white/10">
+              Inscriptions
+            </Link>  
+
+            <Link to="/gestion-equipe"
+              className="block rounded-xl px-4 py-3 font-bold text-white hover:bg-white/10">
+              Gestion d'équipe
+            </Link>
+            
             <Link to="/reglements" onClick={() => setMenuOpen(false)}>
               Règlements Ligue
             </Link>
