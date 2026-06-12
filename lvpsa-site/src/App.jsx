@@ -604,17 +604,65 @@ function ClassementCard({ titre, lien }) {
   );
 }
 
+function ClassementTable({ url, titre }) {
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.text())
+      .then((csv) => {
+        const lignes = csv.trim().split("\n").map((l) => l.split(","));
+        setRows(lignes.slice(1));
+      });
+  }, [url]);
+
+  return (
+    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
+      <div className="bg-amber-400 px-6 py-4 text-slate-950">
+        <h2 className="text-2xl font-black">{titre}</h2>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-left">
+          <thead className="bg-slate-900 text-amber-300">
+            <tr>
+              {["Rang", "Équipe", "PJ", "SG", "SP", "PP", "PC", "Diff.", "Points"].map((h) => (
+                <th key={h} className="px-4 py-3">{h}</th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={index} className="border-t border-white/10">
+                {row.slice(0, 9).map((cell, i) => (
+                  <td key={i} className="px-4 py-3">
+                    {i === 0 && index === 0 ? "🥇 " : ""}
+                    {i === 0 && index === 1 ? "🥈 " : ""}
+                    {i === 0 && index === 2 ? "🥉 " : ""}
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function ClassementDetail({ titre }) {
   let lien = "";
 
   if (titre === "Classement récréatif") {
     lien =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pubhtml?gid=1356137713&single=true";
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1356137713&single=true&output=csv";
   }
 
   if (titre === "Classement compétitif") {
     lien =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pubhtml?gid=1226338215&single=true";
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1226338215&single=true&output=csv";
   }
 
   return (
@@ -625,24 +673,10 @@ function ClassementDetail({ titre }) {
 
       <h1 className="mt-6 text-4xl font-black">{titre}</h1>
 
-    <div className="mt-10 flex justify-center">
-  <div className="overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl bg-white p-6">
-    <iframe
-      src={lien}
-      title={titre}
-      width="950"
-      height="320"
-      style={{
-        border: "none",
-        display: "block",
-      }}
-    />
-  </div>
-</div>
+      <ClassementTable url={lien} titre={titre} />
     </section>
   );
 }
-
 function Tournoi() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
