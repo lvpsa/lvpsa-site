@@ -64,7 +64,6 @@ export default function App() {
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [ligueOpen, setLigueOpen] = useState(false);
   const [tournoiOpen, setTournoiOpen] = useState(false);
   
@@ -179,86 +178,97 @@ function Header() {
           </Link>
         </nav>
 
-       {/* MENU MOBILE */}
-{menuOpen && (
-  <div className="border-t border-white/10 bg-slate-950 px-6 py-4 md:hidden">
-    <div className="flex flex-col gap-4 text-white">
+              {/* BOUTON MOBILE */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="rounded-2xl border border-white/10 px-4 py-3 text-white md:hidden"
+        >
+          ☰
+        </button>
+      </div>
 
-      <Link to="/" onClick={() => setMenuOpen(false)}>
-        ACCUEIL
-      </Link>
+      {/* MENU MOBILE */}
+      {menuOpen && (
+        <div className="border-t border-white/10 bg-slate-950 px-6 py-4 md:hidden">
+          <div className="flex flex-col gap-4 text-white">
 
-      {/* LIGUE */}
-      <button
-        type="button"
-        onClick={() => setLigueOpen(!ligueOpen)}
-        className="flex items-center justify-between text-left text-white"
-      >
-        <span>LIGUE</span>
-        <span>{ligueOpen ? "−" : "+"}</span>
-      </button>
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              ACCUEIL
+            </Link>
 
-      {ligueOpen && (
-        <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
-          <Link to="/calendrier" onClick={() => setMenuOpen(false)}>
-            Calendrier
-          </Link>
+            <button
+              type="button"
+              onClick={() => setLigueOpen(!ligueOpen)}
+              className="flex items-center justify-between text-left text-white"
+            >
+              <span>LIGUE</span>
+              <span>{ligueOpen ? "−" : "+"}</span>
+            </button>
 
-          <Link to="/classements" onClick={() => setMenuOpen(false)}>
-            Classements
-          </Link>
+            {ligueOpen && (
+              <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
+                <Link to="/calendrier" onClick={() => setMenuOpen(false)}>
+                  Calendrier
+                </Link>
 
-          <Link to="/inscription-ligue" onClick={() => setMenuOpen(false)}>
-            Inscriptions
-          </Link>
+                <Link to="/classements" onClick={() => setMenuOpen(false)}>
+                  Classements
+                </Link>
 
-          <Link to="/gestion-equipe" onClick={() => setMenuOpen(false)}>
-            Gestion d'équipe
-          </Link>
+                <Link to="/inscription-ligue" onClick={() => setMenuOpen(false)}>
+                  Inscriptions
+                </Link>
 
-          <Link to="/reglements" onClick={() => setMenuOpen(false)}>
-            Règlements Ligue
-          </Link>
+                <Link to="/gestion-equipe" onClick={() => setMenuOpen(false)}>
+                  Gestion d'équipe
+                </Link>
+
+                <Link to="/reglements" onClick={() => setMenuOpen(false)}>
+                  Règlements Ligue
+                </Link>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setTournoiOpen(!tournoiOpen)}
+              className="flex items-center justify-between text-left text-white"
+            >
+              <span>TOURNOI</span>
+              <span>{tournoiOpen ? "−" : "+"}</span>
+            </button>
+
+            {tournoiOpen && (
+              <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
+                <Link to="/tournoi" onClick={() => setMenuOpen(false)}>
+                  Informations
+                </Link>
+
+                <Link to="/tournoi/reglements" onClick={() => setMenuOpen(false)}>
+                  Règlements
+                </Link>
+              </div>
+            )}
+
+            <Link to="/boutique" onClick={() => setMenuOpen(false)}>
+              BOUTIQUE
+            </Link>
+
+            <Link to="/admin" onClick={() => setMenuOpen(false)}>
+              CONNEXION
+            </Link>
+
+            <Link to="/contact" onClick={() => setMenuOpen(false)}>
+              CONTACT
+            </Link>
+
+          </div>
         </div>
       )}
-
-      {/* TOURNOI */}
-      <button
-        type="button"
-        onClick={() => setTournoiOpen(!tournoiOpen)}
-        className="flex items-center justify-between text-left text-white"
-      >
-        <span>TOURNOI</span>
-        <span>{tournoiOpen ? "−" : "+"}</span>
-      </button>
-
-      {tournoiOpen && (
-        <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
-          <Link to="/tournoi" onClick={() => setMenuOpen(false)}>
-            Informations
-          </Link>
-
-          <Link to="/tournoi/reglements" onClick={() => setMenuOpen(false)}>
-            Règlements
-          </Link>
-        </div>
-      )}
-
-      <Link to="/boutique" onClick={() => setMenuOpen(false)}>
-        BOUTIQUE
-      </Link>
-
-      <Link to="/admin" onClick={() => setMenuOpen(false)}>
-        CONNEXION
-      </Link>
-
-      <Link to="/contact" onClick={() => setMenuOpen(false)}>
-        CONTACT
-      </Link>
-
-    </div>
-  </div>
-)}
+    </header>
+  );
+}
 
 function Dropdown({ title, items }) {
   return (
