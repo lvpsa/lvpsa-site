@@ -1897,19 +1897,19 @@ function Calendrier() {
   ],
 
   competitif: [
-    ["19 mai", ["18h00 à 18h45 — Crabe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Geneviève", "19h30 à 20h15 — Crabe en Bikini vs Félix", "20h15 à 21h00 — Geneviève vs Félix"]],
-    ["26 mai", ["18h00 à 18h45 — Fireballs vs Geneviève", "18h45 à 19h30 — Crabe en Bikini vs Geneviève", "19h30 à 20h15 — Fireballs vs Félix", "20h15 à 21h00 — Crabe en Bikini vs Félix"]],
-    ["2 juin", ["18h00 à 18h45 — Crabe en Bikini vs Félix", "18h45 à 19h30 — Fireballs vs Félix", "19h30 à 20h15 — Crabe en Bikini vs Geneviève", "20h15 à 21h00 — Crabe en Bikini vs Fireballs"]],
-    ["9 juin", ["18h00 à 18h45 — Crabe en Bikini vs Félix", "18h45 à 19h30 — Crabe en Bikini vs Fireballs", "19h30 à 20h15 — Geneviève vs Félix", "20h15 à 21h00 — Fireballs vs Geneviève"]],
+    ["19 mai", ["18h00 à 18h45 — Crabe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Les pieds dans le sable", "19h30 à 20h15 — Crabe en Bikini vs Félix", "20h15 à 21h00 — Les pieds dans le sable vs Félix"]],
+    ["26 mai", ["18h00 à 18h45 — Fireballs vs Les pieds dans le sable", "18h45 à 19h30 — Crabe en Bikini vs Les pieds dans le sable", "19h30 à 20h15 — Fireballs vs Félix", "20h15 à 21h00 — Crabe en Bikini vs Félix"]],
+    ["2 juin", ["18h00 à 18h45 — Crabe en Bikini vs Félix", "18h45 à 19h30 — Fireballs vs Félix", "19h30 à 20h15 — Crabe en Bikini vs Les pieds dans le sable", "20h15 à 21h00 — Crabe en Bikini vs Fireballs"]],
+    ["9 juin", ["18h00 à 18h45 — Crabe en Bikini vs Félix", "18h45 à 19h30 — Crabe en Bikini vs Fireballs", "19h30 à 20h15 — Les pieds dans le sable vs Félix", "20h15 à 21h00 — Fireballs vs Les pieds dans le sable"]],
 
-    ["16 juin", ["18h30 à 19h15 — Fireballs vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Félix", "20h00 à 20h45 — Fireballs vs Geneviève", "20h45 à 21h30 — Crabe en Bikini vs Geneviève"]],
-    ["23 juin", ["18h30 à 19h15 — Crabe en Bikini vs Geneviève", "19h15 à 20h00 — Geneviève vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
-    ["30 juin", ["18h00 à 18h35 — Crabe en Bikini vs Fireballs", "18h35 à 19h10 — Fireballs vs Geneviève", "19h10 à 19h45 — Crabe en Bikini vs Félix", "19h45 à 20h20 — Geneviève vs Félix", "20h20 à 21h00 — Crabe en Bikini vs Geneviève"]],
-    ["7 juil.", ["18h30 à 19h15 — Fireballs vs Geneviève", "19h15 à 20h00 — Crabe en Bikini vs Geneviève", "20h00 à 20h45 — Fireballs vs Félix", "20h45 à 21h30 — Crabe en Bikini vs Félix"]],
-    ["14 juil.", ["18h30 à 19h15 — Geneviève vs Félix", "19h15 à 20h00 — Fireballs vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Geneviève", "20h45 à 21h30 — Crabe en Bikini vs Fireballs"]],
-    ["4 août", ["18h30 à 19h15 — Crabe en Bikini vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Fireballs", "20h00 à 20h45 — Geneviève vs Félix", "20h45 à 21h30 — Fireballs vs Geneviève"]],
-    ["11 août", ["18h30 à 19h15 — Fireballs vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Félix", "20h00 à 20h45 — Fireballs vs Geneviève", "20h45 à 21h30 — Crabe en Bikini vs Geneviève"]],
-    ["18 août", ["18h30 à 19h15 — Crabe en Bikini vs Geneviève", "19h15 à 20h00 — Geneviève vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
+    ["16 juin", ["18h30 à 19h15 — Fireballs vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Félix", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
+    ["23 juin", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
+    ["30 juin", ["18h00 à 18h35 — Crabe en Bikini vs Fireballs", "18h35 à 19h10 — Fireballs vs Les pieds dans le sable", "19h10 à 19h45 — Crabe en Bikini vs Félix", "19h45 à 20h20 — Les pieds dans le sable vs Félix", "20h20 à 21h00 — Crabe en Bikini vs Les pieds dans le sable"]],
+    ["7 juil.", ["18h30 à 19h15 — Fireballs vs Les pieds dans le sable", "19h15 à 20h00 — Crabe en Bikini vs Les pieds dans le sable", "20h00 à 20h45 — Fireballs vs Félix", "20h45 à 21h30 — Crabe en Bikini vs Félix"]],
+    ["14 juil.", ["18h30 à 19h15 — Les pieds dans le sable vs Félix", "19h15 à 20h00 — Fireballs vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Fireballs"]],
+    ["4 août", ["18h30 à 19h15 — Crabe en Bikini vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Fireballs", "20h00 à 20h45 — Les pieds dans le sable vs Félix", "20h45 à 21h30 — Fireballs vs Les pieds dans le sable"]],
+    ["11 août", ["18h30 à 19h15 — Fireballs vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Félix", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
+    ["18 août", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
   ],
 };
   const selection = horaires[categorie];
