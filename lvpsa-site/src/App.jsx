@@ -849,6 +849,17 @@ function Tournoi() {
             d’ambiance estivale sur le sable.
           </p>
 
+          <div className="mt-8 max-w-xl rounded-3xl border border-red-500/30 bg-red-500/10 p-5">
+  <p className="text-center text-xl font-black uppercase tracking-wide text-red-300">
+    🔴 Catégorie récréative : COMPLET
+  </p>
+
+  <p className="mt-2 text-center text-slate-300">
+    Merci pour votre enthousiasme ! Les inscriptions demeurent ouvertes
+    dans la catégorie compétitive.
+  </p>
+</div>
+          
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
               <div className="text-amber-300">📅</div>
