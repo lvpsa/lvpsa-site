@@ -1952,7 +1952,6 @@ const selection = toutesLesDates.filter(([date]) => {
 });
 
 const semaineActive = selection.length > 0 ? selection[0] : null;
-const semaineActive = toutesLesDates.find(([date]) => {
 const dateMatch = convertirDate(date);
 
   const debut = new Date(dateMatch);
