@@ -1931,17 +1931,40 @@ function Calendrier() {
 };
 
 const convertirDate = (date) => {
-  const [jour, moisTexte] = date.split(" ");
-  return new Date(2026, mois[moisTexte], Number(jour), 23, 59, 59);
+const dateMatch = convertirDate(date);
 };
 
 const aujourdHui = new Date();
 
-const selection = horaires[categorie].filter(([date]) => {
+const mois = {
+  mai: 4,
+  juin: 5,
+  "juil.": 6,
+  août: 7,
+};
+
+const convertirDate = (date) => {
+  const [jour, moisTexte] = date.split(" ");
+
+  return new Date(
+    2026,
+    mois[moisTexte],
+    Number(jour),
+    23,
+    59,
+    59
+  );
+};
+
+const aujourdHui = new Date();
+
+const toutesLesDates = horaires[categorie];
+
+const selection = toutesLesDates.filter(([date]) => {
   return convertirDate(date) >= aujourdHui;
 });
 
-const semaineActive = selection.find(([date]) => {
+const semaineActive = toutesLesDates.find(([date]) => {
 const dateMatch = convertirDate(date);
 
   const debut = new Date(dateMatch);
