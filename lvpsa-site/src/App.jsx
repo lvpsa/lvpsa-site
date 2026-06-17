@@ -1951,6 +1951,7 @@ const selection = toutesLesDates.filter(([date]) => {
   return convertirDate(date) >= aujourdHui;
 });
 
+const semaineActive = selection.length > 0 ? selection[0] : null;
 const semaineActive = toutesLesDates.find(([date]) => {
 const dateMatch = convertirDate(date);
 
@@ -1970,11 +1971,7 @@ const dateMatch = convertirDate(date);
       </p>
 
       <h1 className="mt-2 text-5xl font-black">Calendrier</h1>
-{semaineActive && (
-  <div className="mt-6 inline-flex rounded-full border border-emerald-400/30 bg-emerald-400/10 px-5 py-3 text-sm font-bold text-emerald-300">
-    Semaine en cours : {semaineActive[0]}
-  </div>
-)}
+
       <div className="mt-8 flex gap-3">
         <button
           onClick={() => setCategorie("recreatif")}
