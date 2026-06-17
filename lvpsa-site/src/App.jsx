@@ -1932,13 +1932,6 @@ function Calendrier() {
 
 const aujourdHui = new Date();
 
-const mois = {
-  mai: 4,
-  juin: 5,
-  juillet: 6,
-  août: 7,
-};
-
 const convertirDate = (date) => {
   const [jour, moisTexte] = date.split(" ");
 
