@@ -1900,8 +1900,8 @@ function Calendrier() {
     ["15 juin", ["18h30 à 19h15 — Les Bronzés vs Les Artishow", "19h15 à 20h00 — Les As vs Les Artishow", "20h00 à 20h45 — Les Bronzés vs Les Smash", "20h45 à 21h30 — Les As vs Les Smash"]],
     ["22 juin", ["18h30 à 19h15 — Les As vs Les Smash", "19h15 à 20h00 — Les Smash vs Les Artishow", "20h00 à 20h45 — Les As vs Les Bronzés", "20h45 à 21h30 — Les Bronzés vs Les Artishow"]],
     ["29 juin", ["18h30 à 19h15 — Les As vs Les Bronzés", "19h15 à 20h00 — Les Bronzés vs Les Smash", "20h00 à 20h45 — Les As vs Les Artishow", "20h45 à 21h30 — Les Smash vs Les Artishow"]],
-    ["6 juil.", ["18h30 à 19h15 — Les Bronzés vs Les Smash", "19h15 à 20h00 — Les As vs Les Smash", "20h00 à 20h45 — Les Bronzés vs Les Artishow", "20h45 à 21h30 — Les As vs Les Artishow"]],
-    ["13 juil.", ["18h30 à 19h15 — Les Smash vs Les Artishow", "19h15 à 20h00 — Les Bronzés vs Les Artishow", "20h00 à 20h45 — Les As vs Les Smash", "20h45 à 21h30 — Les As vs Les Bronzés"]],
+    ["6 juillet", ["18h30 à 19h15 — Les Bronzés vs Les Smash", "19h15 à 20h00 — Les As vs Les Smash", "20h00 à 20h45 — Les Bronzés vs Les Artishow", "20h45 à 21h30 — Les As vs Les Artishow"]],
+    ["13 juillet", ["18h30 à 19h15 — Les Smash vs Les Artishow", "19h15 à 20h00 — Les Bronzés vs Les Artishow", "20h00 à 20h45 — Les As vs Les Smash", "20h45 à 21h30 — Les As vs Les Bronzés"]],
     ["3 août", ["18h30 à 19h15 — Les As vs Les Artishow", "19h15 à 20h00 — Les As vs Les Bronzés", "20h00 à 20h45 — Les Smash vs Les Artishow", "20h45 à 21h30 — Les Bronzés vs Les Smash"]],
     ["10 août", ["18h30 à 19h15 — Les Bronzés vs Les Artishow", "19h15 à 20h00 — Les As vs Les Artishow", "20h00 à 20h45 — Les Bronzés vs Les Smash", "20h45 à 21h30 — Les As vs Les Smash"]],
     ["17 août", ["18h30 à 19h15 — Les As vs Les Smash", "19h15 à 20h00 — Les Smash vs Les Artishow", "20h00 à 20h45 — Les As vs Les Bronzés", "20h45 à 21h30 — Les Bronzés vs Les Artishow"]],
@@ -1916,8 +1916,8 @@ function Calendrier() {
     ["16 juin", ["18h30 à 19h15 — Fireballs vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Félix", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
     ["23 juin", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
     ["30 juin", ["18h00 à 18h35 — Crabe en Bikini vs Fireballs", "18h35 à 19h10 — Fireballs vs Les pieds dans le sable", "19h10 à 19h45 — Crabe en Bikini vs Félix", "19h45 à 20h20 — Les pieds dans le sable vs Félix", "20h20 à 21h00 — Crabe en Bikini vs Les pieds dans le sable"]],
-    ["7 juil.", ["18h30 à 19h15 — Fireballs vs Les pieds dans le sable", "19h15 à 20h00 — Crabe en Bikini vs Les pieds dans le sable", "20h00 à 20h45 — Fireballs vs Félix", "20h45 à 21h30 — Crabe en Bikini vs Félix"]],
-    ["14 juil.", ["18h30 à 19h15 — Les pieds dans le sable vs Félix", "19h15 à 20h00 — Fireballs vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Fireballs"]],
+    ["7 juillet", ["18h30 à 19h15 — Fireballs vs Les pieds dans le sable", "19h15 à 20h00 — Crabe en Bikini vs Les pieds dans le sable", "20h00 à 20h45 — Fireballs vs Félix", "20h45 à 21h30 — Crabe en Bikini vs Félix"]],
+    ["14 juillet", ["18h30 à 19h15 — Les pieds dans le sable vs Félix", "19h15 à 20h00 — Fireballs vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Fireballs"]],
     ["4 août", ["18h30 à 19h15 — Crabe en Bikini vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Fireballs", "20h00 à 20h45 — Les pieds dans le sable vs Félix", "20h45 à 21h30 — Fireballs vs Les pieds dans le sable"]],
     ["11 août", ["18h30 à 19h15 — Fireballs vs Félix", "19h15 à 20h00 — Crabe en Bikini vs Félix", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
     ["18 août", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
@@ -1926,7 +1926,7 @@ function Calendrier() {
   const mois = {
   mai: 4,
   juin: 5,
-  "juil.": 6,
+  "juillet": 6,
   août: 7,
 };
 
@@ -1939,7 +1939,7 @@ const aujourdHui = new Date();
 const mois = {
   mai: 4,
   juin: 5,
-  "juil.": 6,
+  juillet: 6,
   août: 7,
 };
 
@@ -1955,8 +1955,6 @@ const convertirDate = (date) => {
     59
   );
 };
-
-const aujourdHui = new Date();
 
 const toutesLesDates = horaires[categorie];
 
