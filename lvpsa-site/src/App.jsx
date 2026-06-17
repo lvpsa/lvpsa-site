@@ -1923,20 +1923,26 @@ function Calendrier() {
     ["18 août", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Félix", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Félix"]],
   ],
 };
-  const selection = horaires[categorie];
+  const mois = {
+  mai: 4,
+  juin: 5,
+  "juil.": 6,
+  août: 7,
+};
 
-  const aujourdHui = new Date();
+const convertirDate = (date) => {
+  const [jour, moisTexte] = date.split(" ");
+  return new Date(2026, mois[moisTexte], Number(jour), 23, 59, 59);
+};
+
+const aujourdHui = new Date();
+
+const selection = horaires[categorie].filter(([date]) => {
+  return convertirDate(date) >= aujourdHui;
+});
 
 const semaineActive = selection.find(([date]) => {
-  const mois = {
-    mai: 4,
-    juin: 5,
-    "juil.": 6,
-    août: 7,
-  };
-
-  const [jour, moisTexte] = date.split(" ");
-  const dateMatch = new Date(2026, mois[moisTexte], Number(jour));
+const dateMatch = convertirDate(date);
 
   const debut = new Date(dateMatch);
   debut.setDate(dateMatch.getDate() - 1);
