@@ -1930,10 +1930,6 @@ function Calendrier() {
   août: 7,
 };
 
-const convertirDate = (date) => {
-const dateMatch = convertirDate(date);
-};
-
 const aujourdHui = new Date();
 
 const mois = {
