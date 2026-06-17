@@ -1926,7 +1926,7 @@ function Calendrier() {
   const mois = {
   mai: 4,
   juin: 5,
-  "juillet": 6,
+  juillet: 6,
   août: 7,
 };
 
