@@ -1950,7 +1950,9 @@ const toutesLesDates = horaires[categorie];
 const selection = toutesLesDates.filter(([date]) => {
   return convertirDate(date) >= aujourdHui;
 });
-  
+
+const semaineActive = selection.length > 0 ? selection[0] : null;
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
