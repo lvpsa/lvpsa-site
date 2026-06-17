@@ -1950,18 +1950,6 @@ const toutesLesDates = horaires[categorie];
 const selection = toutesLesDates.filter(([date]) => {
   return convertirDate(date) >= aujourdHui;
 });
-
-const semaineActive = selection.length > 0 ? selection[0] : null;
-const dateMatch = convertirDate(date);
-
-  const debut = new Date(dateMatch);
-  debut.setDate(dateMatch.getDate() - 1);
-
-  const fin = new Date(dateMatch);
-  fin.setDate(dateMatch.getDate() + 6);
-
-  return aujourdHui >= debut && aujourdHui <= fin;
-});
   
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
