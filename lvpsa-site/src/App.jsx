@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import ScrollToTop from "./ScrollToTop";
 
 import { auth, db } from "./firebase";
 
@@ -35,6 +36,9 @@ const meteoLink = "https://www.meteomedia.com/ca/meteo/quebec/saint-augustin-de-
 export default function App() {
   return (
     <BrowserRouter>
+
+      <ScrollToTop />
+      
       <div className="min-h-screen bg-slate-950 text-white">
         <Header />
         <Routes>
