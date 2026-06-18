@@ -1193,8 +1193,9 @@ function CreerCompte() {
         email,
         categorie,
         equipeId,
-        equipeNom: equipe?.nom || "",
+        equipeNom: equipeId === "independant" ? "Joueur indépendant" : equipe?.nom || "",
         role: "joueur",
+        isAdmin: false,
         statut: "actif",
         createdAt: new Date(),
       });
