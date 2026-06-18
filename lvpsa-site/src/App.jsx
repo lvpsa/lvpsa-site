@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "./firebase";
 
@@ -12,7 +13,7 @@ import {
   browserLocalPersistence
 } from "firebase/auth";
 
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
 
 import {
   Calendar,
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/membres" element={<Membres />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/calendrier" element={<Calendrier />} />
+          <Route path="/creer-compte" element={<CreerCompte />} />
         </Routes>
         <Footer />
       </div>
@@ -1135,6 +1137,138 @@ function Membres() {
   );
 }
 
+function CreerCompte() {
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [motDePasse, setMotDePasse] = useState("");
+  const [categorie, setCategorie] = useState("recreatif");
+  const [equipeId, setEquipeId] = useState("");
+  const [teams, setTeams] = useState([]);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const chargerEquipes = async () => {
+      const snapshot = await getDocs(collection(db, "Teams"));
+      const liste = snapshot.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }));
+
+      setTeams(liste.filter((team) => team.actif));
+    };
+
+    chargerEquipes();
+  }, []);
+
+  const equipesFiltrees = teams.filter(
+    (team) => team.categorie === categorie
+  );
+
+  const creerCompte = async (e) => {
+    e.preventDefault();
+    setMessage("");
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        motDePasse
+      );
+
+      const user = userCredential.user;
+      const equipe = teams.find((team) => team.id === equipeId);
+
+      await setDoc(doc(db, "users", user.uid), {
+        nom,
+        email,
+        categorie,
+        equipeId,
+        equipeNom: equipe?.nom || "",
+        role: "joueur",
+        statut: "actif",
+        createdAt: new Date(),
+      });
+
+      setMessage("Compte créé avec succès !");
+    } catch (error) {
+      setMessage("Erreur : " + error.message);
+    }
+  };
+
+  return (
+    <section className="mx-auto max-w-xl px-6 py-20">
+      <h1 className="text-5xl font-black text-white">Créer un compte</h1>
+
+      <form onSubmit={creerCompte} className="mt-10 space-y-5">
+        <input
+          value={nom}
+          onChange={(e) => setNom(e.target.value)}
+          placeholder="Nom complet"
+          required
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+        />
+
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="Adresse courriel"
+          required
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+        />
+
+        <input
+          value={motDePasse}
+          onChange={(e) => setMotDePasse(e.target.value)}
+          type="password"
+          placeholder="Mot de passe"
+          required
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+        />
+
+        <select
+          value={categorie}
+          onChange={(e) => {
+            setCategorie(e.target.value);
+            setEquipeId("");
+          }}
+          className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white"
+        >
+          <option value="recreatif">Récréatif</option>
+          <option value="competitif">Compétitif</option>
+        </select>
+
+        <select
+          value={equipeId}
+          onChange={(e) => setEquipeId(e.target.value)}
+          required
+          className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white"
+        >
+          <option value="">Choisir une équipe</option>
+
+          {equipesFiltrees.map((team) => (
+            <option key={team.id} value={team.id}>
+              {team.nom}
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="submit"
+          className="w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+        >
+          Créer mon compte
+        </button>
+      </form>
+
+      {message && (
+        <p className="mt-6 rounded-2xl bg-white/10 p-4 text-center text-white">
+          {message}
+        </p>
+      )}
+    </section>
+  );
+}
 function Contact() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
