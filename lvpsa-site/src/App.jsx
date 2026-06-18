@@ -178,7 +178,13 @@ function Header() {
 >
   Connexion
 </Link>
-
+          
+<Link
+  to="/creer-compte"
+  className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+>
+  Créer un compte
+</Link>
           <Link to="/contact" className="hover:text-amber-300">
             Contact
           </Link>
@@ -261,10 +267,14 @@ function Header() {
               BOUTIQUE
             </Link>
 
+            <Link to="/creer-compte" onClick={() => setMenuOpen(false)}>
+              CRÉER UN COMPTE
+            </Link>
+            
             <Link to="/admin" onClick={() => setMenuOpen(false)}>
               CONNEXION
             </Link>
-
+            
             <Link to="/contact" onClick={() => setMenuOpen(false)}>
               CONTACT
             </Link>
