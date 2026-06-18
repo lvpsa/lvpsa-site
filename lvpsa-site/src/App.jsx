@@ -678,12 +678,16 @@ function ClassementTable({ url, titre }) {
       });
   }, [url]);
 
-  const medaille = (rang) => {
-    if (rang === "1") return "🥇";
-    if (rang === "2") return "🥈";
-    if (rang === "3") return "🥉";
-    return "";
+const medaille = (rang) => {
+  const medals = {
+    "1": "🥇",
+    "2": "🥈",
+    "3": "🥉",
+    "4": "😎",
   };
+
+  return medals[rang] || "";
+};
 
   const formatDiff = (value) => {
     const nombre = Number(String(value).replace(",", "."));
