@@ -1227,42 +1227,44 @@ function CreerCompte() {
       <h1 className="text-5xl font-black text-white">Créer un compte</h1>
 
       <form onSubmit={creerCompte} className="mt-10 space-y-5">
-        <input
-          value={motDePasse}
-          onChange={(e) => setMotDePasse(e.target.value)}
-          type="password"
-          placeholder="Mot de passe"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
-        />
-
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="Adresse courriel"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
-        />
-
-        <input
-          value={motDePasse}
-          onChange={(e) => setMotDePasse(e.target.value)}
-          type="password"
-          placeholder="Mot de passe"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
-        />
-
-        <input
-          value={confirmationMotDePasse}
-          onChange={(e) => setConfirmationMotDePasse(e.target.value)}
-          type="password"
-          placeholder="Confirmer le mot de passe"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
-        />
-
+          <input
+            value={nom}
+            onChange={(e) => setNom(e.target.value)}
+            placeholder="Nom complet"
+            required
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+          />
+          
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="Adresse courriel"
+            required
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+          />
+          
+          <input
+            value={motDePasse}
+            onChange={(e) => setMotDePasse(e.target.value)}
+            type="password"
+            placeholder="Mot de passe"
+            required
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+          />
+          
+          <p className="text-sm text-slate-400">
+            Minimum 8 caractères et au moins un chiffre.
+          </p>
+          
+          <input
+            value={confirmationMotDePasse}
+            onChange={(e) => setConfirmationMotDePasse(e.target.value)}
+            type="password"
+            placeholder="Confirmer le mot de passe"
+            required
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+          />
         <select
           value={categorie}
           onChange={(e) => {
