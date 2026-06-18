@@ -1151,6 +1151,7 @@ function CreerCompte() {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
+  const [confirmationMotDePasse, setConfirmationMotDePasse] = useState("");
   const [categorie, setCategorie] = useState("recreatif");
   const [equipeId, setEquipeId] = useState("");
   const [teams, setTeams] = useState([]);
@@ -1175,10 +1176,26 @@ function CreerCompte() {
   );
 
   const creerCompte = async (e) => {
-    e.preventDefault();
-    setMessage("");
+  e.preventDefault();
 
-    try {
+  setMessage("");
+
+  if (motDePasse !== confirmationMotDePasse) {
+    setMessage("Les mots de passe ne correspondent pas.");
+    return;
+  }
+
+  const regex = /^(?=.*\d).{8,}$/;
+
+  if (!regex.test(motDePasse)) {
+    <p className="text-sm text-slate-400">
+  Le mot de passe doit contenir au moins 8 caractères et au moins un chiffre.
+</p>
+    );
+    return;
+  }
+
+  try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -1233,6 +1250,15 @@ function CreerCompte() {
           onChange={(e) => setMotDePasse(e.target.value)}
           type="password"
           placeholder="Mot de passe"
+          required
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+        />
+
+        <input
+          value={confirmationMotDePasse}
+          onChange={(e) => setConfirmationMotDePasse(e.target.value)}
+          type="password"
+          placeholder="Confirmer le mot de passe"
           required
           className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
         />
