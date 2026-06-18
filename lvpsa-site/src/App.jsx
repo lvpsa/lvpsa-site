@@ -1188,13 +1188,12 @@ function CreerCompte() {
   const regex = /^(?=.*\d).{8,}$/;
 
   if (!regex.test(motDePasse)) {
-    <p className="text-sm text-slate-400">
-  Le mot de passe doit contenir au moins 8 caractères et au moins un chiffre.
-</p>
-    );
-    return;
-  }
-
+  setMessage(
+    "Le mot de passe doit contenir au moins 8 caractères et au moins un chiffre."
+  );
+  return;
+}
+    
   try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -1229,9 +1228,10 @@ function CreerCompte() {
 
       <form onSubmit={creerCompte} className="mt-10 space-y-5">
         <input
-          value={nom}
-          onChange={(e) => setNom(e.target.value)}
-          placeholder="Nom complet"
+          value={motDePasse}
+          onChange={(e) => setMotDePasse(e.target.value)}
+          type="password"
+          placeholder="Mot de passe"
           required
           className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
         />
