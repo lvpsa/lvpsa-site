@@ -14,7 +14,7 @@ import {
   sendPasswordResetEmail
 } from "firebase/auth";
 
-import { collection, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
 
 import {
   Calendar,
@@ -55,7 +55,7 @@ export default function App() {
           <Route path="/reglements" element={<Reglements />} />
           <Route path="/ligue" element={<Ligue />} />
           <Route path="/inscription-ligue" element={<InscriptionLigueProtegee />} />
-          <Route path="/gestion-equipe" element={<GestionEquipeProtegee />} />
+          <Route path="/gestion-equipe" element={<Protegee />} />
           <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/membres" element={<Membres />} />
@@ -3116,7 +3116,7 @@ const [joueur, setJoueur] = useState({
   );
 }
 
-function GestionEquipeProtegee() {
+function Protegee() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [chargement, setChargement] = useState(true);
@@ -3181,13 +3181,15 @@ function GestionEquipeProtegee() {
     );
   }
 
-  return <GestionEquipe user={user} userData={userData} />;
+  return < user={user} userData={userData} />;
 }
 
 function GestionEquipe({ userData }) {
   const [dateSelectionnee, setDateSelectionnee] = useState("");
   const [remplacants, setRemplacants] = useState([]);
   const [joueurs, setJoueurs] = useState([]);
+  const [joueurAbsentId, setJoueurAbsentId] = useState("");
+  const [remplacantId, setRemplacantId] = useState("");
 
   const datesLigue = [
     { id: "2026-06-22", label: "22 juin" },
@@ -3251,6 +3253,35 @@ function GestionEquipe({ userData }) {
     membre.disponibilites?.includes(dateSelectionnee)
   );
 
+  const confirmerRemplacement = async () => {
+  if (!dateSelectionnee || !joueurAbsentId || !remplacantId) {
+    alert("Veuillez sélectionner une date, un joueur absent et un remplaçant.");
+    return;
+  }
+
+  const joueurAbsent = joueurs.find((joueur) => joueur.id === joueurAbsentId);
+  const remplacant = remplacantsFiltres.find((membre) => membre.id === remplacantId);
+
+  await addDoc(collection(db, "remplacements"), {
+    date: dateSelectionnee,
+    categorie: userData.categorie,
+    equipeId: userData.equipeId,
+    equipeNom: userData.equipeNom,
+    joueurRemplaceId: joueurAbsent?.id || "",
+    joueurRemplaceNom: joueurAbsent?.nom || "",
+    remplacantId: remplacant?.id || "",
+    remplacantNom: remplacant?.nom || "",
+    remplacantEmail: remplacant?.email || "",
+    remplacantTelephone: remplacant?.telephone || "",
+    capitaineId: userData.id || "",
+    createdAt: serverTimestamp(),
+  });
+
+  alert("Remplacement confirmé !");
+  setJoueurAbsentId("");
+  setRemplacantId("");
+};
+  
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -3325,6 +3356,50 @@ function GestionEquipe({ userData }) {
             </option>
           ))}
         </select>
+
+        {dateSelectionnee && (
+  <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-6">
+    <h3 className="text-2xl font-black text-white">
+      Confirmer un remplacement
+    </h3>
+
+    <select
+      value={joueurAbsentId}
+      onChange={(e) => setJoueurAbsentId(e.target.value)}
+      className="mt-5 w-full rounded-2xl bg-slate-900 px-5 py-4 text-white"
+    >
+      <option value="">Choisir le joueur absent</option>
+
+      {joueurs.map((joueur) => (
+        <option key={joueur.id} value={joueur.id}>
+          {joueur.nom}
+        </option>
+      ))}
+    </select>
+
+    <select
+      value={remplacantId}
+      onChange={(e) => setRemplacantId(e.target.value)}
+      className="mt-4 w-full rounded-2xl bg-slate-900 px-5 py-4 text-white"
+    >
+      <option value="">Choisir le remplaçant</option>
+
+      {remplacantsFiltres.map((membre) => (
+        <option key={membre.id} value={membre.id}>
+          {membre.nom}
+        </option>
+      ))}
+    </select>
+
+    <button
+      type="button"
+      onClick={confirmerRemplacement}
+      className="mt-6 rounded-full bg-amber-400 px-7 py-3 font-black text-slate-950 hover:bg-amber-300"
+    >
+      Confirmer le remplacement
+    </button>
+  </div>
+)}
 
         {dateSelectionnee && (
           <div className="mt-8 grid gap-6 md:grid-cols-2">
