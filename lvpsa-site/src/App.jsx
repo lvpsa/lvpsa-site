@@ -2428,6 +2428,41 @@ const formatTelephone = (value) => {
 };
   
   const [type, setType] = useState(null);
+  const [user, setUser] = useState(null);
+const [datesDisponibles, setDatesDisponibles] = useState([]);
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  return () => unsubscribe();
+}, []);
+
+const datesLigue = [
+  { id: "2026-06-22", label: "22 juin" },
+  { id: "2026-06-23", label: "23 juin" },
+  { id: "2026-06-29", label: "29 juin" },
+  { id: "2026-06-30", label: "30 juin" },
+  { id: "2026-07-06", label: "6 juillet" },
+  { id: "2026-07-07", label: "7 juillet" },
+  { id: "2026-07-13", label: "13 juillet" },
+  { id: "2026-07-14", label: "14 juillet" },
+  { id: "2026-08-03", label: "3 août" },
+  { id: "2026-08-04", label: "4 août" },
+  { id: "2026-08-10", label: "10 août" },
+  { id: "2026-08-11", label: "11 août" },
+  { id: "2026-08-17", label: "17 août" },
+  { id: "2026-08-18", label: "18 août" },
+];
+
+const toggleDate = (dateId) => {
+  setDatesDisponibles((dates) =>
+    dates.includes(dateId)
+      ? dates.filter((date) => date !== dateId)
+      : [...dates, dateId]
+  );
+};
 
   const [equipe, setEquipe] = useState({
   capitaine: "",
@@ -2443,8 +2478,7 @@ const [joueur, setJoueur] = useState({
   nom: "",
   courriel: "",
   telephone: "",
-  niveau: "Récréatif",
-  disponibilites: "Les deux",
+  categorie: "recreatif",
   notes: "",
 });
 
@@ -2482,7 +2516,17 @@ const [joueur, setJoueur] = useState({
   setType(null);
 };
 
-  const envoyerJoueur = () => {
+  const envoyerJoueur = async () => {
+  if (!user) {
+    alert("Vous devez être connecté pour vous inscrire.");
+    return;
+  }
+
+  if (datesDisponibles.length === 0) {
+    alert("Veuillez sélectionner au moins une date de disponibilité.");
+    return;
+  }
+
   fetch(inscriptionUrl, {
     method: "POST",
     mode: "no-cors",
@@ -2491,11 +2535,27 @@ const [joueur, setJoueur] = useState({
       nom: joueur.nom,
       courriel: joueur.courriel,
       telephone: joueur.telephone,
-      niveau: joueur.niveau,
-      disponibilites: joueur.disponibilites,
+      categorie: joueur.categorie,
+      disponibilites: datesDisponibles.join(", "),
       notes: joueur.notes,
     }),
   });
+
+  await setDoc(
+    doc(db, "users", user.uid),
+    {
+      nom: joueur.nom,
+      email: joueur.courriel,
+      telephone: joueur.telephone,
+      categorie: joueur.categorie,
+      role: "remplacant",
+      estRemplacant: true,
+      disponibilites: datesDisponibles,
+      commentaire: joueur.notes,
+      statut: "actif",
+    },
+    { merge: true }
+  );
 
   alert("Inscription envoyée avec succès !");
 
@@ -2503,11 +2563,11 @@ const [joueur, setJoueur] = useState({
     nom: "",
     courriel: "",
     telephone: "",
-    niveau: "Récréatif",
-    disponibilites: "Les deux",
+    categorie: "recreatif",
     notes: "",
   });
 
+  setDatesDisponibles([]);
   setType(null);
 };
   return (
@@ -2677,13 +2737,35 @@ const [joueur, setJoueur] = useState({
 
            <select
   className="rounded-2xl px-4 py-3 text-slate-950"
-  value={joueur.niveau}
-  onChange={(e) => setJoueur({ ...joueur, niveau: e.target.value })}
+  value={joueur.categorie}
+  onChange={(e) => setJoueur({ ...joueur, categorie: e.target.value })}
 >
-  <option>Récréatif</option>
-  <option>Compétitif</option>
+  <option value="recreatif">Récréatif</option>
+  <option value="competitif">Compétitif</option>
 </select>
 
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-5 md:col-span-2">
+  <p className="mb-4 font-bold text-white">
+    Dates où vous êtes disponible comme remplaçant
+  </p>
+
+  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+    {datesLigue.map((date) => (
+      <label
+        key={date.id}
+        className="flex items-center gap-3 rounded-xl bg-white/5 p-3 text-slate-200"
+      >
+        <input
+          type="checkbox"
+          checked={datesDisponibles.includes(date.id)}
+          onChange={() => toggleDate(date.id)}
+        />
+        {date.label}
+      </label>
+    ))}
+  </div>
+</div>
+            
             <textarea
   className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
   placeholder="Expérience, position préférée ou disponibilités particulières"
@@ -2774,11 +2856,53 @@ function GestionEquipeProtegee() {
 }
 
 function GestionEquipe({ userData }) {
+  const [dateSelectionnee, setDateSelectionnee] = useState("");
+  const [remplacants, setRemplacants] = useState([]);
+
+  const datesLigue = [
+    { id: "2026-06-22", label: "22 juin" },
+    { id: "2026-06-23", label: "23 juin" },
+    { id: "2026-06-29", label: "29 juin" },
+    { id: "2026-06-30", label: "30 juin" },
+    { id: "2026-07-06", label: "6 juillet" },
+    { id: "2026-07-07", label: "7 juillet" },
+    { id: "2026-07-13", label: "13 juillet" },
+    { id: "2026-07-14", label: "14 juillet" },
+    { id: "2026-08-03", label: "3 août" },
+    { id: "2026-08-04", label: "4 août" },
+    { id: "2026-08-10", label: "10 août" },
+    { id: "2026-08-11", label: "11 août" },
+    { id: "2026-08-17", label: "17 août" },
+    { id: "2026-08-18", label: "18 août" },
+  ];
+
+  useEffect(() => {
+    const chargerRemplacants = async () => {
+      const snapshot = await getDocs(collection(db, "users"));
+
+      const liste = snapshot.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }));
+
+      setRemplacants(
+        liste.filter(
+          (membre) =>
+            membre.estRemplacant === true &&
+            membre.categorie === userData.categorie
+        )
+      );
+    };
+
+    chargerRemplacants();
+  }, [userData.categorie]);
+
+  const remplacantsFiltres = remplacants.filter((membre) =>
+    membre.disponibilites?.includes(dateSelectionnee)
+  );
 
   return (
-
     <section className="mx-auto max-w-7xl px-6 py-20">
-
       <p className="font-bold uppercase tracking-wider text-amber-300">
         Espace membre
       </p>
@@ -2788,55 +2912,90 @@ function GestionEquipe({ userData }) {
       </h1>
 
       <p className="mt-4 text-slate-300">
-        Catégorie : {userData.categorie === "recreatif"
-          ? "Récréatif"
-          : "Compétitif"}
+        Catégorie :{" "}
+        {userData.categorie === "recreatif" ? "Récréatif" : "Compétitif"}
       </p>
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-3">
+      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-3xl font-black text-amber-300">
+          Remplaçants disponibles
+        </h2>
 
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+        <p className="mt-4 text-slate-300">
+          Sélectionnez une date pour voir les remplaçants disponibles dans votre catégorie.
+        </p>
 
-          <h2 className="text-2xl font-black text-amber-300">
-            Joueurs
-          </h2>
+        <select
+          value={dateSelectionnee}
+          onChange={(e) => setDateSelectionnee(e.target.value)}
+          className="mt-6 w-full rounded-2xl bg-slate-900 px-5 py-4 text-white md:max-w-md"
+        >
+          <option value="">Choisir une date</option>
 
-          <p className="mt-4 text-slate-300">
-            Voir les joueurs de l'équipe et leurs coordonnées.
-          </p>
+          {datesLigue.map((date) => (
+            <option key={date.id} value={date.id}>
+              {date.label}
+            </option>
+          ))}
+        </select>
 
-        </div>
+        {dateSelectionnee && (
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+            {remplacantsFiltres.length > 0 ? (
+              remplacantsFiltres.map((membre) => (
+                <div
+                  key={membre.id}
+                  className="rounded-3xl border border-white/10 bg-black/20 p-6"
+                >
+                  <h3 className="text-2xl font-black text-white">
+                    {membre.nom}
+                  </h3>
 
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+                  <p className="mt-3 text-slate-300">
+                    📞 {membre.telephone || "Téléphone non disponible"}
+                  </p>
 
-          <h2 className="text-2xl font-black text-amber-300">
-            Remplaçants
-          </h2>
+                  <p className="text-slate-300">
+                    📧 {membre.email || "Courriel non disponible"}
+                  </p>
 
-          <p className="mt-4 text-slate-300">
-            Trouver ou offrir sa disponibilité comme remplaçant.
-          </p>
+                  {membre.commentaire && (
+                    <p className="mt-4 text-slate-300">
+                      Note : {membre.commentaire}
+                    </p>
+                  )}
 
-        </div>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {membre.telephone && (
+                      <a
+                        href={`tel:${membre.telephone}`}
+                        className="rounded-full bg-amber-400 px-5 py-3 font-black text-slate-950"
+                      >
+                        Appeler
+                      </a>
+                    )}
 
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-
-          <h2 className="text-2xl font-black text-amber-300">
-            Horaire
-          </h2>
-
-          <p className="mt-4 text-slate-300">
-            Consulter les prochains matchs de l'équipe.
-          </p>
-
-        </div>
-
+                    {membre.email && (
+                      <a
+                        href={`mailto:${membre.email}`}
+                        className="rounded-full border border-white/15 px-5 py-3 font-black text-white"
+                      >
+                        Écrire
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-slate-300">
+                Aucun remplaçant disponible pour cette date.
+              </p>
+            )}
+          </div>
+        )}
       </div>
-
     </section>
-
   );
-
 }
 
 function ReglementsTournoi() {
