@@ -408,8 +408,6 @@ function Header() {
   );
 }
 
-)}
-
 {userData?.isAdmin && (
   <Link
     to="/admin"
