@@ -111,6 +111,13 @@ function Header() {
   window.location.href = "/";
 
 };
+
+  const modifierMotDePasse = async () => {
+  if (!user?.email) return;
+
+  await sendPasswordResetEmail(auth, user.email);
+  alert("Un courriel pour modifier votre mot de passe a été envoyé.");
+};
   
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
@@ -374,8 +381,16 @@ function Header() {
   >
     Connexion
   </Link>
+
+          <button
+  onClick={modifierMotDePasse}
+  className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+>
+  Modifier mot de passe
+</button>
+          
 )}
-            
+
             <Link to="/partenaires" onClick={() => setMenuOpen(false)}>
   PARTENAIRES
 </Link>
