@@ -1575,7 +1575,7 @@ window.location.href = "/";
   if (!user) {
     return (
       <section className="mx-auto max-w-xl px-6 py-20">
-        <h1 className="text-4xl font-black">Connexion admin</h1>
+        <h1 className="text-4xl font-black">Connexion</h1>
 
         <input
           className="mt-8 w-full rounded-2xl border px-4 py-3 text-slate-950"
