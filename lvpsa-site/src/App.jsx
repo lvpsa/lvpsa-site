@@ -72,6 +72,24 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [ligueOpen, setLigueOpen] = useState(false);
   const [tournoiOpen, setTournoiOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setUserData(docSnap.data());
+        }
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
   
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
@@ -173,11 +191,20 @@ function Header() {
 </Link>
 
 <Link
-  to="/admin"
+  to="/connexion"
   className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
 >
   Connexion
 </Link>
+
+{userData?.isAdmin && (
+  <Link
+    to="/admin"
+    className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
+  >
+    Administration
+  </Link>
+)}
           
 <Link
   to="/creer-compte"
@@ -271,9 +298,15 @@ function Header() {
               CRÉER UN COMPTE
             </Link>
             
-            <Link to="/admin" onClick={() => setMenuOpen(false)}>
+            <Link to="/connexion" onClick={() => setMenuOpen(false)}>
               CONNEXION
             </Link>
+            
+            {userData?.isAdmin && (
+              <Link to="/admin" onClick={() => setMenuOpen(false)}>
+                ADMINISTRATION
+              </Link>
+            )}
             
             <Link to="/contact" onClick={() => setMenuOpen(false)}>
               CONTACT
@@ -1517,7 +1550,9 @@ useEffect(() => {
       emailAdmin,
       password
     );
-
+    
+window.location.href = "/";
+    
     setUser(result.user);
 
     const snap = await getDoc(doc(db, "settings", "matchStatus"));
