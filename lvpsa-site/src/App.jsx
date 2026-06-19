@@ -1803,16 +1803,64 @@ console.log("ADMIN :", userData?.isAdmin);
   }
 
   return (
-    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
-      <h1 className="text-5xl font-black">
-        Boutique en préparation
-      </h1>
+  <section className="mx-auto max-w-7xl px-6 py-20">
+    <p className="font-bold uppercase tracking-wider text-amber-300">
+      Administration
+    </p>
 
-      <p className="mt-6 text-slate-300">
-        La boutique LVPSA sera disponible bientôt.
-      </p>
-    </section>
-  );
+    <h1 className="mt-2 text-5xl font-black text-white">
+      Boutique LVPSA
+    </h1>
+
+    <p className="mt-5 max-w-3xl text-lg text-slate-300">
+      Interface réservée aux administrateurs pour préparer la boutique de vêtements LVPSA.
+    </p>
+
+    <div className="mt-12 grid gap-8 lg:grid-cols-3">
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-2xl font-black text-amber-300">
+          Produits
+        </h2>
+
+        <p className="mt-4 text-slate-300">
+          Ajouter les t-shirts, camisoles, hoodies, couleurs et grandeurs.
+        </p>
+
+        <button className="mt-6 rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950">
+          Gérer les produits
+        </button>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-2xl font-black text-amber-300">
+          Commandes
+        </h2>
+
+        <p className="mt-4 text-slate-300">
+          Voir les commandes des membres et suivre les paiements.
+        </p>
+
+        <button className="mt-6 rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950">
+          Voir les commandes
+        </button>
+      </div>
+
+      <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-2xl font-black text-amber-300">
+          Mise en ligne
+        </h2>
+
+        <p className="mt-4 text-slate-300">
+          Préparer l’ouverture publique de la boutique lorsqu’elle sera prête.
+        </p>
+
+        <button className="mt-6 rounded-full border border-white/15 px-6 py-3 font-black text-white">
+          Boutique inactive
+        </button>
+      </div>
+    </div>
+  </section>
+);
 }
 
 function Boutique() {
