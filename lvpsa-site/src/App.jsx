@@ -248,7 +248,7 @@ function Header() {
   </Link>
 )}
           <Link to="/contact" className="hover:text-amber-300">
-            Contact
+            Contact/Partenaire
           </Link>
         </nav>
 
@@ -367,7 +367,7 @@ function Header() {
 )}
             
             <Link to="/contact" onClick={() => setMenuOpen(false)}>
-              CONTACT
+              CONTACT/PARTENAIRE
             </Link>
 
           </div>
