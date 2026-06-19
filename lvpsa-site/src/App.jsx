@@ -58,7 +58,7 @@ export default function App() {
           <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/membres" element={<Membres />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/partenaires" element={<Partenaires />} />
           <Route path="/calendrier" element={<Calendrier />} />
           <Route path="/creer-compte" element={<CreerCompte />} />
         </Routes>
@@ -247,9 +247,9 @@ function Header() {
     Créer un compte
   </Link>
 )}
-          <Link to="/contact" className="hover:text-amber-300">
-            Contact/Partenaire
-          </Link>
+          <Link to="/partenaires" className="hover:text-amber-300">
+  Partenaires
+</Link>
         </nav>
 
               {/* BOUTON MOBILE */}
@@ -366,9 +366,9 @@ function Header() {
   </Link>
 )}
             
-            <Link to="/contact" onClick={() => setMenuOpen(false)}>
-              CONTACT/PARTENAIRE
-            </Link>
+            <Link to="/partenaires" onClick={() => setMenuOpen(false)}>
+  PARTENAIRES
+</Link>
 
           </div>
         </div>
@@ -1399,17 +1399,16 @@ function CreerCompte() {
     </section>
   );
 }
-function Contact() {
+function Partenaires() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        Nous joindre
-      </p>
+     <p className="font-bold uppercase tracking-wider text-amber-300">
+  LVPSA
+</p>
 
-      <h1 className="mt-2 text-5xl font-black">
-        Contact LVPSA
-      </h1>
-
+<h1 className="mt-2 text-5xl font-black">
+  Partenaires & Coordonnées
+</h1>
       <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
         Pour toute question concernant la ligue, les horaires, les remplacements, les inscriptions ou les partenariats, communiquez avec l’équipe LVPSA.
       </p>
@@ -1497,23 +1496,49 @@ function Contact() {
   className="max-h-40 w-full object-contain"
 />
           </div>
- <div className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-r from-blue-600/20 to-blue-400/10 p-10 text-center">
-  <h2 className="text-3xl font-black">
+ <div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-10 text-center shadow-2xl">
+
+  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-3xl font-black text-white">
+    f
+  </div>
+
+  <h2 className="mt-6 text-4xl font-black text-white">
     Suivez la LVPSA
   </h2>
 
-  <p className="mt-4 max-w-2xl mx-auto text-slate-300">
-    Pour ne rien manquer!
+  <p className="mt-4 mx-auto max-w-2xl text-lg text-slate-300">
+    Restez informé des horaires, résultats, photos, annonces importantes et événements de la ligue.
   </p>
+
+  <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm font-bold text-slate-300">
+
+    <span className="rounded-full bg-white/10 px-4 py-2">
+      📅 Horaires
+    </span>
+
+    <span className="rounded-full bg-white/10 px-4 py-2">
+      🏆 Résultats
+    </span>
+
+    <span className="rounded-full bg-white/10 px-4 py-2">
+      📸 Photos
+    </span>
+
+    <span className="rounded-full bg-white/10 px-4 py-2">
+      📣 Annonces
+    </span>
+
+  </div>
 
   <a
     href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
     target="_blank"
     rel="noreferrer"
-    className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+    className="mt-8 inline-flex rounded-full bg-amber-400 px-10 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
   >
-    Visiter la page LVPSA
+    Visiter notre page Facebook ↗
   </a>
+
 </div>
         </div>
       </div>
