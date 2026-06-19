@@ -236,57 +236,6 @@ function Header() {
     Connexion
   </Link>
 
-  function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [ligueOpen, setLigueOpen] = useState(false);
-  const [tournoiOpen, setTournoiOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-
-    setUser(currentUser);
-
-    if (currentUser) {
-
-      const docRef = doc(db, "users", currentUser.uid);
-
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setUserData(docSnap.data());
-      }
-
-    } else {
-
-      setUserData(null);
-
-    }
-
-  });
-
-  return () => unsubscribe();
-
-}, []);
-
-  const deconnexion = async () => {
-
-  await signOut(auth);
-
-  window.location.href = "/";
-
-};
-
-  const modifierMotDePasse = async () => {
-  if (!user?.email) return;
-
-  await sendPasswordResetEmail(auth, user.email);
-  alert("Un courriel pour modifier votre mot de passe a été envoyé.");
-};
-  
-  return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
@@ -520,42 +469,49 @@ function Header() {
           )}
             
             {user ? (
-  <div className="flex items-center gap-4">
-    <span className="font-semibold text-white">
+
+  <>
+    <div className="font-semibold text-white">
       Bonjour {userData?.nom?.split(" ")[0]}
-    </span>
+    </div>
 
     {userData?.isAdmin && (
       <Link
         to="/admin"
-        className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
+        onClick={() => setMenuOpen(false)}
       >
-        Administration
+        ADMINISTRATION
       </Link>
     )}
 
     <button
-      onClick={deconnexion}
-      className="rounded-full border border-white/15 px-6 py-3 hover:border-red-400 hover:text-red-400"
+      type="button"
+      onClick={() => {
+        setMenuOpen(false);
+        modifierMotDePasse();
+      }}
+      className="text-left text-amber-300"
     >
-      Déconnexion
+      MODIFIER MOT DE PASSE
     </button>
-  </div>
+
+    <button
+      onClick={deconnexion}
+      className="text-left text-red-400"
+    >
+      DÉCONNEXION
+    </button>
+  </>
+
 ) : (
+
   <Link
     to="/connexion"
-    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+    onClick={() => setMenuOpen(false)}
   >
-    Connexion
+    CONNEXION
   </Link>
 
-          <button
-  onClick={modifierMotDePasse}
-  className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
->
-  Modifier mot de passe
-</button>
-          
 )}
 
             <Link to="/partenaires" onClick={() => setMenuOpen(false)}>
@@ -637,13 +593,13 @@ function Header() {
 
                 {userData?.role === "capitaine" && (
 
+  {(userData?.role === "capitaine" || userData?.isAdmin) && (
+
   <Link
     to="/gestion-equipe"
     className="block rounded-xl px-3 py-2 hover:bg-white/10"
   >
-
     Gestion d'équipe
-
   </Link>
 
 )}
