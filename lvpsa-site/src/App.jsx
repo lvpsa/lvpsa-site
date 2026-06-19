@@ -332,33 +332,43 @@ function Header() {
             </Link>
             
             {user ? (
-              <>
-                <span className="font-semibold text-amber-300">
-                  Bonjour {userData?.nom?.split(" ")[0]}
-                </span>
-            
-                {userData?.isAdmin && (
-                  <Link to="/admin" onClick={() => setMenuOpen(false)}>
-                    ADMINISTRATION
-                  </Link>
-                )}
-            
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    deconnexion();
-                  }}
-                  className="text-left text-red-300"
-                >
-                  DÉCONNEXION
-                </button>
-              </>
-            ) : (
-              <Link to="/connexion" onClick={() => setMenuOpen(false)}>
-                CONNEXION
-              </Link>
-            )}
+
+  <div className="flex items-center gap-4">
+
+    <span className="font-semibold text-white">
+      Bonjour {userData?.nom?.split(" ")[0]}
+    </span>
+
+    {userData?.isAdmin && (
+
+      <Link
+        to="/admin"
+        className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
+      >
+        Administration
+      </Link>
+
+    )}
+
+    <button
+      onClick={deconnexion}
+      className="rounded-full border border-white/15 px-6 py-3 hover:border-red-400 hover:text-red-400"
+    >
+      Déconnexion
+    </button>
+
+  </div>
+
+) : (
+
+  <Link
+    to="/connexion"
+    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+  >
+    Connexion
+  </Link>
+
+)}
             
             <Link to="/contact" onClick={() => setMenuOpen(false)}>
               CONTACT
