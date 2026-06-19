@@ -1783,7 +1783,11 @@ function BoutiqueProtegee() {
       </section>
     );
   }
-
+  
+console.log("USER :", user?.uid);
+console.log("DATA :", userData);
+console.log("ADMIN :", userData?.isAdmin);
+  
   if (!userData?.isAdmin) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
