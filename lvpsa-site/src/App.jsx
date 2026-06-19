@@ -165,8 +165,11 @@ function Header() {
               >
                 Mot de passe
               </button>
-
-              <button onClick={deconnexion} className="rounded-full border border-white/15 px-5 py-2 text-sm font-medium hover:border-red-400 hover:text-red-400"
+              
+              <button
+                onClick={deconnexion}
+                className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-red-400 hover:text-red-400"
+              >
                 Déconnexion
               </button>
             </>
@@ -250,7 +253,7 @@ function Header() {
                     setMenuOpen(false);
                     modifierMotDePasse();
                   }}
-                  className="text-left text-amber-300"
+                  className="text-left text-sm font-semibold text-amber-300"
                 >
                   MODIFIER MOT DE PASSE
                 </button>
@@ -261,7 +264,7 @@ function Header() {
                     setMenuOpen(false);
                     deconnexion();
                   }}
-                  className="text-left text-red-400"
+                  className="text-left text-sm font-semibold text-amber-300"
                 >
                   DÉCONNEXION
                 </button>
