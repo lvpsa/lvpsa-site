@@ -54,7 +54,7 @@ export default function App() {
           <Route path="/reglements" element={<Reglements />} />
           <Route path="/ligue" element={<Ligue />} />
           <Route path="/inscription-ligue" element={<InscriptionLigue />} />
-          <Route path="/gestion-equipe" element={<GestionEquipe />} />
+          <Route path="/gestion-equipe" element={<GestionEquipeProtegee />} />
           <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/membres" element={<Membres />} />
@@ -1241,30 +1241,10 @@ function Membres() {
 function CreerCompte() {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [confirmationMotDePasse, setConfirmationMotDePasse] = useState("");
-  const [categorie, setCategorie] = useState("recreatif");
-  const [equipeId, setEquipeId] = useState("");
-  const [teams, setTeams] = useState([]);
   const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    const chargerEquipes = async () => {
-      const snapshot = await getDocs(collection(db, "Teams"));
-      const liste = snapshot.docs.map((docItem) => ({
-        id: docItem.id,
-        ...docItem.data(),
-      }));
-
-      setTeams(liste.filter((team) => team.actif));
-    };
-
-    chargerEquipes();
-  }, []);
-
-  const equipesFiltrees = teams.filter(
-    (team) => team.categorie === categorie
-  );
 
   const creerCompte = async (e) => {
   e.preventDefault();
@@ -1298,10 +1278,8 @@ function CreerCompte() {
       await setDoc(doc(db, "users", user.uid), {
         nom,
         email,
-        categorie,
-        equipeId,
-        equipeNom: equipeId === "independant" ? "Joueur indépendant" : equipe?.nom || "",
-        role: "joueur",
+        telephone,
+        role: "membre",
         isAdmin: false,
         statut: "actif",
         createdAt: new Date(),
@@ -1334,7 +1312,16 @@ function CreerCompte() {
             required
             className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
           />
-          
+
+          <input
+            value={telephone}
+            onChange={(e) => setTelephone(e.target.value)}
+            type="tel"
+            placeholder="Téléphone"
+            required
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+          />
+        
           <input
             value={motDePasse}
             onChange={(e) => setMotDePasse(e.target.value)}
@@ -1356,33 +1343,7 @@ function CreerCompte() {
             required
             className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
           />
-        <select
-          value={categorie}
-          onChange={(e) => {
-            setCategorie(e.target.value);
-            setEquipeId("");
-          }}
-          className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white"
-        >
-          <option value="recreatif">Récréatif</option>
-          <option value="competitif">Compétitif</option>
-        </select>
-
-        <select
-          value={equipeId}
-          onChange={(e) => setEquipeId(e.target.value)}
-          required
-          className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white"
-        >
-          <option value="">Choisir une équipe</option>
-
-          {equipesFiltrees.map((team) => (
-            <option key={team.id} value={team.id}>
-              {team.nom}
-            </option>
-          ))}
-        </select>
-
+        
         <button
           type="submit"
           className="w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
@@ -2702,15 +2663,138 @@ const [joueur, setJoueur] = useState({
   );
 }
 
-function GestionEquipe() {
+function GestionEquipeProtegee() {
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [chargement, setChargement] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (currentUser) {
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setUserData(docSnap.data());
+        }
+      } else {
+        setUserData(null);
+      }
+
+      setChargement(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (chargement) {
+    return null;
+  }
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">
+          Connexion requise
+        </h1>
+
+        <p className="mt-4 text-slate-300">
+          Connectez-vous pour accéder à votre espace d’équipe.
+        </p>
+
+        <Link
+          to="/connexion"
+          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
+        >
+          Se connecter
+        </Link>
+      </section>
+    );
+  }
+
+  if (!userData?.equipeId || userData?.equipeId === "independant") {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">
+          Aucune équipe associée
+        </h1>
+
+        <p className="mt-4 text-slate-300">
+          Votre compte n’est pas encore associé à une équipe de la ligue.
+        </p>
+      </section>
+    );
+  }
+
+  return <GestionEquipe user={user} userData={userData} />;
+}
+
+function GestionEquipe({ userData }) {
+
   return (
+
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black">Gestion d’équipe</h1>
-      <p className="mt-4 text-slate-300">
-        Cette section servira plus tard aux capitaines pour gérer leur équipe, les présences et les résultats.
+
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Espace membre
       </p>
+
+      <h1 className="mt-2 text-5xl font-black text-white">
+        {userData.equipeNom}
+      </h1>
+
+      <p className="mt-4 text-slate-300">
+        Catégorie : {userData.categorie === "recreatif"
+          ? "Récréatif"
+          : "Compétitif"}
+      </p>
+
+      <div className="mt-12 grid gap-8 lg:grid-cols-3">
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+
+          <h2 className="text-2xl font-black text-amber-300">
+            Joueurs
+          </h2>
+
+          <p className="mt-4 text-slate-300">
+            Voir les joueurs de l'équipe et leurs coordonnées.
+          </p>
+
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+
+          <h2 className="text-2xl font-black text-amber-300">
+            Remplaçants
+          </h2>
+
+          <p className="mt-4 text-slate-300">
+            Trouver ou offrir sa disponibilité comme remplaçant.
+          </p>
+
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+
+          <h2 className="text-2xl font-black text-amber-300">
+            Horaire
+          </h2>
+
+          <p className="mt-4 text-slate-300">
+            Consulter les prochains matchs de l'équipe.
+          </p>
+
+        </div>
+
+      </div>
+
     </section>
+
   );
+
 }
 
 function ReglementsTournoi() {
