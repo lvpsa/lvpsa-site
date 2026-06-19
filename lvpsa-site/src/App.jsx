@@ -2447,16 +2447,57 @@ const formatTelephone = (value) => {
   
   const [type, setType] = useState(null);
   const [user, setUser] = useState(null);
-const [datesDisponibles, setDatesDisponibles] = useState([]);
+  const [datesDisponibles, setDatesDisponibles] = useState([]);
+  const [userData, setUserData] = useState(null);
 
 useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
+
+  const unsubscribe = onAuthStateChanged(
+    auth,
+    async (currentUser) => {
+
+      setUser(currentUser);
+
+      if (currentUser) {
+
+        const docRef = doc(
+          db,
+          "users",
+          currentUser.uid
+        );
+
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+
+          const data = docSnap.data();
+
+          setUserData(data);
+
+          setJoueur((prev) => ({
+            ...prev,
+            nom: data.nom || "",
+            courriel: data.email || "",
+            telephone: data.telephone || "",
+          }));
+
+          setEquipe((prev) => ({
+            ...prev,
+            capitaine: data.nom || "",
+            courriel: data.email || "",
+            telephone: data.telephone || "",
+          }));
+
+        }
+
+      }
+
+    }
+  );
 
   return () => unsubscribe();
-}, []);
 
+}, []);
 const datesLigue = [
   { id: "2026-06-22", label: "22 juin" },
   { id: "2026-06-23", label: "23 juin" },
