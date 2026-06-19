@@ -2870,6 +2870,7 @@ function GestionEquipeProtegee() {
 function GestionEquipe({ userData }) {
   const [dateSelectionnee, setDateSelectionnee] = useState("");
   const [remplacants, setRemplacants] = useState([]);
+  const [joueurs, setJoueurs] = useState([]);
 
   const datesLigue = [
     { id: "2026-06-22", label: "22 juin" },
@@ -2904,6 +2905,14 @@ function GestionEquipe({ userData }) {
             membre.categorie === userData.categorie
         )
       );
+      
+      setJoueurs(
+  liste.filter(
+    (membre) =>
+      membre.equipeId === userData.equipeId &&
+      membre.role === "joueur"
+  )
+);
     };
 
     chargerRemplacants();
@@ -2940,6 +2949,43 @@ function GestionEquipe({ userData }) {
         {userData.categorie === "recreatif" ? "Récréatif" : "Compétitif"}
       </p>
 
+      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+  <h2 className="text-3xl font-black text-amber-300">
+    Joueurs de l’équipe
+  </h2>
+
+  <p className="mt-4 text-slate-300">
+    Liste des joueurs associés à votre équipe.
+  </p>
+
+  <div className="mt-8 grid gap-4 md:grid-cols-2">
+    {joueurs.length > 0 ? (
+      joueurs.map((joueur) => (
+        <div
+          key={joueur.id}
+          className="rounded-2xl border border-white/10 bg-black/20 p-5"
+        >
+          <h3 className="text-xl font-black text-white">
+            {joueur.nom}
+          </h3>
+
+          <p className="mt-2 text-slate-300">
+            📧 {joueur.email || "Courriel non disponible"}
+          </p>
+
+          <p className="text-slate-300">
+            📞 {joueur.telephone || "Téléphone non disponible"}
+          </p>
+        </div>
+      ))
+    ) : (
+      <p className="text-slate-300">
+        Aucun joueur n’est encore associé à cette équipe.
+      </p>
+    )}
+  </div>
+</div>
+      
       <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
         <h2 className="text-3xl font-black text-amber-300">
           Remplaçants disponibles
