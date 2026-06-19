@@ -202,7 +202,7 @@ function Header() {
     to="/admin"
     className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
   >
-    Administration
+    Admin
   </Link>
 )}
           
@@ -304,7 +304,7 @@ function Header() {
             
             {userData?.isAdmin && (
               <Link to="/admin" onClick={() => setMenuOpen(false)}>
-                ADMINISTRATION
+                ADMIN
               </Link>
             )}
             
