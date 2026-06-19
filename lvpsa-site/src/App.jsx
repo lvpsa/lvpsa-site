@@ -10,7 +10,8 @@ import {
   signOut,
   onAuthStateChanged,
   setPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 import { collection, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
@@ -294,9 +295,18 @@ function Header() {
                   Inscriptions
                 </Link>
 
-                <Link to="/gestion-equipe" onClick={() => setMenuOpen(false)}>
-                  Gestion d'équipe
-                </Link>
+                {userData?.role === "capitaine" && (
+
+  <Link
+    to="/gestion-equipe"
+    className="block rounded-xl px-3 py-2 hover:bg-white/10"
+  >
+
+    Gestion d'équipe
+
+  </Link>
+
+)}
 
                 <Link to="/reglements" onClick={() => setMenuOpen(false)}>
                   Règlements Ligue
@@ -1216,26 +1226,137 @@ function Reglements() {
 }
 
 function Membres() {
+
+  const [email, setEmail] = useState("");
+  const [motDePasse, setMotDePasse] = useState("");
+  const [message, setMessage] = useState("");
+
+  const connexion = async () => {
+
+    try {
+
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        motDePasse
+      );
+
+      window.location.href = "/";
+
+    } catch (error) {
+
+      setMessage("Courriel ou mot de passe invalide.");
+
+    }
+
+  };
+
   return (
+
     <section className="bg-white py-16 text-slate-950">
+
       <div className="mx-auto max-w-7xl px-6">
-        <h1 className="text-4xl font-black">Espace Admin</h1>
+
+        <h1 className="text-4xl font-black">
+          Connexion
+        </h1>
+
         <p className="mt-4 text-slate-600">
-          Accès réservé aux administrateurs.
+          Connectez-vous à votre compte LVPSA.
         </p>
 
         <div className="mt-8 max-w-xl rounded-3xl border bg-slate-50 p-6">
+
           <Lock className="mb-4" />
-          <h2 className="text-2xl font-black">Connexion</h2>
-          <input className="mt-5 w-full rounded-2xl border px-4 py-3" placeholder="Courriel" />
-          <input className="mt-3 w-full rounded-2xl border px-4 py-3" placeholder="Mot de passe" type="password" />
-          <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950">
-            <LogIn size={18} /> Se connecter
+
+          <h2 className="text-2xl font-black">
+            Connexion
+          </h2>
+
+          <input
+            className="mt-5 w-full rounded-2xl border px-4 py-3"
+            placeholder="Courriel"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            className="mt-3 w-full rounded-2xl border px-4 py-3"
+            placeholder="Mot de passe"
+            type="password"
+            value={motDePasse}
+            onChange={(e) => setMotDePasse(e.target.value)}
+          />
+
+          <button
+            onClick={connexion}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950"
+          >
+            <LogIn size={18} />
+            Se connecter
           </button>
+
+          <button
+            type="button"
+            onClick={async () => {
+
+              if (!email) {
+
+                setMessage(
+                  "Veuillez entrer votre courriel."
+                );
+
+                return;
+
+              }
+
+              try {
+
+                await sendPasswordResetEmail(
+                  auth,
+                  email
+                );
+
+                setMessage(
+                  "Un courriel de réinitialisation a été envoyé."
+                );
+
+              } catch {
+
+                setMessage(
+                  "Impossible d'envoyer le courriel."
+                );
+
+              }
+
+            }}
+
+            className="mt-5 w-full text-center text-sm font-bold text-amber-600 hover:underline"
+          >
+
+            Mot de passe oublié ?
+
+          </button>
+
+          {message && (
+
+            <p className="mt-4 text-center text-sm">
+
+              {message}
+
+            </p>
+
+          )}
+
         </div>
+
       </div>
+
     </section>
+
   );
+
 }
 
 function CreerCompte() {
@@ -2896,7 +3017,19 @@ function GestionEquipe({ userData }) {
 
     chargerRemplacants();
   }, [userData.categorie]);
+    if (userData?.role !== "capitaine" && !userData?.isAdmin) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">
+          Accès réservé aux capitaines
+        </h1>
 
+        <p className="mt-4 text-slate-300">
+          Cette section est réservée aux capitaines d'équipe.
+        </p>
+      </section>
+    );
+  }
   const remplacantsFiltres = remplacants.filter((membre) =>
     membre.disponibilites?.includes(dateSelectionnee)
   );
