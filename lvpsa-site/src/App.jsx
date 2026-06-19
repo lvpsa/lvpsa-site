@@ -53,7 +53,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           <Route path="/ligue" element={<Ligue />} />
-          <Route path="/inscription-ligue" element={<InscriptionLigue />} />
+          <Route path="/inscription-ligue" element={<InscriptionLigueProtegee />} />
           <Route path="/gestion-equipe" element={<GestionEquipeProtegee />} />
           <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Connexion />} />
@@ -2369,6 +2369,48 @@ function Ligue() {
       </p>
     </section>
   );
+}
+
+function InscriptionLigueProtegee() {
+  const [user, setUser] = useState(null);
+  const [chargement, setChargement] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setChargement(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (chargement) return null;
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">
+          Connexion requise
+        </h1>
+
+        <p className="mt-4 text-slate-300">
+          Vous devez vous connecter ou créer un compte avant de vous inscrire à la ligue.
+        </p>
+
+        <div className="mt-8 flex justify-center gap-4">
+          <Link to="/connexion" className="rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950">
+            Connexion
+          </Link>
+
+          <Link to="/creer-compte" className="rounded-full border border-white/15 px-8 py-4 font-black text-white">
+            Créer un compte
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  return <InscriptionLigue />;
 }
 
 function InscriptionLigue() {
