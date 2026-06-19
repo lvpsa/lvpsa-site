@@ -154,10 +154,58 @@ function Header() {
               </span>
 
               {userData?.isAdmin && (
-                <Link to="/admin" className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950">
-                  Admin
-                </Link>
-              )}
+
+  <div className="group relative">
+
+    <button className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950">
+
+      Administration
+
+    </button>
+
+    <div className="absolute right-0 hidden min-w-[240px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
+
+      <Link
+        to="/admin-equipes"
+        className="block rounded-xl px-3 py-2 hover:bg-white/10"
+      >
+
+        Équipes
+
+      </Link>
+
+      <Link
+        to="/admin-remplacements"
+        className="block rounded-xl px-3 py-2 hover:bg-white/10"
+      >
+
+        Remplacements
+
+      </Link>
+
+      <Link
+        to="/admin-membres"
+        className="block rounded-xl px-3 py-2 hover:bg-white/10"
+      >
+
+        Membres
+
+      </Link>
+
+      <Link
+        to="/admin-boutique"
+        className="block rounded-xl px-3 py-2 hover:bg-white/10"
+      >
+
+        Boutique
+
+      </Link>
+
+    </div>
+
+  </div>
+
+)}
 
               <button
                 onClick={modifierMotDePasse}
@@ -1577,52 +1625,79 @@ function MeteoJour() {
 }
 
 function Admin() {
-  const [emailAdmin, setEmailAdmin] = useState("");
-  const [password, setPassword] = useState("");
+  const [onglet, setOnglet] = useState("statut");
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [chargement, setChargement] = useState(true);
+
   const [statut, setStatut] = useState({
-  texte: "Les parties ont lieu ce soir",
-  couleur: "emerald",
-  message: "Mise à jour officielle LVPSA",
-});
-
-useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-
-    if (currentUser) {
-      setUser(currentUser);
-
-      const snap = await getDoc(doc(db, "settings", "matchStatus"));
-
-      if (snap.exists()) {
-        setStatut(snap.data());
-      }
-    }
+    texte: "Les parties ont lieu ce soir",
+    couleur: "emerald",
+    message: "Mise à jour officielle LVPSA",
   });
 
-  return () => unsubscribe();
-}, []);
+  const [membres, setMembres] = useState([]);
+  const [equipes, setEquipes] = useState([]);
+  const [remplacements, setRemplacements] = useState([]);
 
-  async function connexion() {
-  try {
-    await setPersistence(auth, browserLocalPersistence);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
 
-    const result = await signInWithEmailAndPassword(
-      auth,
-      emailAdmin,
-      password
-    );
-    
-window.location.href = "/";
-    
-    setUser(result.user);
+      if (currentUser) {
+        const userSnap = await getDoc(doc(db, "users", currentUser.uid));
 
-    const snap = await getDoc(doc(db, "settings", "matchStatus"));
-    if (snap.exists()) setStatut(snap.data());
-  } catch (error) {
-    alert("Erreur de connexion : " + error.message);
-  }
-}
+        if (userSnap.exists()) {
+          setUserData(userSnap.data());
+        }
+
+        const statutSnap = await getDoc(doc(db, "settings", "matchStatus"));
+
+        if (statutSnap.exists()) {
+          setStatut(statutSnap.data());
+        }
+      } else {
+        setUserData(null);
+      }
+
+      setChargement(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const chargerAdmin = async () => {
+      if (!userData?.isAdmin) return;
+
+      const membresSnap = await getDocs(collection(db, "users"));
+      const equipesSnap = await getDocs(collection(db, "Teams"));
+      const remplacementsSnap = await getDocs(collection(db, "remplacements"));
+
+      setMembres(
+        membresSnap.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data(),
+        }))
+      );
+
+      setEquipes(
+        equipesSnap.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data(),
+        }))
+      );
+
+      setRemplacements(
+        remplacementsSnap.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data(),
+        }))
+      );
+    };
+
+    chargerAdmin();
+  }, [userData]);
 
   async function sauvegarder() {
     await setDoc(doc(db, "settings", "matchStatus"), statut);
@@ -1631,90 +1706,285 @@ window.location.href = "/";
 
   async function deconnexion() {
     await signOut(auth);
-    setUser(null);
+    window.location.href = "/";
   }
 
-  if (!user) {
+  if (chargement) {
+    return null;
+  }
+
+  if (!user || !userData?.isAdmin) {
     return (
-      <section className="mx-auto max-w-xl px-6 py-20">
-        <h1 className="text-4xl font-black">Connexion</h1>
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">Accès refusé</h1>
 
-        <input
-          className="mt-8 w-full rounded-2xl border px-4 py-3 text-slate-950"
-          placeholder="Courriel"
-          value={emailAdmin}
-          onChange={(e) => setEmailAdmin(e.target.value)}
-        />
+        <p className="mt-4 text-slate-300">
+          Cette section est réservée aux administrateurs de la LVPSA.
+        </p>
 
-        <input
-          className="mt-3 w-full rounded-2xl border px-4 py-3 text-slate-950"
-          placeholder="Mot de passe"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          onClick={connexion}
-          className="mt-5 w-full rounded-full bg-amber-400 px-6 py-3 font-bold text-slate-950"
+        <Link
+          to="/connexion"
+          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
         >
-          Se connecter
-        </button>
+          Connexion
+        </Link>
       </section>
     );
   }
 
+  const equipesRecreatives = equipes.filter(
+    (equipe) => equipe.categorie === "recreatif"
+  );
+
+  const equipesCompetitives = equipes.filter(
+    (equipe) => equipe.categorie === "competitif"
+  );
+
+  const joueursParEquipe = (equipeId) =>
+    membres.filter((membre) => membre.equipeId === equipeId);
+
+  const totalRemplacementsParRemplacant = remplacements.reduce((acc, item) => {
+    const nom = item.remplacantNom || "Sans nom";
+    acc[nom] = (acc[nom] || 0) + 1;
+    return acc;
+  }, {});
+
   return (
-    <section className="mx-auto max-w-3xl px-6 py-20">
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-black">Administration LVPSA</h1>
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p className="font-bold uppercase tracking-wider text-amber-300">
+            Administration
+          </p>
+
+          <h1 className="mt-2 text-5xl font-black text-white">
+            Administration LVPSA
+          </h1>
+        </div>
+
         <button onClick={deconnexion} className="text-amber-300">
           Déconnexion
         </button>
       </div>
 
-      <div className="mt-10 rounded-3xl border border-white/10 bg-white/10 p-6">
-        <h2 className="text-2xl font-black">Statut des parties</h2>
-
-        <label className="mt-6 block text-sm text-slate-300">Texte principal</label>
-        <select
-  className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
-  value={statut.texte}
-  onChange={(e) => setStatut({ ...statut, texte: e.target.value })}
->
-  <option value="Les parties ont lieu ce soir">
-    Les parties ont lieu ce soir
-  </option>
-
-  <option value="Les parties sont annulées ce soir">
-    Les parties sont annulées ce soir
-  </option>
-</select>
-
-        <label className="mt-5 block text-sm text-slate-300">Message secondaire</label>
-        <input
-          className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
-          value={statut.message}
-          onChange={(e) => setStatut({ ...statut, message: e.target.value })}
-        />
-
-        <label className="mt-5 block text-sm text-slate-300">Couleur</label>
-        <select
-          className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
-          value={statut.couleur}
-          onChange={(e) => setStatut({ ...statut, couleur: e.target.value })}
-        >
-          <option value="emerald">Vert — parties confirmées</option>
-          <option value="red">Rouge — parties annulées</option>
-        </select>
-
-        <button
-          onClick={sauvegarder}
-          className="mt-8 rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950"
-        >
-          Sauvegarder le statut
-        </button>
+      <div className="mt-10 flex flex-wrap gap-3">
+        {[
+          ["statut", "Statut des parties"],
+          ["equipes", "Équipes"],
+          ["remplacements", "Remplacements"],
+          ["membres", "Membres"],
+          ["boutique", "Boutique"],
+        ].map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setOnglet(id)}
+            className={`rounded-full px-6 py-3 font-bold ${
+              onglet === id
+                ? "bg-amber-400 text-slate-950"
+                : "border border-white/15 text-white hover:border-amber-300 hover:text-amber-300"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
+
+      {onglet === "statut" && (
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/10 p-6">
+          <h2 className="text-2xl font-black">Statut des parties</h2>
+
+          <label className="mt-6 block text-sm text-slate-300">
+            Texte principal
+          </label>
+
+          <select
+            className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+            value={statut.texte}
+            onChange={(e) => setStatut({ ...statut, texte: e.target.value })}
+          >
+            <option value="Les parties ont lieu ce soir">
+              Les parties ont lieu ce soir
+            </option>
+
+            <option value="Les parties sont annulées ce soir">
+              Les parties sont annulées ce soir
+            </option>
+          </select>
+
+          <label className="mt-5 block text-sm text-slate-300">
+            Message secondaire
+          </label>
+
+          <input
+            className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+            value={statut.message}
+            onChange={(e) => setStatut({ ...statut, message: e.target.value })}
+          />
+
+          <label className="mt-5 block text-sm text-slate-300">Couleur</label>
+
+          <select
+            className="mt-2 w-full rounded-2xl border px-4 py-3 text-slate-950"
+            value={statut.couleur}
+            onChange={(e) => setStatut({ ...statut, couleur: e.target.value })}
+          >
+            <option value="emerald">Vert — parties confirmées</option>
+            <option value="red">Rouge — parties annulées</option>
+          </select>
+
+          <button
+            onClick={sauvegarder}
+            className="mt-8 rounded-full bg-amber-400 px-7 py-3 font-bold text-slate-950"
+          >
+            Sauvegarder le statut
+          </button>
+        </div>
+      )}
+
+      {onglet === "equipes" && (
+        <div className="mt-10 grid gap-8 lg:grid-cols-2">
+          {[
+            ["Récréatif", equipesRecreatives],
+            ["Compétitif", equipesCompetitives],
+          ].map(([titre, liste]) => (
+            <div
+              key={titre}
+              className="rounded-3xl border border-white/10 bg-white/5 p-6"
+            >
+              <h2 className="text-3xl font-black text-amber-300">{titre}</h2>
+
+              <div className="mt-6 space-y-6">
+                {liste.map((equipe) => (
+                  <div
+                    key={equipe.id}
+                    className="rounded-2xl border border-white/10 bg-black/20 p-5"
+                  >
+                    <h3 className="text-2xl font-black text-white">
+                      {equipe.nom}
+                    </h3>
+
+                    <p className="mt-2 text-slate-300">
+                      Capitaine : {equipe.capitaineNom || "Non assigné"}
+                    </p>
+
+                    <div className="mt-4 space-y-2">
+                      {joueursParEquipe(equipe.id).length > 0 ? (
+                        joueursParEquipe(equipe.id).map((joueur) => (
+                          <p key={joueur.id} className="text-slate-300">
+                            • {joueur.nom} — {joueur.email}
+                          </p>
+                        ))
+                      ) : (
+                        <p className="text-slate-500">
+                          Aucun joueur associé.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {onglet === "remplacements" && (
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-3xl font-black text-amber-300">
+            Historique des remplacements
+          </h2>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <h3 className="text-2xl font-black text-white">
+                Total par remplaçant
+              </h3>
+
+              <div className="mt-4 space-y-2">
+                {Object.keys(totalRemplacementsParRemplacant).length > 0 ? (
+                  Object.entries(totalRemplacementsParRemplacant).map(
+                    ([nom, total]) => (
+                      <p key={nom} className="text-slate-300">
+                        {nom} : {total} remplacement{total > 1 ? "s" : ""}
+                      </p>
+                    )
+                  )
+                ) : (
+                  <p className="text-slate-500">
+                    Aucun remplacement enregistré.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <h3 className="text-2xl font-black text-white">Détails</h3>
+
+              <div className="mt-4 space-y-4">
+                {remplacements.length > 0 ? (
+                  remplacements.map((item) => (
+                    <div
+                      key={item.id}
+                      className="rounded-xl bg-white/5 p-4 text-slate-300"
+                    >
+                      <p className="font-bold text-white">
+                        {item.remplacantNom} avec {item.equipeNom}
+                      </p>
+
+                      <p>Date : {item.date}</p>
+
+                      <p>
+                        Remplace : {item.joueurRemplaceNom || "Non précisé"}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-slate-500">
+                    Aucun remplacement enregistré.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {onglet === "membres" && (
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-3xl font-black text-amber-300">Membres</h2>
+
+          <div className="mt-6 space-y-3">
+            {membres.map((membre) => (
+              <div
+                key={membre.id}
+                className="rounded-2xl border border-white/10 bg-black/20 p-5"
+              >
+                <p className="font-bold text-white">
+                  {membre.nom || "Sans nom"}
+                </p>
+
+                <p className="text-slate-300">{membre.email}</p>
+
+                <p className="text-slate-400">
+                  Rôle : {membre.role || "membre"} | Équipe :{" "}
+                  {membre.equipeNom || "Aucune"}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {onglet === "boutique" && (
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-3xl font-black text-amber-300">Boutique</h2>
+
+          <p className="mt-4 text-slate-300">
+            Cette section servira plus tard à gérer les produits, commandes,
+            grandeurs et paiements.
+          </p>
+        </div>
+      )}
     </section>
   );
 }
