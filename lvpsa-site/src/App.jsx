@@ -236,6 +236,173 @@ function Header() {
     Connexion
   </Link>
 
+  function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [ligueOpen, setLigueOpen] = useState(false);
+  const [tournoiOpen, setTournoiOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+
+    setUser(currentUser);
+
+    if (currentUser) {
+
+      const docRef = doc(db, "users", currentUser.uid);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUserData(docSnap.data());
+      }
+
+    } else {
+
+      setUserData(null);
+
+    }
+
+  });
+
+  return () => unsubscribe();
+
+}, []);
+
+  const deconnexion = async () => {
+
+  await signOut(auth);
+
+  window.location.href = "/";
+
+};
+
+  const modifierMotDePasse = async () => {
+  if (!user?.email) return;
+
+  await sendPasswordResetEmail(auth, user.email);
+  alert("Un courriel pour modifier votre mot de passe a été envoyé.");
+};
+  
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+        {/* LOGO */}
+        <Link to="/" className="flex items-center gap-4">
+          <img
+            src="/logo.jpg"
+            alt="LVPSA"
+            className="h-20 w-20 rounded-full object-cover"
+          />
+
+          <div>
+            <h1 className="text-4xl font-black tracking-tight text-white">
+              LVPSA
+            </h1>
+
+            <p className="text-xl text-slate-300">
+              Volleyball de plage de St-Augustin
+            </p>
+          </div>
+        </Link>
+
+        {/* MENU DESKTOP */}
+        <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
+
+          <Link to="/" className="hover:text-amber-300">
+            Accueil
+          </Link>
+
+<div className="group relative">
+  <button className="flex items-center gap-1 hover:text-amber-300">
+    Ligue
+  </button>
+
+  <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
+    <Link
+      to="/calendrier"
+      className="block rounded-xl px-3 py-2 hover:bg-white/10"
+    >
+      Calendrier
+    </Link>
+
+    <Link
+      to="/classements"
+      className="block rounded-xl px-3 py-2 hover:bg-white/10"
+    >
+      Classements
+    </Link>
+
+    <Link
+  to="/inscription-ligue"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Inscriptions
+</Link>
+
+<Link
+  to="/gestion-equipe"
+  className="block rounded-xl px-3 py-2 hover:bg-white/10"
+>
+  Gestion d'équipe
+</Link>
+    
+    <Link
+      to="/reglements"
+      className="block rounded-xl px-3 py-2 hover:bg-white/10"
+    >
+      Règlements
+    </Link>
+  </div>
+</div>
+
+          <div className="group relative">
+            <button className="flex items-center gap-1 hover:text-amber-300">
+              Tournoi
+            </button>
+
+            <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
+              <Link
+                to="/tournoi"
+                className="block rounded-xl px-3 py-2 hover:bg-white/10"
+              >
+                Informations
+              </Link>
+
+              <Link
+                to="/tournoi/reglements"
+                className="block rounded-xl px-3 py-2 hover:bg-white/10"
+              >
+                Règlements
+              </Link>
+            </div>
+          </div>
+
+          <Link to="/boutique" className="hover:text-amber-300">
+  Boutique
+</Link>
+
+{user ? (
+
+  <button
+    onClick={deconnexion}
+    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+  >
+    Déconnexion
+  </button>
+
+) : (
+
+  <Link
+    to="/connexion"
+    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+  >
+    Connexion
+  </Link>
+
 )}
 
 {userData?.isAdmin && (
@@ -387,6 +554,176 @@ function Header() {
   className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
 >
   Modifier mot de passe
+</button>
+          
+)}
+
+            <Link to="/partenaires" onClick={() => setMenuOpen(false)}>
+  PARTENAIRES
+</Link>
+
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+)}
+
+{userData?.isAdmin && (
+  <Link
+    to="/admin"
+    className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
+  >
+    Admin
+  </Link>
+)}
+          
+{!user && (
+  <Link
+    to="/creer-compte"
+    className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+  >
+    Créer un compte
+  </Link>
+)}
+          <Link to="/partenaires" className="hover:text-amber-300">
+  Partenaires
+</Link>
+        </nav>
+
+              {/* BOUTON MOBILE */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="rounded-2xl border border-white/10 px-4 py-3 text-white md:hidden"
+        >
+          ☰
+        </button>
+      </div>
+
+      {/* MENU MOBILE */}
+      {menuOpen && (
+        <div className="border-t border-white/10 bg-slate-950 px-6 py-4 md:hidden">
+          <div className="flex flex-col gap-4 text-white">
+
+            <Link to="/" onClick={() => setMenuOpen(false)}>
+              ACCUEIL
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setLigueOpen(!ligueOpen)}
+              className="flex items-center justify-between text-left text-white"
+            >
+              <span>LIGUE</span>
+              <span>{ligueOpen ? "−" : "+"}</span>
+            </button>
+
+            {ligueOpen && (
+              <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
+                <Link to="/calendrier" onClick={() => setMenuOpen(false)}>
+                  Calendrier
+                </Link>
+
+                <Link to="/classements" onClick={() => setMenuOpen(false)}>
+                  Classements
+                </Link>
+
+                <Link to="/inscription-ligue" onClick={() => setMenuOpen(false)}>
+                  Inscriptions
+                </Link>
+
+                {userData?.role === "capitaine" && (
+
+  <Link
+    to="/gestion-equipe"
+    className="block rounded-xl px-3 py-2 hover:bg-white/10"
+  >
+
+    Gestion d'équipe
+
+  </Link>
+
+)}
+
+                <Link to="/reglements" onClick={() => setMenuOpen(false)}>
+                  Règlements Ligue
+                </Link>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setTournoiOpen(!tournoiOpen)}
+              className="flex items-center justify-between text-left text-white"
+            >
+              <span>TOURNOI</span>
+              <span>{tournoiOpen ? "−" : "+"}</span>
+            </button>
+
+            {tournoiOpen && (
+              <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
+                <Link to="/tournoi" onClick={() => setMenuOpen(false)}>
+                  Informations
+                </Link>
+
+                <Link to="/tournoi/reglements" onClick={() => setMenuOpen(false)}>
+                  Règlements
+                </Link>
+              </div>
+            )}
+
+            <Link to="/boutique" onClick={() => setMenuOpen(false)}>
+              BOUTIQUE
+            </Link>
+
+            {!user && (
+            <Link to="/creer-compte" onClick={() => setMenuOpen(false)}>
+              CRÉER UN COMPTE
+            </Link>
+          )}
+            
+            {user ? (
+  <div className="flex items-center gap-4">
+    <span className="font-semibold text-white">
+      Bonjour {userData?.nom?.split(" ")[0]}
+    </span>
+
+    {userData?.isAdmin && (
+      <Link
+        to="/admin"
+        className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
+      >
+        Administration
+      </Link>
+    )}
+
+    <button
+      onClick={deconnexion}
+      className="rounded-full border border-white/15 px-6 py-3 hover:border-red-400 hover:text-red-400"
+    >
+      Déconnexion
+    </button>
+  </div>
+) : (
+  <Link
+    to="/connexion"
+    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+  >
+    Connexion
+  </Link>
+
+          <button
+  type="button"
+  onClick={() => {
+    setMenuOpen(false);
+    modifierMotDePasse();
+  }}
+  className="text-left text-amber-300"
+>
+  MODIFIER MOT DE PASSE
 </button>
           
 )}
