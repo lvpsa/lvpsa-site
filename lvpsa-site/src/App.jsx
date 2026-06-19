@@ -159,7 +159,10 @@ function Header() {
                 </Link>
               )}
 
-              <button onClick={modifierMotDePasse} className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-amber-300 hover:text-amber-300"
+              <button
+                onClick={modifierMotDePasse}
+                className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-amber-300 hover:text-amber-300"
+              >
                 Mot de passe
               </button>
 
