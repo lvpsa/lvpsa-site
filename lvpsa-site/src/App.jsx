@@ -3181,7 +3181,7 @@ function Protegee() {
     );
   }
 
-  return < user={user} userData={userData} />;
+  return <GestionEquipe user={user} userData={userData} />;
 }
 
 function GestionEquipe({ userData }) {
