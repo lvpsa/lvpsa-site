@@ -239,12 +239,14 @@ function Header() {
   </Link>
 )}
           
-<Link
-  to="/creer-compte"
-  className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
->
-  Créer un compte
-</Link>
+{!user && (
+  <Link
+    to="/creer-compte"
+    className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+  >
+    Créer un compte
+  </Link>
+)}
           <Link to="/contact" className="hover:text-amber-300">
             Contact
           </Link>
@@ -327,9 +329,11 @@ function Header() {
               BOUTIQUE
             </Link>
 
+            {!user && (
             <Link to="/creer-compte" onClick={() => setMenuOpen(false)}>
               CRÉER UN COMPTE
             </Link>
+          )}
             
             {user ? (
   <div className="flex items-center gap-4">
