@@ -1625,21 +1625,81 @@ useEffect(() => {
 function BoutiqueProtegee() {
   const [user, setUser] = useState(null);
   const [chargement, setChargement] = useState(true);
+  const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setChargement(false);
-    });
+useEffect(() => {
 
-    return () => unsubscribe();
-  }, []);
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+
+    setUser(currentUser);
+
+    if (currentUser) {
+
+      const docRef = doc(db, "users", currentUser.uid);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUserData(docSnap.data());
+      }
+
+    } else {
+
+      setUserData(null);
+
+    }
+
+    setChargement(false);
+
+  });
+
+  return () => unsubscribe();
+
+}, []);
 
   if (chargement) {
     return null;
   }
 
   if (!user) {
+
+  return (
+
+    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+
+      <h1 className="text-4xl font-black text-white">
+        Connexion requise
+      </h1>
+
+      <p className="mt-4 text-slate-300">
+        Veuillez vous connecter pour accéder à cette section.
+      </p>
+
+    </section>
+
+  );
+
+}
+
+if (!userData?.isAdmin) {
+
+  return (
+
+    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+
+      <h1 className="text-4xl font-black text-white">
+        Boutique bientôt disponible
+      </h1>
+
+      <p className="mt-4 text-slate-300">
+        La boutique LVPSA est actuellement en préparation et sera accessible sous peu.
+      </p>
+
+    </section>
+
+  );
+
+}
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
         <h1 className="text-5xl font-black">Boutique en préparation</h1>
