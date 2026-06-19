@@ -2330,6 +2330,62 @@ const semaineActive = selection.length > 0 ? selection[0] : null;
   );
 }
 
+function Connexion() {
+  const [email, setEmail] = useState("");
+  const [motDePasse, setMotDePasse] = useState("");
+  const [message, setMessage] = useState("");
+
+  const seConnecter = async (e) => {
+    e.preventDefault();
+
+    try {
+      await signInWithEmailAndPassword(auth, email, motDePasse);
+      window.location.href = "/";
+    } catch (error) {
+      setMessage("Courriel ou mot de passe invalide.");
+    }
+  };
+
+  return (
+    <section className="mx-auto max-w-xl px-6 py-20">
+      <h1 className="text-5xl font-black text-white">Connexion</h1>
+
+      <form onSubmit={seConnecter} className="mt-10 space-y-5">
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
+          placeholder="Adresse courriel"
+          required
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+        />
+
+        <input
+          value={motDePasse}
+          onChange={(e) => setMotDePasse(e.target.value)}
+          type="password"
+          placeholder="Mot de passe"
+          required
+          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
+        />
+
+        <button
+          type="submit"
+          className="w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+        >
+          Se connecter
+        </button>
+      </form>
+
+      {message && (
+        <p className="mt-6 rounded-2xl bg-white/10 p-4 text-center text-white">
+          {message}
+        </p>
+      )}
+    </section>
+  );
+}
+
 function Footer() {
   return (
     <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-400">
