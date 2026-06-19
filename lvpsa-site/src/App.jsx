@@ -332,22 +332,18 @@ function Header() {
             </Link>
             
             {user ? (
-
   <div className="flex items-center gap-4">
-
     <span className="font-semibold text-white">
       Bonjour {userData?.nom?.split(" ")[0]}
     </span>
 
     {userData?.isAdmin && (
-
       <Link
         to="/admin"
         className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950"
       >
         Administration
       </Link>
-
     )}
 
     <button
@@ -356,18 +352,14 @@ function Header() {
     >
       Déconnexion
     </button>
-
   </div>
-
 ) : (
-
   <Link
     to="/connexion"
     className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
   >
     Connexion
   </Link>
-
 )}
             
             <Link to="/contact" onClick={() => setMenuOpen(false)}>
