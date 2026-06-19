@@ -72,24 +72,44 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [ligueOpen, setLigueOpen] = useState(false);
   const [tournoiOpen, setTournoiOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          setUserData(docSnap.data());
-        }
-      } else {
-        setUserData(null);
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+
+    setUser(currentUser);
+
+    if (currentUser) {
+
+      const docRef = doc(db, "users", currentUser.uid);
+
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUserData(docSnap.data());
       }
-    });
 
-    return () => unsubscribe();
-  }, []);
+    } else {
+
+      setUserData(null);
+
+    }
+
+  });
+
+  return () => unsubscribe();
+
+}, []);
+
+  const deconnexion = async () => {
+
+  await signOut(auth);
+
+  window.location.href = "/";
+
+};
   
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
@@ -190,12 +210,25 @@ function Header() {
   Boutique
 </Link>
 
-<Link
-  to="/connexion"
-  className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
->
-  Connexion
-</Link>
+{user ? (
+
+  <button
+    onClick={deconnexion}
+    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+  >
+    Déconnexion
+  </button>
+
+) : (
+
+  <Link
+    to="/connexion"
+    className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300"
+  >
+    Connexion
+  </Link>
+
+)}
 
 {userData?.isAdmin && (
   <Link
@@ -298,13 +331,32 @@ function Header() {
               CRÉER UN COMPTE
             </Link>
             
-            <Link to="/connexion" onClick={() => setMenuOpen(false)}>
-              CONNEXION
-            </Link>
+            {user ? (
+              <>
+                <span className="font-semibold text-amber-300">
+                  Bonjour {userData?.nom?.split(" ")[0]}
+                </span>
             
-            {userData?.isAdmin && (
-              <Link to="/admin" onClick={() => setMenuOpen(false)}>
-                ADMIN
+                {userData?.isAdmin && (
+                  <Link to="/admin" onClick={() => setMenuOpen(false)}>
+                    ADMINISTRATION
+                  </Link>
+                )}
+            
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    deconnexion();
+                  }}
+                  className="text-left text-red-300"
+                >
+                  DÉCONNEXION
+                </button>
+              </>
+            ) : (
+              <Link to="/connexion" onClick={() => setMenuOpen(false)}>
+                CONNEXION
               </Link>
             )}
             
