@@ -1875,17 +1875,23 @@ const equipesCompetitives = equipes.filter(
                     </p>
 
                     <div className="mt-4 space-y-2">
-                      {joueursParEquipe(equipe.id).length > 0 ? (
-                        joueursParEquipe(equipe.id).map((joueur) => (
-                          <p key={joueur.id} className="text-slate-300">
-                            • {joueur.nom} — {joueur.email}
-                          </p>
-                        ))
-                      ) : (
-                        <p className="text-slate-500">
-                          Aucun joueur associé.
-                        </p>
-                      )}
+                     {equipe.joueurs?.length > 0 ? (
+  equipe.joueurs.map((joueur, index) => (
+    <p key={index} className="text-slate-300">
+      • {joueur}
+    </p>
+  ))
+) : joueursParEquipe(equipe.id).length > 0 ? (
+  joueursParEquipe(equipe.id).map((joueur) => (
+    <p key={joueur.id} className="text-slate-300">
+      • {joueur.nom} — {joueur.email}
+    </p>
+  ))
+) : (
+  <p className="text-slate-500">
+    Aucun joueur associé.
+  </p>
+)}
                     </div>
                   </div>
                 ))}
