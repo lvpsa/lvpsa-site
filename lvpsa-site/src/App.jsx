@@ -1639,7 +1639,8 @@ function Admin() {
   const [membres, setMembres] = useState([]);
   const [equipes, setEquipes] = useState([]);
   const [remplacements, setRemplacements] = useState([]);
-
+  const [historiqueRemplacements, setHistoriqueRemplacements] = useState([]);
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -1673,6 +1674,7 @@ function Admin() {
       const membresSnap = await getDocs(collection(db, "users"));
       const equipesSnap = await getDocs(collection(db, "Teams"));
       const remplacementsSnap = await getDocs(collection(db, "remplacements"));
+      const historiqueSnap = await getDocs(collection(db, "historiqueRemplacements"));
 
       setMembres(
         membresSnap.docs.map((docItem) => ({
@@ -1690,6 +1692,13 @@ function Admin() {
 
       setRemplacements(
         remplacementsSnap.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data(),
+        }))
+      );
+
+      setHistoriqueRemplacements(
+        historiqueSnap.docs.map((docItem) => ({
           id: docItem.id,
           ...docItem.data(),
         }))
@@ -1750,12 +1759,16 @@ const equipesCompetitives = equipes.filter(
   const joueursParEquipe = (equipeId) =>
     membres.filter((membre) => membre.equipeId === equipeId);
 
-  const totalRemplacementsParRemplacant = remplacements.reduce((acc, item) => {
-  const nom = item.remplacantNom || item.nom || "Sans nom";
-  acc[nom] = (acc[nom] || 0) + 1;
-  return acc;
-}, {});
+  const totalRemplacantsDisponibles = remplacements.length;
 
+  const totalRemplacementsParRemplacant = historiqueRemplacements.reduce((acc, item) => {
+    const nom = item.remplacantNom || "Sans nom";
+    acc[nom] = (acc[nom] || 0) + 1;
+    return acc;
+  }, {});
+
+  const totalRemplacantsDisponibles = remplacements.length;
+  
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -1902,82 +1915,134 @@ const equipesCompetitives = equipes.filter(
       )}
 
 {onglet === "remplacements" && (
-  <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-    <h2 className="text-3xl font-black text-amber-300">
-      Liste des remplaçants
-    </h2>
+  <div className="mt-10 space-y-8">
 
-    <p className="mt-3 text-slate-300">
-      Total de remplaçants inscrits : {totalRemplacantsDisponibles}
-    </p>
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <h2 className="text-3xl font-black text-amber-300">
+        Liste des remplaçants
+      </h2>
 
-    <div className="mt-6 grid gap-6 lg:grid-cols-2">
-      {remplacements.length > 0 ? (
-        remplacements.map((item) => (
-          <div
-            key={item.id}
-            className="rounded-2xl border border-white/10 bg-black/20 p-5"
-          >
-            <h3 className="text-2xl font-black text-white">
-              {item.nom || "Sans nom"}
-            </h3>
+      <p className="mt-3 text-slate-300">
+        Total de remplaçants inscrits : {totalRemplacantsDisponibles}
+      </p>
 
-            <p className="mt-2 text-slate-300">
-              Catégories : {Array.isArray(item.categories) ? item.categories.join(", ") : "Non précisées"}
-            </p>
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        {remplacements.length > 0 ? (
+          remplacements.map((item) => (
+            <div
+              key={item.id}
+              className="rounded-2xl border border-white/10 bg-black/20 p-5"
+            >
+              <h3 className="text-2xl font-black text-white">
+                {item.nom || "Sans nom"}
+              </h3>
 
-            <p className="text-slate-300">
-              Disponibilités : {item.disponibilites?.join(", ") || "Non précisées"}
-            </p>
+              <p className="mt-2 text-slate-300">
+                Catégories :{" "}
+                {Array.isArray(item.categories)
+                  ? item.categories.join(", ")
+                  : "Non précisées"}
+              </p>
 
-            <p className="text-slate-300">
-              Courriel : {item.email || "Non précisé"}
-            </p>
+              <p className="text-slate-300">
+                Disponibilités :{" "}
+                {Array.isArray(item.disponibilites)
+                  ? item.disponibilites.join(", ")
+                  : "Non précisées"}
+              </p>
 
-            <p className="text-slate-300">
-              Téléphone : {item.telephone || "Non précisé"}
-            </p>
+              <p className="text-slate-300">
+                Courriel : {item.email || "Non précisé"}
+              </p>
 
-            <p className={item.disponible ? "text-emerald-300" : "text-red-300"}>
-              {item.disponible ? "Disponible" : "Non disponible"}
-            </p>
-          </div>
-        ))
-      ) : (
-        <p className="text-slate-500">
-          Aucun remplaçant inscrit.
-        </p>
-      )}
+              <p className="text-slate-300">
+                Téléphone : {item.telephone || "Non précisé"}
+              </p>
+
+              <p className={item.disponible ? "text-emerald-300" : "text-red-300"}>
+                {item.disponible ? "Disponible" : "Non disponible"}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-slate-500">
+            Aucun remplaçant inscrit.
+          </p>
+        )}
       </div>
-  </div>
-)}
+    </div>
 
-      {onglet === "membres" && (
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h2 className="text-3xl font-black text-amber-300">Membres</h2>
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+      <h2 className="text-3xl font-black text-amber-300">
+        Historique des remplacements utilisés
+      </h2>
 
-          <div className="mt-6 space-y-3">
-            {membres.map((membre) => (
-              <div
-                key={membre.id}
-                className="rounded-2xl border border-white/10 bg-black/20 p-5"
-              >
-                <p className="font-bold text-white">
-                  {membre.nom || "Sans nom"}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+          <h3 className="text-2xl font-black text-white">
+            Total par remplaçant
+          </h3>
+
+          <div className="mt-4 space-y-2">
+            {Object.keys(totalRemplacementsParRemplacant).length > 0 ? (
+              Object.entries(totalRemplacementsParRemplacant).map(([nom, total]) => (
+                <p key={nom} className="text-slate-300">
+                  {nom} : {total} remplacement{total > 1 ? "s" : ""}
                 </p>
-
-                <p className="text-slate-300">{membre.email}</p>
-
-                <p className="text-slate-400">
-                  Rôle : {membre.role || "membre"} | Équipe :{" "}
-                  {membre.equipenom || "Aucune"}
-                </p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-slate-500">
+                Aucun remplacement utilisé pour le moment.
+              </p>
+            )}
           </div>
         </div>
-      )}
 
+        <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+          <h3 className="text-2xl font-black text-white">
+            Détails par équipe
+          </h3>
+
+          <div className="mt-4 space-y-4">
+            {historiqueRemplacements.length > 0 ? (
+              historiqueRemplacements.map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl bg-white/5 p-4 text-slate-300"
+                >
+                  <p className="text-xl font-black text-white">
+                    {item.equipeNom || "Équipe non précisée"}
+                  </p>
+
+                  <p className="mt-2">
+                    Remplaçant : {item.remplacantNom || "Non précisé"}
+                  </p>
+
+                  <p>
+                    Joueur remplacé : {item.joueurRemplaceNom || "Non précisé"}
+                  </p>
+
+                  <p>
+                    Date : {item.date || "Non précisée"}
+                  </p>
+
+                  <p>
+                    Note : {item.note || "Aucune note"}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-slate-500">
+                Aucun remplacement utilisé pour le moment.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+)}
       {onglet === "boutique" && (
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
           <h2 className="text-3xl font-black text-amber-300">Boutique</h2>
