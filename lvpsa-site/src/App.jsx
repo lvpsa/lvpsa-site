@@ -1938,8 +1938,13 @@ const equipesCompetitives = equipes.filter(
 >
   {item.disponible ? "Disponible" : "Non disponible"}
 </p>
-              </div>
-        )}
+                            </div>
+            ))
+          ) : (
+            <p className="text-slate-500">
+              Aucun remplaçant inscrit.
+            </p>
+          )}
       </div>
     </div>
 
