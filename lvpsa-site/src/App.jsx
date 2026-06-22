@@ -139,22 +139,12 @@ function Header() {
         <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
           <Link to="/" className="hover:text-amber-300">Accueil</Link>
 
-          <div className="group relative">
-            <button className="hover:text-amber-300">Ligue</button>
-            <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
-              <Link to="/calendrier" className="block rounded-xl px-3 py-2 hover:bg-white/10">Calendrier</Link>
-              <Link to="/classements" className="block rounded-xl px-3 py-2 hover:bg-white/10">Classements</Link>
-              <Link to="/inscription-ligue" className="block rounded-xl px-3 py-2 hover:bg-white/10">Inscriptions</Link>
-
-              {(userData?.role === "capitaine" || userData?.isAdmin) && (
-                <Link to="/gestion-equipe" className="block rounded-xl px-3 py-2 hover:bg-white/10">
-                  Gestion d'équipe
-                </Link>
-              )}
-
-              <Link to="/reglements" className="block rounded-xl px-3 py-2 hover:bg-white/10">Règlements</Link>
-            </div>
-          </div>
+          <Link
+  to="/admin"
+  className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950 transition"
+>
+  Administration
+</Link>
 
           <div className="group relative">
             <button className="hover:text-amber-300">Tournoi</button>
@@ -174,58 +164,14 @@ function Header() {
 
               {userData?.isAdmin && (
 
-  <div className="group relative">
-
-    <button className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950">
-
-      Administration
-
-    </button>
-
-    <div className="absolute right-0 hidden min-w-[240px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
-
-      <Link
-        to="/admin"
-        className="block rounded-xl px-3 py-2 hover:bg-white/10"
-      >
-
-        Équipes
-
-      </Link>
-
-      <Link
-        to="/admin"
-        className="block rounded-xl px-3 py-2 hover:bg-white/10"
-      >
-
-        Remplacements
-
-      </Link>
-
-      <Link
-        to="/admin"
-        className="block rounded-xl px-3 py-2 hover:bg-white/10"
-      >
-
-        Membres
-
-      </Link>
-
-      <Link
-        to="/admin"
-        className="block rounded-xl px-3 py-2 hover:bg-white/10"
-      >
-
-        Boutique
-
-      </Link>
-
-    </div>
-
-  </div>
+  <Link
+    to="/admin"
+    className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950 transition"
+  >
+    Administration
+  </Link>
 
 )}
-
               <button
                 onClick={modifierMotDePasse}
                 className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-amber-300 hover:text-amber-300"
