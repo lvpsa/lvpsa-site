@@ -2690,33 +2690,22 @@ function Connexion() {
 
     try {
       await setPersistence(
-  auth,
-  seSouvenir ? browserLocalPersistence : browserSessionPersistence
-);
+        auth,
+        seSouvenir ? browserLocalPersistence : browserSessionPersistence
+      );
 
-await setPersistence(
-  auth,
-  seSouvenir
-    ? browserLocalPersistence
-    : browserSessionPersistence
-);
+      await signInWithEmailAndPassword(auth, email, motDePasse);
 
-await signInWithEmailAndPassword(
-  auth,
-  email,
-  motDePasse
-);
+      if (!seSouvenir) {
+        localStorage.setItem(
+          "lvpsaSessionExpire",
+          String(Date.now() + 60 * 60 * 1000)
+        );
+      } else {
+        localStorage.removeItem("lvpsaSessionExpire");
+      }
 
-if (!seSouvenir) {
-  localStorage.setItem(
-    "lvpsaSessionExpire",
-    String(Date.now() + 60 * 60 * 1000)
-  );
-} else {
-  localStorage.removeItem("lvpsaSessionExpire");
-}
-
-window.location.href = "/";
+      window.location.href = "/";
     } catch (error) {
       setMessage("Courriel ou mot de passe invalide.");
     }
@@ -2745,28 +2734,23 @@ window.location.href = "/";
           className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
         />
 
+        <label className="flex items-center gap-3 text-sm text-slate-300">
+          <input
+            type="checkbox"
+            checked={seSouvenir}
+            onChange={(e) => setSeSouvenir(e.target.checked)}
+            className="h-4 w-4"
+          />
+          Se souvenir de moi
+        </label>
+
         <button
           type="submit"
           className="w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
         >
-
-          <label className="mt-4 flex items-center gap-3 text-sm text-slate-300">
-            <input
-              type="checkbox"
-              checked={seSouvenir}
-              onChange={(e) => setSeSouvenir(e.target.checked)}
-              className="h-4 w-4"
-            />
-            Se souvenir de moi
-          </label>
-          
-          <button
-            type="submit"
-            className="mt-6 w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-          >
-            Se connecter
-          </button>
-        </form>
+          Se connecter
+        </button>
+      </form>
 
       {message && (
         <p className="mt-6 rounded-2xl bg-white/10 p-4 text-center text-white">
