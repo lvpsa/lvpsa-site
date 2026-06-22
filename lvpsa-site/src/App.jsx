@@ -11,6 +11,7 @@ import {
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
+  browserSessionPersistence,
   sendPasswordResetEmail
 } from "firebase/auth";
 
@@ -76,6 +77,24 @@ function Header() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
 
+  useEffect(() => {
+  const verifierExpiration = () => {
+    const expiration = localStorage.getItem("lvpsaSessionExpire");
+
+    if (expiration && Date.now() > Number(expiration)) {
+      localStorage.removeItem("lvpsaSessionExpire");
+      signOut(auth);
+      window.location.href = "/connexion";
+    }
+  };
+
+  verifierExpiration();
+
+  const interval = setInterval(verifierExpiration, 60 * 1000);
+
+  return () => clearInterval(interval);
+}, []);
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -1177,24 +1196,34 @@ function Membres() {
   const [message, setMessage] = useState("");
 
   const connexion = async () => {
+  try {
+    await setPersistence(
+      auth,
+      seSouvenir
+        ? browserLocalPersistence
+        : browserSessionPersistence
+    );
 
-    try {
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      motDePasse
+    );
 
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        motDePasse
+    if (!seSouvenir) {
+      localStorage.setItem(
+        "lvpsaSessionExpire",
+        String(Date.now() + 60 * 60 * 1000)
       );
-
-      window.location.href = "/";
-
-    } catch (error) {
-
-      setMessage("Courriel ou mot de passe invalide.");
-
+    } else {
+      localStorage.removeItem("lvpsaSessionExpire");
     }
 
-  };
+    window.location.href = "/";
+  } catch (error) {
+    setMessage("Courriel ou mot de passe invalide.");
+  }
+};
 
   return (
 
@@ -2654,13 +2683,40 @@ function Connexion() {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [message, setMessage] = useState("");
+  const [seSouvenir, setSeSouvenir] = useState(false);
 
   const seConnecter = async (e) => {
     e.preventDefault();
 
     try {
-      await signInWithEmailAndPassword(auth, email, motDePasse);
-      window.location.href = "/";
+      await setPersistence(
+  auth,
+  seSouvenir ? browserLocalPersistence : browserSessionPersistence
+);
+
+await setPersistence(
+  auth,
+  seSouvenir
+    ? browserLocalPersistence
+    : browserSessionPersistence
+);
+
+await signInWithEmailAndPassword(
+  auth,
+  email,
+  motDePasse
+);
+
+if (!seSouvenir) {
+  localStorage.setItem(
+    "lvpsaSessionExpire",
+    String(Date.now() + 60 * 60 * 1000)
+  );
+} else {
+  localStorage.removeItem("lvpsaSessionExpire");
+}
+
+window.location.href = "/";
     } catch (error) {
       setMessage("Courriel ou mot de passe invalide.");
     }
@@ -2693,9 +2749,24 @@ function Connexion() {
           type="submit"
           className="w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
         >
-          Se connecter
-        </button>
-      </form>
+
+          <label className="mt-4 flex items-center gap-3 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              checked={seSouvenir}
+              onChange={(e) => setSeSouvenir(e.target.checked)}
+              className="h-4 w-4"
+            />
+            Se souvenir de moi
+          </label>
+          
+          <button
+            type="submit"
+            className="mt-6 w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+          >
+            Se connecter
+          </button>
+        </form>
 
       {message && (
         <p className="mt-6 rounded-2xl bg-white/10 p-4 text-center text-white">
