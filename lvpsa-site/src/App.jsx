@@ -1948,12 +1948,7 @@ const equipesCompetitives = equipes.filter(
           Aucun remplaçant inscrit.
         </p>
       )}
-    </div>
-  </div>
-)}
-        </div>
       </div>
-    </div>
   </div>
 )}
 
