@@ -146,14 +146,6 @@ function Header() {
   Administration
 </Link>
 
-          <div className="group relative">
-            <button className="hover:text-amber-300">Tournoi</button>
-            <div className="absolute hidden min-w-[220px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
-              <Link to="/tournoi" className="block rounded-xl px-3 py-2 hover:bg-white/10">Informations</Link>
-              <Link to="/tournoi/reglements" className="block rounded-xl px-3 py-2 hover:bg-white/10">Règlements</Link>
-            </div>
-          </div>
-
           <Link to="/boutique" className="hover:text-amber-300">Boutique</Link>
 
           {user ? (
