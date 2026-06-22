@@ -1305,7 +1305,7 @@ function Membres() {
 }
 
 function CreerCompte() {
-  const [nom, setNom] = useState("");
+  const [nom, setnom] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
@@ -1364,8 +1364,8 @@ function CreerCompte() {
       <form onSubmit={creerCompte} className="mt-10 space-y-5">
           <input
             value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            placeholder="Nom complet"
+            onChange={(e) => setnom(e.target.value)}
+            placeholder="nom complet"
             required
             className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
           />
@@ -1751,7 +1751,7 @@ const equipesCompetitives = equipes.filter(
     membres.filter((membre) => membre.equipeId === equipeId);
 
   const totalRemplacementsParRemplacant = remplacements.reduce((acc, item) => {
-    const nom = item.remplacantNom || "Sans nom";
+    const nom = item.nom || "Sans nom";
     acc[nom] = (acc[nom] || 0) + 1;
     return acc;
   }, {});
@@ -1871,7 +1871,7 @@ const equipesCompetitives = equipes.filter(
                     </h3>
 
                     <p className="mt-2 text-slate-300">
-                      Capitaine : {equipe.capitaineNom || equipe.capitainenom || "Non assigné"}
+                      Capitaine : {equipe.capitainenom || equipe.capitainenom || "Non assigné"}
                     </p>
 
                     <div className="mt-4 space-y-2">
@@ -1904,7 +1904,7 @@ const equipesCompetitives = equipes.filter(
       {onglet === "remplacements" && (
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
           <h2 className="text-3xl font-black text-amber-300">
-            Historique des remplacements
+            Liste des remplacements
           </h2>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -1934,28 +1934,42 @@ const equipesCompetitives = equipes.filter(
               <h3 className="text-2xl font-black text-white">Détails</h3>
 
               <div className="mt-4 space-y-4">
-                {remplacements.length > 0 ? (
-                  remplacements.map((item) => (
-                    <div
-                      key={item.id}
-                      className="rounded-xl bg-white/5 p-4 text-slate-300"
-                    >
-                      <p className="font-bold text-white">
-                        {item.remplacantNom} avec {item.equipeNom}
-                      </p>
+{remplacements.length > 0 ? (
+  remplacements.map((item) => (
+    <div
+      key={item.id}
+      className="rounded-2xl border border-white/10 bg-black/20 p-5"
+    >
+      <h3 className="text-2xl font-black text-white">
+        {item.nom || "Sans nom"}
+      </h3>
 
-                      <p>Date : {item.date}</p>
+      <p className="mt-2 text-slate-300">
+        Catégories : {item.categories?.join(", ") || "Non précisées"}
+      </p>
 
-                      <p>
-                        Remplace : {item.joueurRemplaceNom || "Non précisé"}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-slate-500">
-                    Aucun remplacement enregistré.
-                  </p>
-                )}
+      <p className="text-slate-300">
+        Disponibilités : {item.disponibilites?.join(", ") || "Non précisées"}
+      </p>
+
+      <p className="text-slate-300">
+        Courriel : {item.email || "Non précisé"}
+      </p>
+
+      <p className="text-slate-300">
+        Téléphone : {item.telephone || "Non précisé"}
+      </p>
+
+      <p className={item.disponible ? "text-emerald-300" : "text-red-300"}>
+        {item.disponible ? "Disponible" : "Non disponible"}
+      </p>
+    </div>
+  ))
+) : (
+  <p className="text-slate-500">
+    Aucun remplaçant inscrit.
+  </p>
+)}
               </div>
             </div>
           </div>
@@ -1980,7 +1994,7 @@ const equipesCompetitives = equipes.filter(
 
                 <p className="text-slate-400">
                   Rôle : {membre.role || "membre"} | Équipe :{" "}
-                  {membre.equipeNom || "Aucune"}
+                  {membre.equipenom || "Aucune"}
                 </p>
               </div>
             ))}
@@ -2973,7 +2987,7 @@ const [joueur, setJoueur] = useState({
           <div className="mt-8 grid gap-4 md:grid-cols-2">
 <input
   className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Nom du capitaine"
+  placeholder="nom du capitaine"
   value={equipe.capitaine}
   onChange={(e) => setEquipe({ ...equipe, capitaine: e.target.value })}
 />
@@ -2996,7 +3010,7 @@ const [joueur, setJoueur] = useState({
 
 <input
   className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Nom de l’équipe"
+  placeholder="nom de l’équipe"
   value={equipe.nomEquipe}
   onChange={(e) => setEquipe({ ...equipe, nomEquipe: e.target.value })}
 />
@@ -3010,12 +3024,12 @@ const [joueur, setJoueur] = useState({
   <option>Compétitif</option>
 </select>
 
-{equipe.joueurs.map((joueurNom, index) => (
+{equipe.joueurs.map((joueurnom, index) => (
   <input
     key={index}
     className="rounded-2xl px-4 py-3 text-slate-950"
     placeholder={`Joueur ${index + 1}${index > 3 ? " optionnel" : ""}`}
-    value={joueurNom}
+    value={joueurnom}
     onChange={(e) => {
       const nouveauxJoueurs = [...equipe.joueurs];
       nouveauxJoueurs[index] = e.target.value;
@@ -3052,7 +3066,7 @@ const [joueur, setJoueur] = useState({
           <div className="mt-8 grid gap-4 md:grid-cols-2">
 <input
   className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Nom complet"
+  placeholder="nom complet"
   value={joueur.nom}
   onChange={(e) => setJoueur({ ...joueur, nom: e.target.value })}
 />
@@ -3279,11 +3293,11 @@ function GestionEquipe({ userData }) {
     date: dateSelectionnee,
     categorie: userData.categorie,
     equipeId: userData.equipeId,
-    equipeNom: userData.equipeNom,
+    equipenom: userData.equipenom,
     joueurRemplaceId: joueurAbsent?.id || "",
-    joueurRemplaceNom: joueurAbsent?.nom || "",
+    joueurRemplacenom: joueurAbsent?.nom || "",
     remplacantId: remplacant?.id || "",
-    remplacantNom: remplacant?.nom || "",
+    nom: remplacant?.nom || "",
     remplacantEmail: remplacant?.email || "",
     remplacantTelephone: remplacant?.telephone || "",
     capitaineId: userData.id || "",
@@ -3302,7 +3316,7 @@ function GestionEquipe({ userData }) {
       </p>
 
       <h1 className="mt-2 text-5xl font-black text-white">
-        {userData.equipeNom}
+        {userData.equipenom}
       </h1>
 
       <p className="mt-4 text-slate-300">
