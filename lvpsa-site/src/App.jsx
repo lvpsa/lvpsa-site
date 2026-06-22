@@ -1751,10 +1751,10 @@ const equipesCompetitives = equipes.filter(
     membres.filter((membre) => membre.equipeId === equipeId);
 
   const totalRemplacementsParRemplacant = remplacements.reduce((acc, item) => {
-    const nom = item.nom || "Sans nom";
-    acc[nom] = (acc[nom] || 0) + 1;
-    return acc;
-  }, {});
+  const nom = item.remplacantNom || item.nom || "Sans nom";
+  acc[nom] = (acc[nom] || 0) + 1;
+  return acc;
+}, {});
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -1901,80 +1901,80 @@ const equipesCompetitives = equipes.filter(
         </div>
       )}
 
-      {onglet === "remplacements" && (
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h2 className="text-3xl font-black text-amber-300">
-            Liste des remplacements
-          </h2>
+{onglet === "remplacements" && (
+  <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+    <h2 className="text-3xl font-black text-amber-300">
+      Remplacements utilisés
+    </h2>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-              <h3 className="text-2xl font-black text-white">
-                Total par remplaçant
-              </h3>
+    <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+        <h3 className="text-2xl font-black text-white">
+          Total par remplaçant
+        </h3>
 
-              <div className="mt-4 space-y-2">
-                {Object.keys(totalRemplacementsParRemplacant).length > 0 ? (
-                  Object.entries(totalRemplacementsParRemplacant).map(
-                    ([nom, total]) => (
-                      <p key={nom} className="text-slate-300">
-                        {nom} : {total} remplacement{total > 1 ? "s" : ""}
-                      </p>
-                    )
-                  )
-                ) : (
-                  <p className="text-slate-500">
-                    Aucun remplacement enregistré.
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-              <h3 className="text-2xl font-black text-white">Détails</h3>
-
-              <div className="mt-4 space-y-4">
-{remplacements.length > 0 ? (
-  remplacements.map((item) => (
-    <div
-      key={item.id}
-      className="rounded-2xl border border-white/10 bg-black/20 p-5"
-    >
-      <h3 className="text-2xl font-black text-white">
-        {item.nom || "Sans nom"}
-      </h3>
-
-      <p className="mt-2 text-slate-300">
-        Catégories : {item.categories?.join(", ") || "Non précisées"}
-      </p>
-
-      <p className="text-slate-300">
-        Disponibilités : {item.disponibilites?.join(", ") || "Non précisées"}
-      </p>
-
-      <p className="text-slate-300">
-        Courriel : {item.email || "Non précisé"}
-      </p>
-
-      <p className="text-slate-300">
-        Téléphone : {item.telephone || "Non précisé"}
-      </p>
-
-      <p className={item.disponible ? "text-emerald-300" : "text-red-300"}>
-        {item.disponible ? "Disponible" : "Non disponible"}
-      </p>
-    </div>
-  ))
-) : (
-  <p className="text-slate-500">
-    Aucun remplaçant inscrit.
-  </p>
-)}
-              </div>
-            </div>
-          </div>
+        <div className="mt-4 space-y-2">
+          {Object.keys(totalRemplacementsParRemplacant).length > 0 ? (
+            Object.entries(totalRemplacementsParRemplacant).map(([nom, total]) => (
+              <p key={nom} className="text-slate-300">
+                {nom} : {total} remplacement{total > 1 ? "s" : ""}
+              </p>
+            ))
+          ) : (
+            <p className="text-slate-500">
+              Aucun remplacement enregistré.
+            </p>
+          )}
         </div>
-      )}
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+        <h3 className="text-2xl font-black text-white">
+          Détails par équipe
+        </h3>
+
+        <div className="mt-4 space-y-4">
+          {remplacements.length > 0 ? (
+            remplacements.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-2xl border border-white/10 bg-black/20 p-5"
+              >
+                <h3 className="text-2xl font-black text-white">
+                  {item.equipeNom || item.equipe || "Équipe non précisée"}
+                </h3>
+
+                <p className="mt-2 text-slate-300">
+                  Remplaçant : {item.remplacantNom || item.nom || "Non précisé"}
+                </p>
+
+                <p className="text-slate-300">
+                  Joueur remplacé : {item.joueurRemplaceNom || "Non précisé"}
+                </p>
+
+                <p className="text-slate-300">
+                  Date : {item.date || "Non précisée"}
+                </p>
+
+                <p className="text-slate-300">
+                  Courriel : {item.remplacantEmail || item.email || "Non précisé"}
+                </p>
+
+                <p className="text-slate-300">
+                  Téléphone : {item.remplacantTelephone || item.telephone || "Non précisé"}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-slate-500">
+              Aucun remplacement utilisé pour le moment.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {onglet === "membres" && (
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
