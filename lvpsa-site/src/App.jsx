@@ -1915,19 +1915,31 @@ const equipesCompetitives = equipes.filter(
                 Courriel : {item.email || "Non précisé"}
               </p>
 
-              <p className="text-slate-300">
-                Téléphone : {item.telephone || "Non précisé"}
-              </p>
+             <p className="text-slate-300">
+  Téléphone : {item.telephone || "Non précisé"}
+</p>
 
-              <p className={item.disponible ? "text-emerald-300" : "text-red-300"}>
-                {item.disponible ? "Disponible" : "Non disponible"}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className="text-slate-500">
-            Aucun remplaçant inscrit.
-          </p>
+{item.note && (
+  <div className="mt-4 rounded-xl bg-white/5 p-4">
+    <p className="mb-2 font-bold text-amber-300">
+      Note du remplaçant
+    </p>
+
+    <p className="italic text-slate-300">
+      "{item.note}"
+    </p>
+  </div>
+)}
+
+<p
+  className={`mt-4 font-bold ${
+    item.disponible
+      ? "text-emerald-300"
+      : "text-red-300"
+  }`}
+>
+  {item.disponible ? "Disponible" : "Non disponible"}
+</p>
         )}
       </div>
     </div>
