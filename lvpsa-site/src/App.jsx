@@ -166,7 +166,7 @@ function Header() {
     <div className="absolute right-0 hidden min-w-[240px] rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl group-hover:block">
 
       <Link
-        to="/admin-equipes"
+        to="/admin"
         className="block rounded-xl px-3 py-2 hover:bg-white/10"
       >
 
@@ -175,7 +175,7 @@ function Header() {
       </Link>
 
       <Link
-        to="/admin-remplacements"
+        to="/admin"
         className="block rounded-xl px-3 py-2 hover:bg-white/10"
       >
 
@@ -184,7 +184,7 @@ function Header() {
       </Link>
 
       <Link
-        to="/admin-membres"
+        to="/admin"
         className="block rounded-xl px-3 py-2 hover:bg-white/10"
       >
 
@@ -193,7 +193,7 @@ function Header() {
       </Link>
 
       <Link
-        to="/admin-boutique"
+        to="/admin"
         className="block rounded-xl px-3 py-2 hover:bg-white/10"
       >
 
