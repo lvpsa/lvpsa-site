@@ -1871,7 +1871,7 @@ const equipesCompetitives = equipes.filter(
                     </h3>
 
                     <p className="mt-2 text-slate-300">
-                      Capitaine : {equipe.capitaineNom || "Non assigné"}
+                      Capitaine : {equipe.capitaineNom || equipe.capitainenom || "Non assigné"}
                     </p>
 
                     <div className="mt-4 space-y-2">
