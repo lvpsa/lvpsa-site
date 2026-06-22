@@ -1919,17 +1919,15 @@ const equipesCompetitives = equipes.filter(
   Téléphone : {item.telephone || "Non précisé"}
 </p>
 
-{item.note && (
-  <div className="mt-4 rounded-xl bg-white/5 p-4">
-    <p className="mb-2 font-bold text-amber-300">
-      Note du remplaçant
-    </p>
+<div className="mt-4 rounded-xl bg-white/5 p-4">
+  <p className="mb-2 font-bold text-amber-300">
+    Note du remplaçant
+  </p>
 
-    <p className="italic text-slate-300">
-      {item.note}
-    </p>
-  </div>
-)}
+  <p className="italic text-slate-300">
+    {item.note || "Aucune note"}
+  </p>
+</div>
 
 <p
   className={`mt-4 font-bold ${
@@ -1940,6 +1938,7 @@ const equipesCompetitives = equipes.filter(
 >
   {item.disponible ? "Disponible" : "Non disponible"}
 </p>
+              </div>
         )}
       </div>
     </div>
