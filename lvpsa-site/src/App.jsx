@@ -1750,7 +1750,7 @@ const equipesCompetitives = equipes.filter(
   const joueursParEquipe = (equipeId) =>
     membres.filter((membre) => membre.equipeId === equipeId);
 
-  const totalRemplacantsDisponibles = remplacements.length;
+  const totalRemplacementsParRemplacant = remplacements.reduce((acc, item) => {
   const nom = item.remplacantNom || item.nom || "Sans nom";
   acc[nom] = (acc[nom] || 0) + 1;
   return acc;
