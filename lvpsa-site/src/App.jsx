@@ -1732,13 +1732,20 @@ function Admin() {
     );
   }
 
-  const equipesRecreatives = equipes.filter(
-    (equipe) => equipe.categorie === "recreatif"
-  );
+  const normaliserCategorie = (categorie) =>
+  String(categorie || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
 
-  const equipesCompetitives = equipes.filter(
-    (equipe) => equipe.categorie === "competitif"
-  );
+const equipesRecreatives = equipes.filter(
+  (equipe) => normaliserCategorie(equipe.categorie) === "recreatif"
+);
+
+const equipesCompetitives = equipes.filter(
+  (equipe) => normaliserCategorie(equipe.categorie) === "competitif"
+);
 
   const joueursParEquipe = (equipeId) =>
     membres.filter((membre) => membre.equipeId === equipeId);
