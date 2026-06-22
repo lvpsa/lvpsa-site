@@ -1339,7 +1339,7 @@ function CreerCompte() {
       );
 
       const user = userCredential.user;
-      const equipe = teams.find((team) => team.id === equipeId);
+      const equipe = Teams.find((team) => team.id === equipeId);
 
       await setDoc(doc(db, "users", user.uid), {
         nom,
