@@ -1926,7 +1926,7 @@ const equipesCompetitives = equipes.filter(
     </p>
 
     <p className="italic text-slate-300">
-      "{item.note}"
+      {item.note}
     </p>
   </div>
 )}
