@@ -138,14 +138,7 @@ function Header() {
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
           <Link to="/" className="hover:text-amber-300">Accueil</Link>
-
-          <Link
-  to="/admin"
-  className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950 transition"
->
-  Administration
-</Link>
-
+          
           <Link to="/boutique" className="hover:text-amber-300">Boutique</Link>
 
           {user ? (
