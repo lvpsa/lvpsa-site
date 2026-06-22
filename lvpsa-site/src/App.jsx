@@ -1923,7 +1923,7 @@ const equipesCompetitives = equipes.filter(
             </h3>
 
             <p className="mt-2 text-slate-300">
-              Catégories : {item.categories?.join(", ") || "Non précisées"}
+              Catégories : {Array.isArray(item.categories) ? item.categories.join(", ") : "Non précisées"}
             </p>
 
             <p className="text-slate-300">
