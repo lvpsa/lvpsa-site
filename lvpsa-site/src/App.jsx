@@ -1760,14 +1760,12 @@ const equipesCompetitives = equipes.filter(
     membres.filter((membre) => membre.equipeId === equipeId);
 
   const totalRemplacantsDisponibles = remplacements.length;
-
+  
   const totalRemplacementsParRemplacant = historiqueRemplacements.reduce((acc, item) => {
     const nom = item.remplacantNom || "Sans nom";
     acc[nom] = (acc[nom] || 0) + 1;
     return acc;
   }, {});
-
-  const totalRemplacantsDisponibles = remplacements.length;
   
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
