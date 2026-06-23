@@ -2809,6 +2809,7 @@ const formatTelephone = (value) => {
   const [type, setType] = useState(null);
   const [user, setUser] = useState(null);
   const [datesDisponibles, setDatesDisponibles] = useState([]);
+  const [disponibleEnToutTemps, setDisponibleEnToutTemps] = useState(false);
   const [userData, setUserData] = useState(null);
 
 useEffect(() => {
@@ -2860,23 +2861,25 @@ useEffect(() => {
 
 }, []);
 const datesLigue = [
-  { id: "2026-06-22", label: "22 juin" },
-  { id: "2026-06-23", label: "23 juin" },
-  { id: "2026-06-29", label: "29 juin" },
-  { id: "2026-06-30", label: "30 juin" },
-  { id: "2026-07-06", label: "6 juillet" },
-  { id: "2026-07-07", label: "7 juillet" },
-  { id: "2026-07-13", label: "13 juillet" },
-  { id: "2026-07-14", label: "14 juillet" },
-  { id: "2026-08-03", label: "3 août" },
-  { id: "2026-08-04", label: "4 août" },
-  { id: "2026-08-10", label: "10 août" },
-  { id: "2026-08-11", label: "11 août" },
-  { id: "2026-08-17", label: "17 août" },
-  { id: "2026-08-18", label: "18 août" },
+  { id: "2026-06-22", label: "22 juin", categorie: "recreatif" },
+  { id: "2026-06-23", label: "23 juin", categorie: "competitif" },
+  { id: "2026-06-29", label: "29 juin", categorie: "recreatif" },
+  { id: "2026-06-30", label: "30 juin", categorie: "competitif" },
+  { id: "2026-07-06", label: "6 juillet", categorie: "recreatif" },
+  { id: "2026-07-07", label: "7 juillet", categorie: "competitif" },
+  { id: "2026-07-13", label: "13 juillet", categorie: "recreatif" },
+  { id: "2026-07-14", label: "14 juillet", categorie: "competitif" },
+  { id: "2026-08-03", label: "3 août", categorie: "recreatif" },
+  { id: "2026-08-04", label: "4 août", categorie: "competitif" },
+  { id: "2026-08-10", label: "10 août", categorie: "recreatif" },
+  { id: "2026-08-11", label: "11 août", categorie: "competitif" },
+  { id: "2026-08-17", label: "17 août", categorie: "recreatif" },
+  { id: "2026-08-18", label: "18 août", categorie: "competitif" },
 ];
 
 const toggleDate = (dateId) => {
+  setDisponibleEnToutTemps(false);
+
   setDatesDisponibles((dates) =>
     dates.includes(dateId)
       ? dates.filter((date) => date !== dateId)
@@ -2901,6 +2904,33 @@ const [joueur, setJoueur] = useState({
   categorie: "recreatif",
   notes: "",
 });
+
+const obtenirDatesSelonCategorie = (categorie) => {
+  if (categorie === "les-deux") return datesLigue;
+  return datesLigue.filter((date) => date.categorie === categorie);
+};
+
+const datesSelonCategorie = obtenirDatesSelonCategorie(joueur.categorie);
+
+const categoriesJoueur =
+  joueur.categorie === "les-deux"
+    ? ["recreatif", "competitif"]
+    : [joueur.categorie];
+
+useEffect(() => {
+  const idsDisponiblesPourCategorie = obtenirDatesSelonCategorie(joueur.categorie).map(
+    (date) => date.id
+  );
+
+  if (disponibleEnToutTemps) {
+    setDatesDisponibles(idsDisponiblesPourCategorie);
+    return;
+  }
+
+  setDatesDisponibles((datesActuelles) =>
+    datesActuelles.filter((dateId) => idsDisponiblesPourCategorie.includes(dateId))
+  );
+}, [joueur.categorie, disponibleEnToutTemps]);
 
   const inscriptionUrl =
   "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec";
@@ -2947,8 +2977,12 @@ const [joueur, setJoueur] = useState({
     return;
   }
 
-  if (datesDisponibles.length === 0) {
-    alert("Veuillez sélectionner au moins une date de disponibilité.");
+  const disponibilitesFinales = disponibleEnToutTemps
+    ? datesSelonCategorie.map((date) => date.id)
+    : datesDisponibles;
+
+  if (disponibilitesFinales.length === 0) {
+    alert("Veuillez sélectionner au moins une date de disponibilité ou l'option en tout temps.");
     return;
   }
 
@@ -2960,8 +2994,9 @@ const [joueur, setJoueur] = useState({
       courriel: joueur.courriel,
       telephone: joueur.telephone,
       categorie: joueur.categorie,
-      categories: [joueur.categorie],
-      disponibilites: datesDisponibles,
+      categories: categoriesJoueur,
+      enToutTemps: disponibleEnToutTemps,
+      disponibilites: disponibilitesFinales,
       note: joueur.notes,
       notes: joueur.notes,
       commentaire: joueur.notes,
@@ -2980,7 +3015,9 @@ const [joueur, setJoueur] = useState({
         courriel: joueur.courriel,
         telephone: joueur.telephone,
         categorie: joueur.categorie,
-        disponibilites: datesDisponibles.join(", "),
+        categories: categoriesJoueur.join(", "),
+        enToutTemps: disponibleEnToutTemps ? "Oui" : "Non",
+        disponibilites: disponibilitesFinales.join(", "),
         notes: joueur.notes,
       }),
     });
@@ -2993,11 +3030,13 @@ const [joueur, setJoueur] = useState({
         email: joueur.courriel,
         telephone: joueur.telephone,
         categorie: joueur.categorie,
+        categories: categoriesJoueur,
         role: "remplacant",
         estJoueur: true,
         estRemplacant: true,
         equipeId: "independant",
-        disponibilites: datesDisponibles,
+        enToutTemps: disponibleEnToutTemps,
+        disponibilites: disponibilitesFinales,
         commentaire: joueur.notes,
         statut: "actif",
         updatedAt: serverTimestamp(),
@@ -3026,6 +3065,7 @@ const [joueur, setJoueur] = useState({
     });
 
     setDatesDisponibles([]);
+    setDisponibleEnToutTemps(false);
     setType(null);
   } catch (error) {
     console.error(error);
@@ -3204,22 +3244,52 @@ const [joueur, setJoueur] = useState({
 >
   <option value="recreatif">Récréatif</option>
   <option value="competitif">Compétitif</option>
+  <option value="les-deux">Les deux catégories</option>
 </select>
 
             <div className="rounded-2xl border border-white/10 bg-black/20 p-5 md:col-span-2">
   <p className="mb-4 font-bold text-white">
-    Dates où vous êtes disponible comme remplaçant
+    Disponibilités comme remplaçant
+  </p>
+
+  <div className="mb-5 grid gap-3 sm:grid-cols-2">
+    <label className="flex items-center gap-3 rounded-xl bg-white/5 p-3 text-slate-200">
+      <input
+        type="radio"
+        name="disponibilite"
+        checked={!disponibleEnToutTemps}
+        onChange={() => setDisponibleEnToutTemps(false)}
+      />
+      Dates spécifiques
+    </label>
+
+    <label className="flex items-center gap-3 rounded-xl bg-amber-400/10 p-3 font-bold text-amber-300">
+      <input
+        type="radio"
+        name="disponibilite"
+        checked={disponibleEnToutTemps}
+        onChange={() => setDisponibleEnToutTemps(true)}
+      />
+      En tout temps
+    </label>
+  </div>
+
+  <p className="mb-4 text-sm text-slate-300">
+    Les dates affichées s'ajustent automatiquement selon la catégorie choisie.
   </p>
 
   <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-    {datesLigue.map((date) => (
+    {datesSelonCategorie.map((date) => (
       <label
         key={date.id}
-        className="flex items-center gap-3 rounded-xl bg-white/5 p-3 text-slate-200"
+        className={`flex items-center gap-3 rounded-xl p-3 text-slate-200 ${
+          disponibleEnToutTemps ? "bg-emerald-400/10" : "bg-white/5"
+        }`}
       >
         <input
           type="checkbox"
           checked={datesDisponibles.includes(date.id)}
+          disabled={disponibleEnToutTemps}
           onChange={() => toggleDate(date.id)}
         />
         {date.label}
@@ -3325,20 +3395,20 @@ function GestionEquipe({ userData }) {
   const [remplacantId, setRemplacantId] = useState("");
 
   const datesLigue = [
-    { id: "2026-06-22", label: "22 juin" },
-    { id: "2026-06-23", label: "23 juin" },
-    { id: "2026-06-29", label: "29 juin" },
-    { id: "2026-06-30", label: "30 juin" },
-    { id: "2026-07-06", label: "6 juillet" },
-    { id: "2026-07-07", label: "7 juillet" },
-    { id: "2026-07-13", label: "13 juillet" },
-    { id: "2026-07-14", label: "14 juillet" },
-    { id: "2026-08-03", label: "3 août" },
-    { id: "2026-08-04", label: "4 août" },
-    { id: "2026-08-10", label: "10 août" },
-    { id: "2026-08-11", label: "11 août" },
-    { id: "2026-08-17", label: "17 août" },
-    { id: "2026-08-18", label: "18 août" },
+    { id: "2026-06-22", label: "22 juin", categorie: "recreatif" },
+    { id: "2026-06-23", label: "23 juin", categorie: "competitif" },
+    { id: "2026-06-29", label: "29 juin", categorie: "recreatif" },
+    { id: "2026-06-30", label: "30 juin", categorie: "competitif" },
+    { id: "2026-07-06", label: "6 juillet", categorie: "recreatif" },
+    { id: "2026-07-07", label: "7 juillet", categorie: "competitif" },
+    { id: "2026-07-13", label: "13 juillet", categorie: "recreatif" },
+    { id: "2026-07-14", label: "14 juillet", categorie: "competitif" },
+    { id: "2026-08-03", label: "3 août", categorie: "recreatif" },
+    { id: "2026-08-04", label: "4 août", categorie: "competitif" },
+    { id: "2026-08-10", label: "10 août", categorie: "recreatif" },
+    { id: "2026-08-11", label: "11 août", categorie: "competitif" },
+    { id: "2026-08-17", label: "17 août", categorie: "recreatif" },
+    { id: "2026-08-18", label: "18 août", categorie: "competitif" },
   ];
 
   useEffect(() => {
@@ -3357,11 +3427,16 @@ function GestionEquipe({ userData }) {
       }));
 
       setRemplacants(
-        listeRemplacants.filter(
-          (membre) =>
+        listeRemplacants.filter((membre) => {
+          const categories = Array.isArray(membre.categories)
+            ? membre.categories
+            : [membre.categorie].filter(Boolean);
+
+          return (
             membre.disponible === true &&
-            membre.categorie === userData.categorie
-        )
+            categories.includes(userData.categorie)
+          );
+        })
       );
       
       setJoueurs(
@@ -3388,8 +3463,14 @@ function GestionEquipe({ userData }) {
       </section>
     );
   }
-  const remplacantsFiltres = remplacants.filter((membre) =>
-    membre.disponibilites?.includes(dateSelectionnee)
+  const remplacantsFiltres = remplacants.filter(
+    (membre) =>
+      membre.enToutTemps === true ||
+      membre.disponibilites?.includes(dateSelectionnee)
+  );
+
+  const datesEquipe = datesLigue.filter(
+    (date) => date.categorie === userData.categorie
   );
 
   const confirmerRemplacement = async () => {
@@ -3489,7 +3570,7 @@ function GestionEquipe({ userData }) {
         >
           <option value="">Choisir une date</option>
 
-          {datesLigue.map((date) => (
+          {datesEquipe.map((date) => (
             <option key={date.id} value={date.id}>
               {date.label}
             </option>
@@ -3559,6 +3640,12 @@ function GestionEquipe({ userData }) {
                   <p className="text-slate-300">
                     📧 {membre.email || "Courriel non disponible"}
                   </p>
+
+                  {membre.enToutTemps && (
+                    <p className="mt-4 font-bold text-emerald-300">
+                      Disponible en tout temps
+                    </p>
+                  )}
 
                   {membre.commentaire && (
                     <p className="mt-4 text-slate-300">
