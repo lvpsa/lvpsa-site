@@ -125,6 +125,21 @@ function Header() {
     alert("Un courriel pour modifier votre mot de passe a été envoyé.");
   };
 
+  const ligueItems = [
+    { label: "Calendrier", to: "/calendrier" },
+    { label: "Classements", to: "/classements" },
+    { label: "Inscriptions", to: "/inscription-ligue" },
+    ...((userData?.role === "capitaine" || userData?.isAdmin)
+      ? [{ label: "Gestion d'équipe", to: "/gestion-equipe" }]
+      : []),
+    { label: "Règlements Ligue", to: "/reglements" },
+  ];
+
+  const tournoiItems = [
+    { label: "Informations", to: "/tournoi" },
+    { label: "Règlements", to: "/tournoi/reglements" },
+  ];
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -138,7 +153,10 @@ function Header() {
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
           <Link to="/" className="hover:text-amber-300">Accueil</Link>
-          
+
+          <Dropdown title="LIGUE" items={ligueItems} />
+          <Dropdown title="TOURNOI" items={tournoiItems} />
+
           <Link to="/boutique" className="hover:text-amber-300">Boutique</Link>
 
           {user ? (
@@ -148,22 +166,21 @@ function Header() {
               </span>
 
               {userData?.isAdmin && (
+                <Link
+                  to="/admin"
+                  className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950 transition"
+                >
+                  Administration
+                </Link>
+              )}
 
-  <Link
-    to="/admin"
-    className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950 transition"
-  >
-    Administration
-  </Link>
-
-)}
               <button
                 onClick={modifierMotDePasse}
                 className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-amber-300 hover:text-amber-300"
               >
                 Mot de passe
               </button>
-              
+
               <button
                 onClick={deconnexion}
                 className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-red-400 hover:text-red-400"
@@ -1299,7 +1316,6 @@ function CreerCompte() {
       );
 
       const user = userCredential.user;
-      const equipe = Teams.find((team) => team.id === equipeId);
 
       await setDoc(doc(db, "users", user.uid), {
         nom,
@@ -1308,7 +1324,12 @@ function CreerCompte() {
         role: "membre",
         isAdmin: false,
         statut: "actif",
-        createdAt: new Date(),
+        estJoueur: false,
+        estRemplacant: false,
+        equipeId: null,
+        categorie: null,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       });
 
       setMessage("Compte créé avec succès !");
@@ -2921,53 +2942,95 @@ const [joueur, setJoueur] = useState({
     return;
   }
 
+  if (!joueur.nom || !joueur.courriel || !joueur.telephone) {
+    alert("Veuillez compléter votre nom, courriel et téléphone.");
+    return;
+  }
+
   if (datesDisponibles.length === 0) {
     alert("Veuillez sélectionner au moins une date de disponibilité.");
     return;
   }
 
-  fetch(inscriptionUrl, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({
-      type: "joueur",
+  try {
+    const donneesRemplacant = {
+      userId: user.uid,
       nom: joueur.nom,
+      email: joueur.courriel,
       courriel: joueur.courriel,
       telephone: joueur.telephone,
       categorie: joueur.categorie,
-      disponibilites: datesDisponibles.join(", "),
-      notes: joueur.notes,
-    }),
-  });
-
-  await setDoc(
-    doc(db, "users", user.uid),
-    {
-      nom: joueur.nom,
-      email: joueur.courriel,
-      telephone: joueur.telephone,
-      categorie: joueur.categorie,
-      role: "remplacant",
-      estRemplacant: true,
+      categories: [joueur.categorie],
       disponibilites: datesDisponibles,
+      note: joueur.notes,
+      notes: joueur.notes,
       commentaire: joueur.notes,
+      disponible: true,
       statut: "actif",
-    },
-    { merge: true }
-  );
+      updatedAt: serverTimestamp(),
+    };
 
-  alert("Inscription envoyée avec succès !");
+    // Conserve ton envoi vers Google Sheets, mais la base officielle pour les capitaines est Firestore.
+    fetch(inscriptionUrl, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({
+        type: "joueur",
+        nom: joueur.nom,
+        courriel: joueur.courriel,
+        telephone: joueur.telephone,
+        categorie: joueur.categorie,
+        disponibilites: datesDisponibles.join(", "),
+        notes: joueur.notes,
+      }),
+    });
 
-  setJoueur({
-    nom: "",
-    courriel: "",
-    telephone: "",
-    categorie: "recreatif",
-    notes: "",
-  });
+    // Met à jour le profil du membre.
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        nom: joueur.nom,
+        email: joueur.courriel,
+        telephone: joueur.telephone,
+        categorie: joueur.categorie,
+        role: "remplacant",
+        estJoueur: true,
+        estRemplacant: true,
+        equipeId: "independant",
+        disponibilites: datesDisponibles,
+        commentaire: joueur.notes,
+        statut: "actif",
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
 
-  setDatesDisponibles([]);
-  setType(null);
+    // Ajoute/actualise le joueur dans la banque de remplaçants consultée par les capitaines.
+    await setDoc(
+      doc(db, "remplacements", user.uid),
+      {
+        ...donneesRemplacant,
+        createdAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    alert("Inscription envoyée avec succès ! Vous êtes maintenant visible pour les capitaines.");
+
+    setJoueur({
+      nom: "",
+      courriel: "",
+      telephone: "",
+      categorie: "recreatif",
+      notes: "",
+    });
+
+    setDatesDisponibles([]);
+    setType(null);
+  } catch (error) {
+    console.error(error);
+    alert("Erreur lors de l'inscription. Veuillez réessayer.");
+  }
 };
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -3280,32 +3343,38 @@ function GestionEquipe({ userData }) {
 
   useEffect(() => {
     const chargerRemplacants = async () => {
-      const snapshot = await getDocs(collection(db, "users"));
+      const usersSnapshot = await getDocs(collection(db, "users"));
+      const remplacementsSnapshot = await getDocs(collection(db, "remplacements"));
 
-      const liste = snapshot.docs.map((docItem) => ({
+      const listeUsers = usersSnapshot.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }));
+
+      const listeRemplacants = remplacementsSnapshot.docs.map((docItem) => ({
         id: docItem.id,
         ...docItem.data(),
       }));
 
       setRemplacants(
-        liste.filter(
+        listeRemplacants.filter(
           (membre) =>
-            membre.estRemplacant === true &&
+            membre.disponible === true &&
             membre.categorie === userData.categorie
         )
       );
       
       setJoueurs(
-  liste.filter(
-    (membre) =>
-      membre.equipeId === userData.equipeId &&
-      membre.role === "joueur"
-  )
-);
+        listeUsers.filter(
+          (membre) =>
+            membre.equipeId === userData.equipeId &&
+            membre.role === "joueur"
+        )
+      );
     };
 
     chargerRemplacants();
-  }, [userData.categorie]);
+  }, [userData.categorie, userData.equipeId]);
     if (userData?.role !== "capitaine" && !userData?.isAdmin) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
@@ -3332,16 +3401,16 @@ function GestionEquipe({ userData }) {
   const joueurAbsent = joueurs.find((joueur) => joueur.id === joueurAbsentId);
   const remplacant = remplacantsFiltres.find((membre) => membre.id === remplacantId);
 
-  await addDoc(collection(db, "remplacements"), {
+  await addDoc(collection(db, "historiqueRemplacements"), {
     date: dateSelectionnee,
     categorie: userData.categorie,
     equipeId: userData.equipeId,
-    equipenom: userData.equipenom,
+    equipeNom: userData.equipenom || "",
     joueurRemplaceId: joueurAbsent?.id || "",
-    joueurRemplacenom: joueurAbsent?.nom || "",
+    joueurRemplaceNom: joueurAbsent?.nom || "",
     remplacantId: remplacant?.id || "",
-    nom: remplacant?.nom || "",
-    remplacantEmail: remplacant?.email || "",
+    remplacantNom: remplacant?.nom || "",
+    remplacantEmail: remplacant?.email || remplacant?.courriel || "",
     remplacantTelephone: remplacant?.telephone || "",
     capitaineId: userData.id || "",
     createdAt: serverTimestamp(),
@@ -3626,3 +3695,4 @@ function ReglementsTournoi() {
     </section>
   );
 }
+
