@@ -372,15 +372,16 @@ function Accueil() {
       const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
 
       const resultats = data.hourly.time
-        .map((time, index) => ({
-          time,
-          heure: time.slice(11, 16),
-          temperature: Math.round(data.hourly.temperature_2m[index]),
-          vent: Math.round(data.hourly.wind_speed_10m[index]),
-          humidite: data.hourly.relative_humidity_2m[index],
-          code: data.hourly.weather_code[index],
-        }))
-        .filter((item) => heuresVoulues.includes(item.heure));
+  .map((time, index) => ({
+    time,
+    heure: time.slice(11, 16),
+    temperature: Math.round(data.hourly.temperature_2m[index]),
+    vent: Math.round(data.hourly.wind_speed_10m[index]),
+    humidite: data.hourly.relative_humidity_2m[index],
+    uv: data.hourly.uv_index[index],
+    code: data.hourly.weather_code[index],
+  }))
+  .filter((item) => heuresVoulues.includes(item.heure));
 
       setMeteoHeures(resultats);
     }
@@ -457,6 +458,10 @@ function Accueil() {
                     <p className="mt-2 text-xl font-black text-white">
                       {item.temperature}°
                     </p>
+
+                    <p className="mt-1 text-xs font-bold text-amber-300">
+                      UV {item.uv !== undefined ? Number(item.uv).toFixed(1) : "--"}
+                    </p>
                   </div>
                 ))
               ) : (
@@ -473,6 +478,10 @@ function Accueil() {
 
               <div className="rounded-full bg-white/10 px-4 py-2">
                 Humidité : {meteoHeures[0]?.humidite ?? "--"}%
+              </div>
+
+              <div className="rounded-full bg-white/10 px-4 py-2">
+                UV : {meteoHeures[0]?.uv !== undefined ? Number(meteoHeures[0].uv).toFixed(1) : "--"}
               </div>
 
               <a
