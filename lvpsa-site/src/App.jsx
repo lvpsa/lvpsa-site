@@ -345,99 +345,76 @@ const statutMatchs = {
 };
 
 function Accueil() {
-const [statutMatchs, setStatutMatchs] = useState({
-  texte: "Chargement...",
-  couleur: "emerald",
-  message: "LVPSA",
-});
+  const [statutMatchs, setStatutMatchs] = useState({
+    texte: "Chargement...",
+    couleur: "emerald",
+    message: "LVPSA",
+  });
 
-const [meteoHeures, setMeteoHeures] = useState([]);
+  const [meteoHeures, setMeteoHeures] = useState([]);
 
-useEffect(() => {
-  async function chargerStatut() {
-    const ref = doc(db, "settings", "matchStatus");
-    const snap = await getDoc(ref);
+  useEffect(() => {
+    async function chargerStatut() {
+      const ref = doc(db, "settings", "matchStatus");
+      const snap = await getDoc(ref);
 
-    if (snap.exists()) {
-      setStatutMatchs(snap.data());
+      if (snap.exists()) {
+        setStatutMatchs(snap.data());
+      }
     }
-  }
 
-  async function chargerMeteo() {
-    const url =
-      "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=America%2FToronto&forecast_days=1";
+    async function chargerMeteo() {
+      const url =
+        "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=America%2FToronto&forecast_days=1";
 
-    const res = await fetch(url);
-    const data = await res.json();
+      const res = await fetch(url);
+      const data = await res.json();
 
-    const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
+      const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
 
-    const resultats = data.hourly.time
-      .map((time, index) => ({
-        time,
-        heure: time.slice(11, 16),
-        temperature: Math.round(data.hourly.temperature_2m[index]),
-        vent: Math.round(data.hourly.wind_speed_10m[index]),
-        humidite: data.hourly.relative_humidity_2m[index],
-        code: data.hourly.weather_code[index],
-      }))
-      .filter((item) => heuresVoulues.includes(item.heure));
+      const resultats = data.hourly.time
+        .map((time, index) => ({
+          time,
+          heure: time.slice(11, 16),
+          temperature: Math.round(data.hourly.temperature_2m[index]),
+          vent: Math.round(data.hourly.wind_speed_10m[index]),
+          humidite: data.hourly.relative_humidity_2m[index],
+          code: data.hourly.weather_code[index],
+        }))
+        .filter((item) => heuresVoulues.includes(item.heure));
 
-    setMeteoHeures(resultats);
-  }
+      setMeteoHeures(resultats);
+    }
 
-  chargerStatut();
-  chargerMeteo();
-}, []);
+    chargerStatut();
+    chargerMeteo();
+  }, []);
 
-  <>
-      <section className="relative overflow-hidden px-6 py-16">
-
-              <div className="mb-8 rounded-3xl border-2 border-red-500 bg-red-600 p-5 text-center text-white shadow-xl">
-
-  <div className="flex items-center justify-center gap-4 text-4xl animate-pulse">
-    <span>🚨</span>
-    <span>🚨</span>
-    <span>🚨</span>
-  </div>
- <p className="mt-2 text-2xl font-black">
-    IMPORTANT – HORAIRE MODIFIÉ
-  </p>
-
-  <p className="mt-2 text-lg font-semibold">
-    À compter de la semaine du 15 juin, toutes les parties débuteront à
-    <span className="font-black text-yellow-300"> 18h30 </span>
-    plutôt qu'à
-    <span className="font-black text-yellow-300"> 18h00</span>.
-  </p>
-         
-</div>
-        
-        <div className="mx-auto max-w-7xl">
-  <div className="grid gap-8 lg:grid-cols-2">
-    
   return (
-    
+    <>
+      <section className="relative overflow-hidden px-6 py-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-2">
+
             {/* COLONNE GAUCHE */}
             <div>
 
               {/* STATUT + MÉTÉO */}
               <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-sky-500/20 to-slate-900/40 p-6 backdrop-blur-xl">
-
                 <div
-  className={`mb-5 rounded-2xl border p-4 ${
-    statutMatchs.couleur === "red"
-      ? "border-red-400/30 bg-red-400/10"
-      : "border-emerald-400/30 bg-emerald-400/10"
-  }`}
->
+                  className={`mb-5 rounded-2xl border p-4 ${
+                    statutMatchs.couleur === "red"
+                      ? "border-red-400/30 bg-red-400/10"
+                      : "border-emerald-400/30 bg-emerald-400/10"
+                  }`}
+                >
                   <p
-  className={`text-sm uppercase tracking-[0.25em] ${
-    statutMatchs.couleur === "red"
-      ? "text-red-300"
-      : "text-emerald-300"
-  }`}
->
+                    className={`text-sm uppercase tracking-[0.25em] ${
+                      statutMatchs.couleur === "red"
+                        ? "text-red-300"
+                        : "text-emerald-300"
+                    }`}
+                  >
                     Statut des parties
                   </p>
 
@@ -456,21 +433,29 @@ useEffect(() => {
 
                 <div className="mt-5 grid grid-cols-5 gap-3">
                   {meteoHeures.length > 0 ? (
-  meteoHeures.map((item) => (
-    <div key={item.heure} className="rounded-2xl bg-white/10 p-3 text-center">
-      <p className="text-sm text-slate-300">{item.heure.replace(":00", "h")}</p>
-      <p className="mt-2 text-3xl">
-        {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
-      </p>
-      <p className="mt-2 text-xl font-black">{item.temperature}°</p>
-    </div>
-  ))
-) : (
-  <p className="col-span-5 text-sm text-slate-300">
-    Chargement de la météo...
-  </p>
-)}
-                    
+                    meteoHeures.map((item) => (
+                      <div
+                        key={item.heure}
+                        className="rounded-2xl bg-white/10 p-3 text-center"
+                      >
+                        <p className="text-sm text-slate-300">
+                          {item.heure.replace(":00", "h")}
+                        </p>
+
+                        <p className="mt-2 text-3xl">
+                          {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
+                        </p>
+
+                        <p className="mt-2 text-xl font-black">
+                          {item.temperature}°
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="col-span-5 text-sm text-slate-300">
+                      Chargement de la météo...
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-6 flex gap-4 text-sm text-slate-300">
@@ -484,62 +469,60 @@ useEffect(() => {
                 </div>
               </div>
 
-             {/* SLOGAN */}
-<div className="mt-10">
-  <h1 className="text-5xl font-black leading-tight md:text-7xl">
-    Plus qu’une ligue.
-    <span className="block text-amber-300">
-      Une ambiance.
-    </span>
-  </h1>
+              {/* SLOGAN */}
+              <div className="mt-10">
+                <h1 className="text-5xl font-black leading-tight md:text-7xl">
+                  Plus qu’une ligue.
+                  <span className="block text-amber-300">
+                    Une ambiance.
+                  </span>
+                </h1>
 
-  <div className="mt-10 relative overflow-hidden rounded-[2rem] border border-white/10 h-[320px]">
-    <img
-      src="/volley-bg.jpg"
-      alt="Terrain LVPSA"
-      className="h-full w-full object-cover"
-    />
+                <div className="mt-10 relative overflow-hidden rounded-[2rem] border border-white/10 h-[320px]">
+                  <img
+                    src="/volley-bg.jpg"
+                    alt="Terrain LVPSA"
+                    className="h-full w-full object-cover"
+                  />
 
-    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
 
-    <div className="absolute bottom-6 left-6">
-      <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
-        Parc Portneuf
-      </p>
+                  <div className="absolute bottom-6 left-6">
+                    <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
+                      Parc Portneuf
+                    </p>
 
-      <h3 className="mt-2 text-3xl font-black text-white">
-        Terrain officiel LVPSA
-      </h3>
-    </div>
-  </div>
-</div>
-  </div>
-            
+                    <h3 className="mt-2 text-3xl font-black text-white">
+                      Terrain officiel LVPSA
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* COLONNE DROITE */}
             <div>
 
               {/* TOURNOI */}
               <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
-
                 <img
                   src="/tournoi-lvpsa-2026.png"
                   alt="Tournoi LVPSA"
                   className="w-full h-auto"
                 />
 
-              
                 <div className="flex gap-4 p-5">
-  <div className="flex-1 rounded-full bg-red-500/20 px-6 py-3 text-center font-bold text-red-300 border border-red-400/30">
-    Tournoi complet
-  </div>
+                  <div className="flex-1 rounded-full bg-red-500/20 px-6 py-3 text-center font-bold text-red-300 border border-red-400/30">
+                    Tournoi complet
+                  </div>
 
-  <Link
-    to="/tournoi"
-    className="flex-1 rounded-full border border-white/15 px-6 py-3 text-center font-semibold hover:bg-white/10"
-  >
-    Voir les détails
-  </Link>
-</div>
+                  <Link
+                    to="/tournoi"
+                    className="flex-1 rounded-full border border-white/15 px-6 py-3 text-center font-semibold hover:bg-white/10"
+                  >
+                    Voir les détails
+                  </Link>
+                </div>
               </div>
 
               {/* TEXTE */}
@@ -555,7 +538,6 @@ useEffect(() => {
 
           {/* CARTES BAS */}
           <div className="mt-14 grid gap-6 md:grid-cols-4">
-
             <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950">
                 👥
@@ -608,7 +590,8 @@ useEffect(() => {
               </h3>
 
               <p className="mt-3 text-slate-300">
-                Le Parc Portneuf, modules et jeux d'eau pour petits et grands, terrain de volleyball de plage, pickelball et basketball.
+                Le Parc Portneuf, modules et jeux d'eau pour petits et grands,
+                terrain de volleyball de plage, pickelball et basketball.
               </p>
             </div>
           </div>
@@ -622,9 +605,9 @@ useEffect(() => {
             >
               {email}
             </a>
-</div>
-</div>
-</section>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
