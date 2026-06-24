@@ -392,7 +392,27 @@ useEffect(() => {
 
   <>
       <section className="relative overflow-hidden px-6 py-16">
- 
+
+              <div className="mb-8 rounded-3xl border-2 border-red-500 bg-red-600 p-5 text-center text-white shadow-xl">
+
+  <div className="flex items-center justify-center gap-4 text-4xl animate-pulse">
+    <span>🚨</span>
+    <span>🚨</span>
+    <span>🚨</span>
+  </div>
+ <p className="mt-2 text-2xl font-black">
+    IMPORTANT – HORAIRE MODIFIÉ
+  </p>
+
+  <p className="mt-2 text-lg font-semibold">
+    À compter de la semaine du 15 juin, toutes les parties débuteront à
+    <span className="font-black text-yellow-300"> 18h30 </span>
+    plutôt qu'à
+    <span className="font-black text-yellow-300"> 18h00</span>.
+  </p>
+         
+</div>
+        
         <div className="mx-auto max-w-7xl">
   <div className="grid gap-8 lg:grid-cols-2">
     
