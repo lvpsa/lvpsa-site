@@ -2625,19 +2625,19 @@ function Calendrier() {
   ],
 
   competitif: [
-    ["19 mai", ["18h00 à 18h45 — Crabe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Les pieds dans le sable", "19h30 à 20h15 — Crabe en Bikini vs President Choice", "20h15 à 21h00 — Les pieds dans le sable vs President Choice"]],
-    ["26 mai", ["18h00 à 18h45 — Fireballs vs Les pieds dans le sable", "18h45 à 19h30 — Crabe en Bikini vs Les pieds dans le sable", "19h30 à 20h15 — Fireballs vs President Choice", "20h15 à 21h00 — Crabe en Bikini vs President Choice"]],
-    ["2 juin", ["18h00 à 18h45 — Crabe en Bikini vs President Choice", "18h45 à 19h30 — Fireballs vs President Choice", "19h30 à 20h15 — Crabe en Bikini vs Les pieds dans le sable", "20h15 à 21h00 — Crabe en Bikini vs Fireballs"]],
-    ["9 juin", ["18h00 à 18h45 — Crabe en Bikini vs President Choice", "18h45 à 19h30 — Crabe en Bikini vs Fireballs", "19h30 à 20h15 — Les pieds dans le sable vs President Choice", "20h15 à 21h00 — Fireballs vs Les pieds dans le sable"]],
+    ["19 mai", ["18h00 à 18h45 — Crabe en Bikini vs Fireballs", "18h45 à 19h30 — Fireballs vs Les pieds dans le sable", "19h30 à 20h15 — Crabe en Bikini vs Choix du Président", "20h15 à 21h00 — Les pieds dans le sable vs Choix du Président"]],
+    ["26 mai", ["18h00 à 18h45 — Fireballs vs Les pieds dans le sable", "18h45 à 19h30 — Crabe en Bikini vs Les pieds dans le sable", "19h30 à 20h15 — Fireballs vs Choix du Président", "20h15 à 21h00 — Crabe en Bikini vs Choix du Président"]],
+    ["2 juin", ["18h00 à 18h45 — Crabe en Bikini vs Choix du Président", "18h45 à 19h30 — Fireballs vs Choix du Président", "19h30 à 20h15 — Crabe en Bikini vs Les pieds dans le sable", "20h15 à 21h00 — Crabe en Bikini vs Fireballs"]],
+    ["9 juin", ["18h00 à 18h45 — Crabe en Bikini vs Choix du Président", "18h45 à 19h30 — Crabe en Bikini vs Fireballs", "19h30 à 20h15 — Les pieds dans le sable vs Choix du Président", "20h15 à 21h00 — Fireballs vs Les pieds dans le sable"]],
 
-    ["16 juin", ["18h30 à 19h15 — Fireballs vs President Choice", "19h15 à 20h00 — Crabe en Bikini vs President Choice", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
-    ["23 juin", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs President Choice", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs President Choice"]],
-    ["30 juin", ["18h00 à 18h35 — Crabe en Bikini vs Fireballs", "18h35 à 19h10 — Fireballs vs Les pieds dans le sable", "19h10 à 19h45 — Crabe en Bikini vs President Choice", "19h45 à 20h20 — Les pieds dans le sable vs President Choice", "20h20 à 21h00 — Crabe en Bikini vs Les pieds dans le sable"]],
-    ["7 juillet", ["18h30 à 19h15 — Fireballs vs Les pieds dans le sable", "19h15 à 20h00 — Crabe en Bikini vs Les pieds dans le sable", "20h00 à 20h45 — Fireballs vs President Choice", "20h45 à 21h30 — Crabe en Bikini vs President Choice"]],
-    ["14 juillet", ["18h30 à 19h15 — Les pieds dans le sable vs President Choice", "19h15 à 20h00 — Fireballs vs President Choice", "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Fireballs"]],
-    ["4 août", ["18h30 à 19h15 — Crabe en Bikini vs President Choice", "19h15 à 20h00 — Crabe en Bikini vs Fireballs", "20h00 à 20h45 — Les pieds dans le sable vs President Choice", "20h45 à 21h30 — Fireballs vs Les pieds dans le sable"]],
-    ["11 août", ["18h30 à 19h15 — Fireballs vs President Choice", "19h15 à 20h00 — Crabe en Bikini vs President Choice", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
-    ["18 août", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs President Choice", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs President Choice"]],
+    ["16 juin", ["18h30 à 19h15 — Fireballs vs Choix du Président", "19h15 à 20h00 — Crabe en Bikini vs Choix du Président", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
+    ["23 juin", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Choix du Président", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Choix du Président"]],
+    ["30 juin", ["18h00 à 18h35 — Crabe en Bikini vs Fireballs", "18h35 à 19h10 — Fireballs vs Les pieds dans le sable", "19h10 à 19h45 — Crabe en Bikini vs Choix du Président", "19h45 à 20h20 — Les pieds dans le sable vs Choix du Président", "20h20 à 21h00 — Crabe en Bikini vs Les pieds dans le sable"]],
+    ["7 juillet", ["18h30 à 19h15 — Fireballs vs Les pieds dans le sable", "19h15 à 20h00 — Crabe en Bikini vs Les pieds dans le sable", "20h00 à 20h45 — Fireballs vs Choix du Président", "20h45 à 21h30 — Crabe en Bikini vs Choix du Président"]],
+    ["14 juillet", ["18h30 à 19h15 — Les pieds dans le sable vs Choix du Président", "19h15 à 20h00 — Fireballs vs Choix du Président", "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Fireballs"]],
+    ["4 août", ["18h30 à 19h15 — Crabe en Bikini vs Choix du Président", "19h15 à 20h00 — Crabe en Bikini vs Fireballs", "20h00 à 20h45 — Les pieds dans le sable vs Choix du Président", "20h45 à 21h30 — Fireballs vs Les pieds dans le sable"]],
+    ["11 août", ["18h30 à 19h15 — Fireballs vs Choix du Président", "19h15 à 20h00 — Crabe en Bikini vs Choix du Président", "20h00 à 20h45 — Fireballs vs Les pieds dans le sable", "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable"]],
+    ["18 août", ["18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable", "19h15 à 20h00 — Les pieds dans le sable vs Choix du Président", "20h00 à 20h45 — Crabe en Bikini vs Fireballs", "20h45 à 21h30 — Fireballs vs Choix du Président"]],
   ],
 };
   const mois = {
