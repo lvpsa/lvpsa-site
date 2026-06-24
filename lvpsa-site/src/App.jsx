@@ -393,215 +393,369 @@ function Accueil() {
   return (
     <>
       <section className="relative overflow-hidden px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-8 lg:grid-cols-2">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950 to-sky-950"></div>
+        <div className="absolute left-[-120px] top-20 h-80 w-80 rounded-full bg-amber-400/10 blur-3xl"></div>
+        <div className="absolute bottom-[-160px] right-[-100px] h-96 w-96 rounded-full bg-sky-400/10 blur-3xl"></div>
 
-            {/* COLONNE GAUCHE */}
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+
+            {/* HERO GAUCHE */}
             <div>
-
-              {/* STATUT + MÉTÉO */}
-              <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-sky-500/20 to-slate-900/40 p-6 backdrop-blur-xl">
-                <div
-                  className={`mb-5 rounded-2xl border p-4 ${
-                    statutMatchs.couleur === "red"
-                      ? "border-red-400/30 bg-red-400/10"
-                      : "border-emerald-400/30 bg-emerald-400/10"
-                  }`}
-                >
-                  <p
-                    className={`text-sm uppercase tracking-[0.25em] ${
-                      statutMatchs.couleur === "red"
-                        ? "text-red-300"
-                        : "text-emerald-300"
-                    }`}
-                  >
-                    Statut des parties
-                  </p>
-
-                  <h3 className="mt-2 text-2xl font-black text-white">
-                    {statutMatchs.texte}
-                  </h3>
-
-                  <p className="mt-1 text-sm text-slate-300">
-                    {statutMatchs.message}
-                  </p>
-                </div>
-
-                <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
-                  Météo des prochaines heures
-                </p>
-
-                <div className="mt-5 grid grid-cols-5 gap-3">
-                  {meteoHeures.length > 0 ? (
-                    meteoHeures.map((item) => (
-                      <div
-                        key={item.heure}
-                        className="rounded-2xl bg-white/10 p-3 text-center"
-                      >
-                        <p className="text-sm text-slate-300">
-                          {item.heure.replace(":00", "h")}
-                        </p>
-
-                        <p className="mt-2 text-3xl">
-                          {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
-                        </p>
-
-                        <p className="mt-2 text-xl font-black">
-                          {item.temperature}°
-                        </p>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="col-span-5 text-sm text-slate-300">
-                      Chargement de la météo...
-                    </p>
-                  )}
-                </div>
-
-                <div className="mt-6 flex gap-4 text-sm text-slate-300">
-                  <div className="rounded-xl bg-white/10 px-4 py-2">
-                    Vent : {meteoHeures[0]?.vent ?? "--"} km/h
-                  </div>
-
-                  <div className="rounded-xl bg-white/10 px-4 py-2">
-                    Humidité : {meteoHeures[0]?.humidite ?? "--"}%
-                  </div>
-                </div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
+                🏐 Saison 2026 · Parc Portneuf
               </div>
 
-              {/* SLOGAN */}
-              <div className="mt-10">
-                <h1 className="text-5xl font-black leading-tight md:text-7xl">
-                  Plus qu’une ligue.
-                  <span className="block text-amber-300">
-                    Une ambiance.
-                  </span>
-                </h1>
+              <h1 className="mt-8 text-6xl font-black leading-tight text-white md:text-7xl">
+                Plus qu’une ligue.
+                <span className="block text-amber-300">
+                  Une ambiance.
+                </span>
+              </h1>
 
-                <div className="mt-10 relative overflow-hidden rounded-[2rem] border border-white/10 h-[320px]">
+              <p className="mt-6 max-w-2xl text-xl leading-8 text-slate-300">
+                La LVPSA rassemble les passionnés de volleyball de plage à
+                Saint-Augustin dans une atmosphère sportive, estivale et
+                conviviale.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  to="/calendrier"
+                  className="inline-flex items-center rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+                >
+                  Voir le calendrier
+                </Link>
+
+                <Link
+                  to="/classements"
+                  className="inline-flex items-center rounded-full border border-white/15 px-8 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
+                >
+                  Voir les classements
+                </Link>
+              </div>
+
+              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-3xl font-black text-amber-300">2</p>
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-300">
+                    Catégories
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-3xl font-black text-amber-300">8</p>
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-300">
+                    Équipes
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-3xl font-black text-amber-300">1</p>
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-300">
+                    Communauté
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* HERO DROITE */}
+            <div className="relative">
+              <div className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-3 shadow-2xl">
+                <div className="relative h-[520px] overflow-hidden rounded-[2rem]">
                   <img
                     src="/volley-bg.jpg"
                     alt="Terrain LVPSA"
                     className="h-full w-full object-cover"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
 
-                  <div className="absolute bottom-6 left-6">
-                    <p className="text-sm uppercase tracking-[0.25em] text-amber-300">
-                      Parc Portneuf
-                    </p>
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="rounded-3xl border border-white/10 bg-slate-950/75 p-6 backdrop-blur-xl">
+                      <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
+                        Terrain officiel
+                      </p>
 
-                    <h3 className="mt-2 text-3xl font-black text-white">
-                      Terrain officiel LVPSA
-                    </h3>
+                      <h2 className="mt-2 text-3xl font-black text-white">
+                        Parc Portneuf
+                      </h2>
+
+                      <p className="mt-2 text-slate-300">
+                        Volleyball de plage, ambiance estivale et soirées de ligue.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* COLONNE DROITE */}
-            <div>
-
-              {/* TOURNOI */}
-              <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
-                <img
-                  src="/tournoi-lvpsa-2026.png"
-                  alt="Tournoi LVPSA"
-                  className="w-full h-auto"
-                />
-
-                <div className="flex gap-4 p-5">
-                  <div className="flex-1 rounded-full bg-red-500/20 px-6 py-3 text-center font-bold text-red-300 border border-red-400/30">
-                    Tournoi complet
-                  </div>
-
-                  <Link
-                    to="/tournoi"
-                    className="flex-1 rounded-full border border-white/15 px-6 py-3 text-center font-semibold hover:bg-white/10"
-                  >
-                    Voir les détails
-                  </Link>
-                </div>
-              </div>
-
-              {/* TEXTE */}
-              <div className="mt-10">
-                <p className="max-w-xl text-lg leading-8 text-slate-300">
-                  La LVPSA rassemble les passionnés de volleyball de plage à
-                  St-Augustin dans une atmosphère sportive, estivale et
-                  conviviale.
+              <div className="absolute -bottom-6 -left-4 hidden rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-5 backdrop-blur-xl md:block">
+                <p className="text-sm font-bold uppercase text-emerald-300">
+                  Saison active
+                </p>
+                <p className="mt-1 text-2xl font-black text-white">
+                  Mai à août 2026
                 </p>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* CARTES BAS */}
-          <div className="mt-14 grid gap-6 md:grid-cols-4">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950">
-                👥
-              </div>
+      {/* STATUT + MÉTÉO */}
+      <section className="px-6 py-12">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
 
-              <h3 className="text-2xl font-black">
-                Une communauté passionnée
-              </h3>
+          <div
+            className={`rounded-[2rem] border p-8 ${
+              statutMatchs.couleur === "red"
+                ? "border-red-400/30 bg-red-400/10"
+                : "border-emerald-400/30 bg-emerald-400/10"
+            }`}
+          >
+            <p
+              className={`text-sm font-bold uppercase tracking-[0.25em] ${
+                statutMatchs.couleur === "red"
+                  ? "text-red-300"
+                  : "text-emerald-300"
+              }`}
+            >
+              Statut des parties
+            </p>
 
-              <p className="mt-3 text-slate-300">
-                Des joueurs de tous les niveaux réunis par la même passion du volleyball de plage.
-              </p>
+            <h2 className="mt-4 text-4xl font-black text-white">
+              {statutMatchs.texte}
+            </h2>
+
+            <p className="mt-3 text-lg text-slate-300">
+              {statutMatchs.message}
+            </p>
+
+            <Link
+              to="/calendrier"
+              className="mt-8 inline-flex rounded-full border border-white/15 px-6 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              Consulter l’horaire
+            </Link>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
+              Météo des prochaines heures
+            </p>
+
+            <div className="mt-6 grid grid-cols-5 gap-3">
+              {meteoHeures.length > 0 ? (
+                meteoHeures.map((item) => (
+                  <div
+                    key={item.heure}
+                    className="rounded-2xl border border-white/10 bg-slate-950/60 p-3 text-center"
+                  >
+                    <p className="text-sm text-slate-300">
+                      {item.heure.replace(":00", "h")}
+                    </p>
+
+                    <p className="mt-2 text-3xl">
+                      {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
+                    </p>
+
+                    <p className="mt-2 text-xl font-black text-white">
+                      {item.temperature}°
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="col-span-5 text-sm text-slate-300">
+                  Chargement de la météo...
+                </p>
+              )}
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950">
-                🏆
+            <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-300">
+              <div className="rounded-full bg-white/10 px-4 py-2">
+                Vent : {meteoHeures[0]?.vent ?? "--"} km/h
               </div>
 
-              <h3 className="text-2xl font-black">
-                Compétition et plaisir
-              </h3>
+              <div className="rounded-full bg-white/10 px-4 py-2">
+                Humidité : {meteoHeures[0]?.humidite ?? "--"}%
+              </div>
 
-              <p className="mt-3 text-slate-300">
-                Des ligues compétitives et récréatives pour tous les profils.
-              </p>
+              <a
+                href={meteoLink}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-white/15 px-4 py-2 font-bold text-amber-300 hover:border-amber-300"
+              >
+                MétéoMédia ↗
+              </a>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950">
+      {/* ACCÈS RAPIDES */}
+      <section className="px-6 py-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-8">
+            <p className="font-bold uppercase tracking-wider text-amber-300">
+              Accès rapides
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black text-white">
+              Tout ce qu’il faut pour suivre la saison
+            </h2>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Link
+              to="/calendrier"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:border-amber-300"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400 text-3xl text-slate-950">
                 📅
               </div>
 
-              <h3 className="text-2xl font-black">
-                Saison estivale
+              <h3 className="text-2xl font-black text-white">
+                Calendrier
               </h3>
 
               <p className="mt-3 text-slate-300">
-                Des matchs tout l’été dans un cadre exceptionnel.
+                Consulte les matchs à venir pour les catégories récréative et compétitive.
               </p>
-            </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950">
-                📍
+              <p className="mt-5 font-bold text-amber-300">
+                Voir l’horaire →
+              </p>
+            </Link>
+
+            <Link
+              to="/classements"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:border-amber-300"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400 text-3xl text-slate-950">
+                🏆
               </div>
 
-              <h3 className="text-2xl font-black">
-                Un site exceptionnel
+              <h3 className="text-2xl font-black text-white">
+                Classements
               </h3>
 
               <p className="mt-3 text-slate-300">
-                Le Parc Portneuf, modules et jeux d'eau pour petits et grands,
-                terrain de volleyball de plage, pickelball et basketball.
+                Suis les résultats, les points et l’évolution des équipes.
               </p>
-            </div>
+
+              <p className="mt-5 font-bold text-amber-300">
+                Voir les classements →
+              </p>
+            </Link>
+
+            <Link
+              to="/inscription-ligue"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:border-amber-300"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400 text-3xl text-slate-950">
+                🙋
+              </div>
+
+              <h3 className="text-2xl font-black text-white">
+                Remplaçants
+              </h3>
+
+              <p className="mt-3 text-slate-300">
+                Ajoute ton nom à la liste des joueurs indépendants disponibles.
+              </p>
+
+              <p className="mt-5 font-bold text-amber-300">
+                S’inscrire comme remplaçant →
+              </p>
+            </Link>
+
+            <Link
+              to="/reglements"
+              className="group rounded-3xl border border-white/10 bg-white/5 p-7 transition hover:-translate-y-1 hover:border-amber-300"
+            >
+              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400 text-3xl text-slate-950">
+                📋
+              </div>
+
+              <h3 className="text-2xl font-black text-white">
+                Règlements
+              </h3>
+
+              <p className="mt-3 text-slate-300">
+                Consulte les règles de jeu, le format et les consignes importantes.
+              </p>
+
+              <p className="mt-5 font-bold text-amber-300">
+                Lire les règlements →
+              </p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* TOURNOI COMPLET, SANS AFFICHE */}
+      <section className="px-6 py-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-[2rem] border border-red-400/20 bg-gradient-to-br from-red-500/10 to-slate-900 p-8 text-center">
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-red-300">
+              Tournoi LVPSA 2026
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black text-white">
+              Le tournoi est maintenant complet
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
+              Merci pour votre enthousiasme et votre confiance. On se voit bientôt
+              sur le sable pour une journée de volleyball, d’ambiance et de plaisir.
+            </p>
+
+            <Link
+              to="/tournoi"
+              className="mt-8 inline-flex rounded-full border border-white/15 px-8 py-4 font-black text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              Voir les informations du tournoi
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* BAS DE PAGE */}
+      <section className="px-6 py-12">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 lg:col-span-2">
+            <p className="font-bold uppercase tracking-wider text-amber-300">
+              LVPSA
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black text-white">
+              Une ligue locale, simple, sportive et rassembleuse.
+            </h2>
+
+            <p className="mt-5 text-lg leading-8 text-slate-300">
+              La Ligue de volleyball de plage de Saint-Augustin a été créée pour
+              offrir aux joueurs un endroit structuré, agréable et accessible pour
+              jouer tout l’été dans une ambiance conviviale.
+            </p>
           </div>
 
-          {/* BAS */}
-          <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 px-6 py-5 text-slate-300">
-            Inscriptions de la ligue terminées · Remplaçants :
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+            <p className="font-bold uppercase tracking-wider text-amber-300">
+              Contact
+            </p>
+
+            <h3 className="mt-2 text-3xl font-black text-white">
+              Besoin d’information?
+            </h3>
+
+            <p className="mt-4 text-slate-300">
+              Pour les remplacements, les horaires ou les questions générales :
+            </p>
+
             <a
-              className="ml-2 font-bold text-amber-300"
               href={`mailto:${email}`}
+              className="mt-6 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
             >
               {email}
             </a>
