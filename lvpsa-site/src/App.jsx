@@ -390,6 +390,12 @@ useEffect(() => {
   chargerMeteo();
 }, []);
 
+  <>
+      <section className="relative overflow-hidden px-6 py-16">
+ 
+        <div className="mx-auto max-w-7xl">
+  <div className="grid gap-8 lg:grid-cols-2">
+    
   return (
     
             {/* COLONNE GAUCHE */}
