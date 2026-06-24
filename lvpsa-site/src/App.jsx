@@ -401,23 +401,6 @@ useEffect(() => {
     <span>🚨</span>
   </div>
 
-  <p className="mt-2 text-2xl font-black">
-    IMPORTANT – HORAIRE MODIFIÉ
-  </p>
-
-  <p className="mt-2 text-lg font-semibold">
-    À compter de la semaine du 15 juin, toutes les parties débuteront à
-    <span className="font-black text-yellow-300"> 18h30 </span>
-    plutôt qu'à
-    <span className="font-black text-yellow-300"> 18h00</span>.
-  </p>
-         
-</div>
-
-        <div className="mx-auto max-w-7xl">
-  <div className="grid gap-8 lg:grid-cols-2">
-
-
             {/* COLONNE GAUCHE */}
             <div>
 
