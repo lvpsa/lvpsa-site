@@ -51,6 +51,7 @@ export default function App() {
           <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
+          <Route path="/tournoi/horaire" element={<HoraireTournoi />} />
           <Route path="/boutique" element={<BoutiqueProtegee />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
@@ -137,6 +138,7 @@ function Header() {
 
   const tournoiItems = [
     { label: "Informations", to: "/tournoi" },
+    { label: "Horaire", to: "/tournoi/horaire" },
     { label: "Règlements", to: "/tournoi/reglements" },
   ];
 
@@ -246,6 +248,7 @@ function Header() {
             {tournoiOpen && (
               <div className="ml-4 flex flex-col gap-3 border-l border-white/10 pl-4 text-white/90">
                 <Link to="/tournoi" onClick={() => setMenuOpen(false)}>Informations</Link>
+                <Link to="/tournoi/horaire" onClick={() => setMenuOpen(false)}>Horaire</Link>
                 <Link to="/tournoi/reglements" onClick={() => setMenuOpen(false)}>Règlements</Link>
               </div>
             )}
@@ -4006,6 +4009,84 @@ function GestionEquipe({ userData }) {
             )}
           </div>
         )}
+      </div>
+    </section>
+  );
+}
+function HoraireTournoi() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Tournoi LVPSA 2026
+      </p>
+
+      <h1 className="mt-2 text-5xl font-black text-white">
+        Horaire du tournoi
+      </h1>
+
+      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+        L’horaire officiel du tournoi sera publié ici dès qu’il sera finalisé.
+      </p>
+
+      <div className="mt-12 rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-8 text-center">
+        <div className="text-5xl">📅</div>
+
+        <h2 className="mt-5 text-3xl font-black text-amber-300">
+          Horaire à venir
+        </h2>
+
+        <p className="mx-auto mt-4 max-w-2xl text-slate-300">
+          Les heures des matchs, les catégories, les équipes et la séquence des parties
+          seront ajoutées prochainement.
+        </p>
+      </div>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-2xl font-black text-white">
+            Début du tournoi
+          </h3>
+
+          <p className="mt-3 text-slate-300">
+            Les premiers matchs sont prévus en matinée.
+          </p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-2xl font-black text-white">
+            Phase préliminaire
+          </h3>
+
+          <p className="mt-3 text-slate-300">
+            Chaque équipe jouera ses matchs de classement avant les séries.
+          </p>
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-2xl font-black text-white">
+            Séries éliminatoires
+          </h3>
+
+          <p className="mt-3 text-slate-300">
+            Les séries auront lieu après la phase préliminaire.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-10 flex flex-wrap gap-4">
+        <Link
+          to="/tournoi"
+          className="rounded-full border border-white/15 px-8 py-4 font-black text-white hover:border-amber-300 hover:text-amber-300"
+        >
+          Retour aux informations
+        </Link>
+
+        <Link
+          to="/tournoi/reglements"
+          className="rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
+        >
+          Voir les règlements
+        </Link>
       </div>
     </section>
   );
