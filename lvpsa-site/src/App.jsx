@@ -529,23 +529,17 @@ useEffect(() => {
 
               
                 <div className="flex gap-4 p-5">
+  <div className="flex-1 rounded-full bg-red-500/20 px-6 py-3 text-center font-bold text-red-300 border border-red-400/30">
+    Tournoi complet
+  </div>
 
-                  <a
-                    href={tournoiLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 rounded-full bg-amber-400 px-6 py-3 text-center font-bold text-slate-950 hover:bg-amber-300"
-                  >
-                    S’inscrire maintenant
-                  </a>
-
-                  <Link
-                    to="/tournoi"
-                    className="flex-1 rounded-full border border-white/15 px-6 py-3 text-center font-semibold hover:bg-white/10"
-                  >
-                    Voir les détails
-                  </Link>
-                </div>
+  <Link
+    to="/tournoi"
+    className="flex-1 rounded-full border border-white/15 px-6 py-3 text-center font-semibold hover:bg-white/10"
+  >
+    Voir les détails
+  </Link>
+</div>
               </div>
 
               {/* TEXTE */}
@@ -884,12 +878,11 @@ function Tournoi() {
 
           <div className="mt-8 max-w-xl rounded-3xl border border-red-500/30 bg-red-500/10 p-5">
   <p className="text-center text-xl font-black uppercase tracking-wide text-red-300">
-    🔴 Catégorie récréative : COMPLET
+    🔴 Le tournoi est maintenant : COMPLET
   </p>
 
   <p className="mt-2 text-center text-slate-300">
-    Merci pour votre enthousiasme ! Les inscriptions demeurent ouvertes
-    dans la catégorie compétitive.
+    Merci pour votre enthousiasme ! On se voit bientôt sur le sable!!!
   </p>
 </div>
           
@@ -922,15 +915,6 @@ function Tournoi() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-4">
-  <a
-    href="https://forms.gle/csLUt6NmcjNADcBm7"
-    target="_blank"
-    rel="noreferrer"
-    className="inline-flex items-center rounded-full bg-amber-400 px-10 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-  >
-    S’inscrire maintenant ↗
-  </a>
-
   <Link
     to="/tournoi/reglements"
     className="inline-flex items-center rounded-full border border-white/15 px-10 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
@@ -1747,6 +1731,14 @@ const equipesCompetitives = equipes.filter(
     acc[nom] = (acc[nom] || 0) + 1;
     return acc;
   }, {});
+
+  const ongletsAdmin = [
+    ["statut", "Statut des parties"],
+    ["equipes", "Équipes"],
+    ["remplacements", "Remplacements"],
+    ["membres", "Membres"],
+    ["boutique", "Boutique"],
+  ];
   
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -1766,26 +1758,39 @@ const equipesCompetitives = equipes.filter(
         </button>
       </div>
 
-      <div className="mt-10 flex flex-wrap gap-3">
-        {[
-          ["statut", "Statut des parties"],
-          ["equipes", "Équipes"],
-          ["remplacements", "Remplacements"],
-          ["membres", "Membres"],
-          ["boutique", "Boutique"],
-        ].map(([id, label]) => (
-          <button
-            key={id}
-            onClick={() => setOnglet(id)}
-            className={`rounded-full px-6 py-3 font-bold ${
-              onglet === id
-                ? "bg-amber-400 text-slate-950"
-                : "border border-white/15 text-white hover:border-amber-300 hover:text-amber-300"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="relative z-10 mt-10 rounded-3xl border border-white/10 bg-white/5 p-4">
+        <label className="block text-sm font-bold uppercase tracking-wider text-amber-300">
+          Menu administration
+        </label>
+
+        <select
+          value={onglet}
+          onChange={(e) => setOnglet(e.target.value)}
+          className="mt-3 w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 font-bold text-white outline-none md:hidden"
+        >
+          {ongletsAdmin.map(([id, label]) => (
+            <option key={id} value={id}>
+              {label}
+            </option>
+          ))}
+        </select>
+
+        <div className="mt-4 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {ongletsAdmin.map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setOnglet(id)}
+              className={`block w-full rounded-2xl px-4 py-4 text-center font-black transition ${
+                onglet === id
+                  ? "bg-amber-400 text-slate-950"
+                  : "border border-white/15 bg-slate-950 text-white hover:border-amber-300 hover:text-amber-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {onglet === "statut" && (
@@ -2040,6 +2045,89 @@ const equipesCompetitives = equipes.filter(
 
   </div>
 )}
+      {onglet === "membres" && (
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="text-3xl font-black text-amber-300">
+                Liste des membres
+              </h2>
+
+              <p className="mt-3 text-slate-300">
+                Total de membres inscrits : {membres.length}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {membres.length > 0 ? (
+              membres.map((membre) => (
+                <div
+                  key={membre.id}
+                  className="rounded-2xl border border-white/10 bg-black/20 p-5"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-xl font-black text-white">
+                      {membre.nom || "Sans nom"}
+                    </h3>
+
+                    {membre.isAdmin && (
+                      <span className="rounded-full bg-amber-400 px-3 py-1 text-xs font-black text-slate-950">
+                        Admin
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-4 space-y-2 text-sm text-slate-300">
+                    <p>
+                      <span className="font-bold text-white">Courriel :</span>{" "}
+                      {membre.email || "Non précisé"}
+                    </p>
+
+                    <p>
+                      <span className="font-bold text-white">Téléphone :</span>{" "}
+                      {membre.telephone || "Non précisé"}
+                    </p>
+
+                    <p>
+                      <span className="font-bold text-white">Rôle :</span>{" "}
+                      {membre.role || "membre"}
+                    </p>
+
+                    <p>
+                      <span className="font-bold text-white">Statut :</span>{" "}
+                      {membre.statut || "Non précisé"}
+                    </p>
+
+                    <p>
+                      <span className="font-bold text-white">Équipe :</span>{" "}
+                      {membre.equipeId || "Aucune équipe associée"}
+                    </p>
+
+                    <p>
+                      <span className="font-bold text-white">Catégorie :</span>{" "}
+                      {Array.isArray(membre.categories)
+                        ? membre.categories.join(", ")
+                        : membre.categorie || "Non précisée"}
+                    </p>
+
+                    {membre.estRemplacant && (
+                      <p className="font-bold text-emerald-300">
+                        Disponible comme joueur indépendant
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-slate-500">
+                Aucun membre inscrit pour le moment.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {onglet === "boutique" && (
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
           <h2 className="text-3xl font-black text-amber-300">Boutique</h2>
