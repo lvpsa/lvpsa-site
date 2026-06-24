@@ -1200,8 +1200,8 @@ function Tournoi() {
           <ul className="mt-6 space-y-3 text-slate-300">
             <li>✅ Tournoi sur 1 journée</li>
             <li>✅ Matchs en continu de 8 h à 20 h</li>
-            <li>✅ Phase préliminaire : 2 sets de 15 points</li>
-            <li>✅ Séries éliminatoires : 2 sets de 21 points</li>
+            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
+            <li>✅ Séries éliminatoires : 2 sets de 25 points</li>
           </ul>
         </div>
 
@@ -4049,16 +4049,7 @@ function HoraireTournoi() {
 
           <p className="mt-3 text-slate-300">
             Les premiers matchs sont prévus en matinée.
-          </p>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-2xl font-black text-white">
-            Phase préliminaire
-          </h3>
-
-          <p className="mt-3 text-slate-300">
-            Chaque équipe jouera ses matchs de classement avant les séries.
+            Chaque équipe jouera 4 matchs de classement avant les séries.
           </p>
         </div>
 
