@@ -365,8 +365,7 @@ function Accueil() {
 
     async function chargerMeteo() {
       const url =
-        "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=America%2FToronto&forecast_days=1";
-
+  "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,uv_index&timezone=America%2FToronto&forecast_days=1";
       const res = await fetch(url);
       const data = await res.json();
 
