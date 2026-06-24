@@ -391,16 +391,7 @@ useEffect(() => {
 }, []);
 
   return (
-    <>
-      <section className="relative overflow-hidden px-6 py-16">
-       <div className="mb-8 rounded-3xl border-2 border-red-500 bg-red-600 p-5 text-center text-white shadow-xl">
-
-  <div className="flex items-center justify-center gap-4 text-4xl animate-pulse">
-    <span>🚨</span>
-    <span>🚨</span>
-    <span>🚨</span>
-  </div>
-
+    
             {/* COLONNE GAUCHE */}
             <div>
 
