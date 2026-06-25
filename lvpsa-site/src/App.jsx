@@ -4247,7 +4247,7 @@ const matchsPreliminairesFiltres = matchsPreliminaires.filter(matchConcerneEquip
 const seriesRecreatifFiltres = seriesRecreatif.filter(matchConcerneEquipe);
 const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
   
-  const TableHoraire = ({ titre, matchs }) => (
+  const TableHoraire = ({ titre, matchs, afficherGagnant = true }) => (
     <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
       <div className="bg-amber-400 px-6 py-5 text-slate-950">
         <h2 className="text-3xl font-black">{titre}</h2>
@@ -4264,7 +4264,7 @@ const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
               <th className="px-5 py-4 font-black">Équipe B</th>
               <th className="px-5 py-4 font-black">Résultat</th>
               <th className="px-5 py-4 font-black">Marqueur</th>
-              <th className="px-5 py-4 font-black">Gagnant</th>
+              {afficherGagnant && (<th className="px-5 py-4 font-black">Gagnant</th>)}
               <th className="px-5 py-4 font-black">Statut</th>
             </tr>
           </thead>
@@ -4310,9 +4310,11 @@ const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
                     {match.marqueur || "À confirmer"}
                   </td>
 
-                  <td className="px-5 py-4 text-slate-300">
-                    {match.gagnant || "—"}
-                  </td>
+                  {afficherGagnant && (
+  <td className="px-5 py-4 text-slate-300">
+    {match.gagnant || "—"}
+  </td>
+)}
 
                   <td className="px-5 py-4">
                     <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-slate-300">
@@ -4451,6 +4453,7 @@ const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
             <TableHoraire
   titre="Ronde préliminaire"
   matchs={matchsPreliminairesFiltres}
+  afficherGagnant={false}
 />
           </div>
 
