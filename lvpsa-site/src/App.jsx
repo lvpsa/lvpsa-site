@@ -4542,6 +4542,7 @@ function ReglementsTournoi() {
           <ul className="mt-6 space-y-4 text-slate-300">
             <li>❌ Bloquer une femme sur une action à l’attaque pour les hommes.</li>
             <li>❌ Renvoyer en touche ou en tip, sauf pour le volet récréatif.</li>
+            <li>❌ Aucune faute de doubles touches.</li>
             <li>❌ Toucher le filet.</li>
             <li>❌ Traverser de l’autre côté.</li>
             <li>❌ Faire un transport.</li>
@@ -4550,7 +4551,7 @@ function ReglementsTournoi() {
 
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
           <h2 className="text-3xl font-black text-amber-300">
-            Rotation
+            Rotation/Position
           </h2>
 
           <p className="mt-6 text-slate-300 leading-8">
