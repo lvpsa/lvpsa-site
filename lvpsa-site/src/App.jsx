@@ -4389,44 +4389,49 @@ const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
   )}
 </div>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div className="text-4xl">🏐</div>
+      <div className="mt-8 grid gap-4 md:grid-cols-3">
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div className="flex items-center gap-3">
+      <div className="text-2xl">🏐</div>
 
-          <h2 className="mt-4 text-2xl font-black text-white">
-            Ronde préliminaire
-          </h2>
+      <h2 className="text-lg font-black text-white">
+        Ronde préliminaire
+      </h2>
+    </div>
 
-          <p className="mt-3 text-slate-300">
-            Parties de 2 sets de 21 points.
-          </p>
-        </div>
+    <p className="mt-2 text-sm leading-6 text-slate-300">
+      Parties de 2 sets de 21 points.
+    </p>
+  </div>
 
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div className="text-4xl">📝</div>
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div className="flex items-center gap-3">
+      <div className="text-2xl">📝</div>
 
-          <h2 className="mt-4 text-2xl font-black text-white">
-            Marqueurs
-          </h2>
+      <h2 className="text-lg font-black text-white">
+        Marqueurs
+      </h2>
+    </div>
 
-          <p className="mt-3 text-slate-300">
-            Chaque équipe doit fournir un marqueur pour 2 parties durant la journée.
-          </p>
-        </div>
+    <p className="mt-2 text-sm leading-6 text-slate-300">
+      Chaque équipe fournit un marqueur pour 2 parties.
+    </p>
+  </div>
 
-        <div className="rounded-3xl border border-red-400/20 bg-red-400/10 p-6">
-          <div className="text-4xl">⏱️</div>
+  <div className="rounded-2xl border border-red-400/20 bg-red-400/10 p-4">
+    <div className="flex items-center gap-3">
+      <div className="text-2xl">⏱️</div>
 
-          <h2 className="mt-4 text-2xl font-black text-white">
-            Soyez prêts
-          </h2>
+      <h2 className="text-lg font-black text-white">
+        Soyez prêts
+      </h2>
+    </div>
 
-          <p className="mt-3 text-slate-300">
-            Une équipe non prête 5 minutes après la fin du match précédent perdra
-            le premier set par forfait 21-0.
-          </p>
-        </div>
-      </div>
+    <p className="mt-2 text-sm leading-6 text-slate-300">
+      Non prêt 5 minutes après le match précédent : forfait 21-0 au premier set.
+    </p>
+  </div>
+</div>
 
       {chargementHoraire && (
         <p className="mt-10 rounded-2xl bg-white/10 p-5 text-center text-slate-300">
