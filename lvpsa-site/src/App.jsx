@@ -4023,6 +4023,7 @@ function HoraireTournoi() {
   const [seriesCompetitif, setSeriesCompetitif] = useState([]);
   const [chargementHoraire, setChargementHoraire] = useState(true);
   const [erreurHoraire, setErreurHoraire] = useState("");
+  const [equipeFiltre, setEquipeFiltre] = useState("");
 
   const normaliserEntete = (texte) =>
     String(texte || "")
@@ -4201,6 +4202,51 @@ function HoraireTournoi() {
     return "bg-white/10 text-slate-300";
   };
 
+  const normaliserTexte = (texte) =>
+  String(texte || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+const toutesLesEquipes = Array.from(
+  new Set(
+    [...matchsPreliminaires, ...seriesRecreatif, ...seriesCompetitif]
+      .flatMap((match) => [
+        match.equipeA,
+        match.equipeB,
+        match.marqueur,
+      ])
+      .filter(Boolean)
+      .filter((nom) => {
+        const texte = normaliserTexte(nom);
+
+        return (
+          !texte.includes("classement") &&
+          !texte.includes("gagnant") &&
+          !texte.includes("demi-finale") &&
+          texte !== "a confirmer"
+        );
+      })
+  )
+).sort((a, b) => a.localeCompare(b, "fr"));
+
+const matchConcerneEquipe = (match) => {
+  if (!equipeFiltre) return true;
+
+  const equipe = normaliserTexte(equipeFiltre);
+
+  return (
+    normaliserTexte(match.equipeA) === equipe ||
+    normaliserTexte(match.equipeB) === equipe ||
+    normaliserTexte(match.marqueur) === equipe
+  );
+};
+
+const matchsPreliminairesFiltres = matchsPreliminaires.filter(matchConcerneEquipe);
+const seriesRecreatifFiltres = seriesRecreatif.filter(matchConcerneEquipe);
+const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
+  
   const TableHoraire = ({ titre, matchs }) => (
     <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
       <div className="bg-amber-400 px-6 py-5 text-slate-950">
@@ -4304,6 +4350,45 @@ function HoraireTournoi() {
         selon l’avance ou le retard accumulé durant la journée.
       </p>
 
+      <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 p-6">
+  <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
+    Filtrer l’horaire par équipe
+  </p>
+
+  <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center">
+    <select
+      value={equipeFiltre}
+      onChange={(e) => setEquipeFiltre(e.target.value)}
+      className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white md:max-w-md"
+    >
+      <option value="">Toutes les équipes</option>
+
+      {toutesLesEquipes.map((equipe) => (
+        <option key={equipe} value={equipe}>
+          {equipe}
+        </option>
+      ))}
+    </select>
+
+    {equipeFiltre && (
+      <button
+        type="button"
+        onClick={() => setEquipeFiltre("")}
+        className="rounded-full border border-white/15 px-6 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
+      >
+        Réinitialiser
+      </button>
+    )}
+  </div>
+
+  {equipeFiltre && (
+    <p className="mt-4 text-slate-300">
+      Affichage des matchs et assignations de marqueur pour :{" "}
+      <span className="font-bold text-amber-300">{equipeFiltre}</span>
+    </p>
+  )}
+</div>
+
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="text-4xl">🏐</div>
@@ -4359,21 +4444,21 @@ function HoraireTournoi() {
         <>
           <div className="mt-12">
             <TableHoraire
-              titre="Ronde préliminaire"
-              matchs={matchsPreliminaires}
-            />
+  titre="Ronde préliminaire"
+  matchs={matchsPreliminairesFiltres}
+/>
           </div>
 
           <div className="mt-16 grid gap-8 lg:grid-cols-2">
-            <TableHoraire
-              titre="Séries récréatives"
-              matchs={seriesRecreatif}
-            />
+           <TableHoraire
+  titre="Séries récréatives"
+  matchs={seriesRecreatifFiltres}
+/>
 
-            <TableHoraire
-              titre="Séries compétitives"
-              matchs={seriesCompetitif}
-            />
+<TableHoraire
+  titre="Séries compétitives"
+  matchs={seriesCompetitifFiltres}
+/>
           </div>
         </>
       )}
