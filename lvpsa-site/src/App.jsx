@@ -4014,6 +4014,113 @@ function GestionEquipe({ userData }) {
   );
 }
 function HoraireTournoi() {
+  const matchsPreliminaires = [
+    { no: 1, heure: "08:00", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Les anciens", marqueur: "Les cheveux longs" },
+    { no: 2, heure: "08:25", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "Les cheveux longs", marqueur: "Girl Power" },
+    { no: 3, heure: "08:50", categorie: "Récréatif", equipeA: "Set on the Beach", equipeB: "Big Gun", marqueur: "Les anciens" },
+    { no: 4, heure: "09:15", categorie: "Compétitif", equipeA: "Sand Eaters", equipeB: "New Blues on the Beach", marqueur: "Big Gun" },
+    { no: 5, heure: "09:40", categorie: "Récréatif", equipeA: "Les Crinqués", equipeB: "Biche Volley", marqueur: "Sand Eaters" },
+    { no: 6, heure: "10:05", categorie: "Compétitif", equipeA: "Fire Ball", equipeB: "RALC", marqueur: "Les Crinqués" },
+    { no: 7, heure: "10:30", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Big Gun", marqueur: "Fire Ball" },
+    { no: 8, heure: "10:55", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "New Blues on the Beach", marqueur: "Biche Volley" },
+    { no: 9, heure: "11:20", categorie: "Récréatif", equipeA: "Les anciens", equipeB: "Biche Volley", marqueur: "Pine là Colada" },
+    { no: 10, heure: "11:45", categorie: "Compétitif", equipeA: "Les cheveux longs", equipeB: "RALC", marqueur: "New Blues on the Beach" },
+    { no: 11, heure: "12:10", categorie: "Récréatif", equipeA: "Set on the Beach", equipeB: "Les Crinqués", marqueur: "RALC" },
+    { no: 12, heure: "12:35", categorie: "Compétitif", equipeA: "Sand Eaters", equipeB: "Fire Ball", marqueur: "Les Crinqués" },
+    { no: 13, heure: "13:00", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Biche Volley", marqueur: "Set on the Beach" },
+    { no: 14, heure: "13:25", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "RALC", marqueur: "Girl Power" },
+    { no: 15, heure: "13:50", categorie: "Récréatif", equipeA: "Big Gun", equipeB: "Les Crinqués", marqueur: "RALC" },
+    { no: 16, heure: "14:15", categorie: "Compétitif", equipeA: "New Blues on the Beach", equipeB: "Fire Ball", marqueur: "Big Gun" },
+    { no: 17, heure: "14:40", categorie: "Récréatif", equipeA: "Les anciens", equipeB: "Set on the Beach", marqueur: "Fire Ball" },
+    { no: 18, heure: "15:05", categorie: "Compétitif", equipeA: "Les cheveux longs", equipeB: "Sand Eaters", marqueur: "Set on the Beach" },
+    { no: 19, heure: "15:30", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Les Crinqués", marqueur: "Les cheveux longs" },
+    { no: 20, heure: "15:55", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "Fire Ball", marqueur: "New Blues on the Beach" },
+    { no: 21, heure: "16:20", categorie: "Récréatif", equipeA: "Biche Volley", equipeB: "Set on the Beach", marqueur: "Pine là Colada" },
+    { no: 22, heure: "16:45", categorie: "Compétitif", equipeA: "RALC", equipeB: "Sand Eaters", marqueur: "Biche Volley" },
+    { no: 23, heure: "17:10", categorie: "Récréatif", equipeA: "Big Gun", equipeB: "Les anciens", marqueur: "Sand Eaters" },
+    { no: 24, heure: "17:35", categorie: "Compétitif", equipeA: "New Blues on the Beach", equipeB: "Les cheveux longs", marqueur: "Les anciens" },
+  ];
+
+  const seriesRecreatif = [
+    { no: 25, heure: "18:00", categorie: "Séries récréatif", equipeA: "1er classement", equipeB: "4e classement" },
+    { no: 26, heure: "18:25", categorie: "Séries récréatif", equipeA: "2e classement", equipeB: "3e classement" },
+    { no: 28, heure: "19:45", categorie: "Finale récréative", equipeA: "Gagnant demi-finale 1", equipeB: "Gagnant demi-finale 2" },
+  ];
+
+  const seriesCompetitif = [
+    { no: 29, heure: "18:50", categorie: "Séries compétitif", equipeA: "1er classement", equipeB: "4e classement" },
+    { no: 30, heure: "19:15", categorie: "Séries compétitif", equipeA: "2e classement", equipeB: "3e classement" },
+    { no: 32, heure: "20:10", categorie: "Finale compétitive", equipeA: "Gagnant demi-finale 1", equipeB: "Gagnant demi-finale 2" },
+  ];
+
+  const TableHoraire = ({ titre, matchs }) => (
+    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
+      <div className="bg-amber-400 px-6 py-5 text-slate-950">
+        <h2 className="text-3xl font-black">{titre}</h2>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[900px] text-left">
+          <thead>
+            <tr className="border-b border-white/10 bg-slate-900 text-amber-300">
+              <th className="px-5 py-4 font-black">Match</th>
+              <th className="px-5 py-4 font-black">Heure</th>
+              <th className="px-5 py-4 font-black">Catégorie</th>
+              <th className="px-5 py-4 font-black">Équipe A</th>
+              <th className="px-5 py-4 font-black">Équipe B</th>
+              <th className="px-5 py-4 font-black">Marqueur</th>
+              <th className="px-5 py-4 font-black">Statut</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {matchs.map((match) => (
+              <tr key={match.no} className="border-b border-white/10 text-white">
+                <td className="px-5 py-4 font-black text-amber-300">
+                  #{match.no}
+                </td>
+
+                <td className="px-5 py-4 font-bold">
+                  {match.heure}
+                </td>
+
+                <td className="px-5 py-4">
+                  <span
+                    className={`rounded-full px-3 py-1 text-sm font-bold ${
+                      match.categorie.toLowerCase().includes("récréatif")
+                        ? "bg-sky-400/10 text-sky-300"
+                        : "bg-red-400/10 text-red-300"
+                    }`}
+                  >
+                    {match.categorie}
+                  </span>
+                </td>
+
+                <td className="px-5 py-4 font-bold">
+                  {match.equipeA}
+                </td>
+
+                <td className="px-5 py-4 font-bold">
+                  {match.equipeB}
+                </td>
+
+                <td className="px-5 py-4 text-slate-300">
+                  {match.marqueur || "À confirmer"}
+                </td>
+
+                <td className="px-5 py-4">
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-slate-300">
+                    À jouer
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -4025,43 +4132,64 @@ function HoraireTournoi() {
       </h1>
 
       <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        L’horaire officiel du tournoi sera publié ici dès qu’il sera finalisé.
+        Voici l’horaire officiel du tournoi. Les équipes doivent être prêtes à
+        commencer dès que leur tour arrive. L’horaire pourrait légèrement varier
+        selon l’avance ou le retard accumulé durant la journée.
       </p>
-
-      <div className="mt-12 rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-8 text-center">
-        <div className="text-5xl">📅</div>
-
-        <h2 className="mt-5 text-3xl font-black text-amber-300">
-          Horaire à venir
-        </h2>
-
-        <p className="mx-auto mt-4 max-w-2xl text-slate-300">
-          Les heures des matchs, les catégories, les équipes et la séquence des parties
-          seront ajoutées prochainement.
-        </p>
-      </div>
 
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-2xl font-black text-white">
-            Début du tournoi
-          </h3>
-
+          <div className="text-4xl">🏐</div>
+          <h2 className="mt-4 text-2xl font-black text-white">
+            Ronde préliminaire
+          </h2>
           <p className="mt-3 text-slate-300">
-            Les premiers matchs sont prévus en matinée.
-            Chaque équipe jouera 4 matchs de classement avant les séries.
+            Parties de 2 sets de 21 points.
           </p>
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-2xl font-black text-white">
-            Séries éliminatoires
-          </h3>
-
+          <div className="text-4xl">📝</div>
+          <h2 className="mt-4 text-2xl font-black text-white">
+            Marqueurs
+          </h2>
           <p className="mt-3 text-slate-300">
-            Les séries auront lieu après la phase préliminaire.
+            Chaque équipe doit fournir un marqueur pour 2 parties durant la journée.
           </p>
         </div>
+
+        <div className="rounded-3xl border border-red-400/20 bg-red-400/10 p-6">
+          <div className="text-4xl">⏱️</div>
+          <h2 className="mt-4 text-2xl font-black text-white">
+            Soyez prêts
+          </h2>
+          <p className="mt-3 text-slate-300">
+            Une équipe non prête 5 minutes après la fin du match précédent perdra
+            le premier set par forfait 21-0.
+          </p>
+        </div>
+      </div>
+
+      <TableHoraire titre="Ronde préliminaire" matchs={matchsPreliminaires} />
+
+      <div className="mt-16 grid gap-8 lg:grid-cols-2">
+        <TableHoraire titre="Séries récréatives" matchs={seriesRecreatif} />
+        <TableHoraire titre="Séries compétitives" matchs={seriesCompetitif} />
+      </div>
+
+      <div className="mt-12 rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-8">
+        <h2 className="text-3xl font-black text-amber-300">
+          Informations importantes
+        </h2>
+
+        <ul className="mt-6 space-y-3 text-slate-300">
+          <li>• Terrain de pickleball, basketball, parc pour enfants, jeux d’eau et toilettes sur place.</li>
+          <li>• Nourriture et rafraîchissements inclus en quantité déterminée pour les joueurs.</li>
+          <li>• Nourriture et rafraîchissements aussi disponibles à l’achat pour tous.</li>
+          <li>• Prévoir vos chaises.</li>
+          <li>• Bourses, prix de présence et festin d’après-tournoi seront offerts.</li>
+          <li>• Le but est d’avoir du gros fun : en cas de zone grise, le point sera repris.</li>
+        </ul>
       </div>
 
       <div className="mt-10 flex flex-wrap gap-4">
@@ -4107,6 +4235,8 @@ function ReglementsTournoi() {
           <ul className="mt-6 space-y-4 text-slate-300">
             <li>🏐 4 contre 4 avec au moins une fille sur le terrain en tout temps.</li>
             <li>👥 Une équipe peut avoir plus de 4 joueurs, mais seulement 4 joueurs sur le terrain.</li>
+            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
+            <li>✅ Phase séries : 2 sets de 25 points, un set de 15 points si égalité.</li>
             <li>⚠️ Si une équipe joue à 3, un joueur fantôme perdra un point à sa rotation au service.</li>
           </ul>
         </div>
@@ -4143,8 +4273,8 @@ function ReglementsTournoi() {
           </h2>
 
           <p className="mt-6 text-slate-300 leading-8">
-            Un arbitre/marqueur non officiel sera attitré. Toutes les équipes
-            devront fournir un arbitre/marqueur pendant la journée. En cas de
+            Un arbitre non officiel/marqueur sera attitré. Toutes les équipes
+            devront fournir un arbitre/marqueur 2 fois pendant la journée. En cas de
             doute, le point sera repris.
           </p>
         </div>
