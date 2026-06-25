@@ -4033,57 +4033,99 @@ function HoraireTournoi() {
       .trim();
 
   const lireCSV = (csv) => {
-    const lignes = csv
-      .trim()
-      .split(/\r?\n/)
-      .map((ligne) =>
-        ligne
-          .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-          .map((cell) => cell.replace(/^"|"$/g, "").replace(/""/g, '"').trim())
+  const parserLigne = (ligne) => {
+    const separateurs = [",", ";", "\t"];
+
+    const separateur =
+      separateurs.find((sep) => ligne.includes(sep)) || ",";
+
+    return ligne
+      .split(
+        separateur === ","
+          ? /,(?=(?:(?:[^"]*"){2})*[^"]*$)/
+          : separateur
+      )
+      .map((cell) =>
+        cell
+          .replace(/^"|"$/g, "")
+          .replace(/""/g, '"')
+          .trim()
       );
-
-    if (lignes.length < 2) return [];
-
-    const entetes = lignes[0].map(normaliserEntete);
-
-    const valeur = (row, nomsPossibles) => {
-      for (const nom of nomsPossibles) {
-        const index = entetes.indexOf(normaliserEntete(nom));
-
-        if (index !== -1) {
-          return row[index] || "";
-        }
-      }
-
-      return "";
-    };
-
-    return lignes
-      .slice(1)
-      .filter((row) => valeur(row, ["Match #", "Match", "No", "No."]))
-      .map((row) => {
-        const set1A = valeur(row, ["Set 1 - A", "Set 1 A"]);
-        const set1B = valeur(row, ["Set 1 - B", "Set 1 B"]);
-        const set2A = valeur(row, ["Set 2 - A", "Set 2 A"]);
-        const set2B = valeur(row, ["Set 2 - B", "Set 2 B"]);
-
-        return {
-          no: valeur(row, ["Match #", "Match", "No", "No."]),
-          heure: valeur(row, ["Heure"]),
-          categorie: valeur(row, ["Catégorie", "Categorie"]),
-          equipeA: valeur(row, ["Équipe A", "Equipe A"]),
-          equipeB: valeur(row, ["Équipe B", "Equipe B"]),
-          set1A,
-          set1B,
-          set2A,
-          set2B,
-          gagnant: valeur(row, ["Gagnant"]),
-          marqueur: valeur(row, ["Arbitre", "Arbitre (équipe)", "Marqueur"]),
-          statut: valeur(row, ["Statut"]) || "À jouer",
-        };
-      });
   };
 
+  const lignes = csv
+    .split(/\r?\n/)
+    .map(parserLigne)
+    .filter((row) => row.some((cell) => String(cell).trim() !== ""));
+
+  if (lignes.length < 2) return [];
+
+  const normaliser = (texte) =>
+    String(texte || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const indexEntetes = lignes.findIndex((row) => {
+    const rowNormalisee = row.map(normaliser);
+
+    return (
+      rowNormalisee.some((cell) => cell.includes("match")) &&
+      rowNormalisee.some((cell) => cell.includes("heure"))
+    );
+  });
+
+  if (indexEntetes === -1) {
+    console.error("Aucune ligne d'entêtes trouvée dans le CSV.");
+    return [];
+  }
+
+  const entetes = lignes[indexEntetes].map(normaliser);
+
+  const valeur = (row, nomsPossibles) => {
+    for (const nom of nomsPossibles) {
+      const index = entetes.indexOf(normaliser(nom));
+
+      if (index !== -1) {
+        return row[index] || "";
+      }
+    }
+
+    return "";
+  };
+
+  return lignes
+    .slice(indexEntetes + 1)
+    .filter((row) => {
+      const noMatch = valeur(row, ["Match #", "Match", "No", "No."]);
+      const heure = valeur(row, ["Heure"]);
+
+      return noMatch && heure;
+    })
+    .map((row) => {
+      const set1A = valeur(row, ["Set 1 - A", "Set 1 A"]);
+      const set1B = valeur(row, ["Set 1 - B", "Set 1 B"]);
+      const set2A = valeur(row, ["Set 2 - A", "Set 2 A"]);
+      const set2B = valeur(row, ["Set 2 - B", "Set 2 B"]);
+
+      return {
+        no: valeur(row, ["Match #", "Match", "No", "No."]),
+        heure: valeur(row, ["Heure"]),
+        categorie: valeur(row, ["Catégorie", "Categorie"]),
+        equipeA: valeur(row, ["Équipe A", "Equipe A"]),
+        equipeB: valeur(row, ["Équipe B", "Equipe B"]),
+        set1A,
+        set1B,
+        set2A,
+        set2B,
+        gagnant: valeur(row, ["Gagnant"]),
+        marqueur: valeur(row, ["Arbitre", "Arbitre (équipe)", "Marqueur"]),
+        statut: valeur(row, ["Statut"]) || "À jouer",
+      };
+    });
+};
   useEffect(() => {
     async function chargerHoraire() {
       try {
