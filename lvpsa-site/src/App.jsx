@@ -4014,53 +4014,159 @@ function GestionEquipe({ userData }) {
   );
 }
 function HoraireTournoi() {
-  const matchsPreliminaires = [
-    { no: 1, heure: "08:00", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Les anciens", marqueur: "Les cheveux longs" },
-    { no: 2, heure: "08:25", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "Les cheveux longs", marqueur: "Girl Power" },
-    { no: 3, heure: "08:50", categorie: "Récréatif", equipeA: "Set on the Beach", equipeB: "Big Gun", marqueur: "Les anciens" },
-    { no: 4, heure: "09:15", categorie: "Compétitif", equipeA: "Sand Eaters", equipeB: "New Blues on the Beach", marqueur: "Big Gun" },
-    { no: 5, heure: "09:40", categorie: "Récréatif", equipeA: "Les Crinqués", equipeB: "Biche Volley", marqueur: "Sand Eaters" },
-    { no: 6, heure: "10:05", categorie: "Compétitif", equipeA: "Fire Ball", equipeB: "RALC", marqueur: "Les Crinqués" },
-    { no: 7, heure: "10:30", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Big Gun", marqueur: "Fire Ball" },
-    { no: 8, heure: "10:55", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "New Blues on the Beach", marqueur: "Biche Volley" },
-    { no: 9, heure: "11:20", categorie: "Récréatif", equipeA: "Les anciens", equipeB: "Biche Volley", marqueur: "Pine là Colada" },
-    { no: 10, heure: "11:45", categorie: "Compétitif", equipeA: "Les cheveux longs", equipeB: "RALC", marqueur: "New Blues on the Beach" },
-    { no: 11, heure: "12:10", categorie: "Récréatif", equipeA: "Set on the Beach", equipeB: "Les Crinqués", marqueur: "RALC" },
-    { no: 12, heure: "12:35", categorie: "Compétitif", equipeA: "Sand Eaters", equipeB: "Fire Ball", marqueur: "Les Crinqués" },
-    { no: 13, heure: "13:00", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Biche Volley", marqueur: "Set on the Beach" },
-    { no: 14, heure: "13:25", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "RALC", marqueur: "Girl Power" },
-    { no: 15, heure: "13:50", categorie: "Récréatif", equipeA: "Big Gun", equipeB: "Les Crinqués", marqueur: "RALC" },
-    { no: 16, heure: "14:15", categorie: "Compétitif", equipeA: "New Blues on the Beach", equipeB: "Fire Ball", marqueur: "Big Gun" },
-    { no: 17, heure: "14:40", categorie: "Récréatif", equipeA: "Les anciens", equipeB: "Set on the Beach", marqueur: "Fire Ball" },
-    { no: 18, heure: "15:05", categorie: "Compétitif", equipeA: "Les cheveux longs", equipeB: "Sand Eaters", marqueur: "Set on the Beach" },
-    { no: 19, heure: "15:30", categorie: "Récréatif", equipeA: "Girl Power", equipeB: "Les Crinqués", marqueur: "Les cheveux longs" },
-    { no: 20, heure: "15:55", categorie: "Compétitif", equipeA: "Pine là Colada", equipeB: "Fire Ball", marqueur: "New Blues on the Beach" },
-    { no: 21, heure: "16:20", categorie: "Récréatif", equipeA: "Biche Volley", equipeB: "Set on the Beach", marqueur: "Pine là Colada" },
-    { no: 22, heure: "16:45", categorie: "Compétitif", equipeA: "RALC", equipeB: "Sand Eaters", marqueur: "Biche Volley" },
-    { no: 23, heure: "17:10", categorie: "Récréatif", equipeA: "Big Gun", equipeB: "Les anciens", marqueur: "Sand Eaters" },
-    { no: 24, heure: "17:35", categorie: "Compétitif", equipeA: "New Blues on the Beach", equipeB: "Les cheveux longs", marqueur: "Les anciens" },
-  ];
+  const URL_PRELIMINAIRE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-c5VyUXXuIZzF-kTjV0f5Q3j22z_GEVvDZo_NPv0TL2vFioxrTrbmekcGRsQG_-YZjEpoucTHiuK5/pub?gid=1462787850&single=true&output=csv";
+  const URL_SERIES_RECREATIF = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-c5VyUXXuIZzF-kTjV0f5Q3j22z_GEVvDZo_NPv0TL2vFioxrTrbmekcGRsQG_-YZjEpoucTHiuK5/pub?gid=1339498144&single=true&output=csv";
+  const URL_SERIES_COMPETITIF = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-c5VyUXXuIZzF-kTjV0f5Q3j22z_GEVvDZo_NPv0TL2vFioxrTrbmekcGRsQG_-YZjEpoucTHiuK5/pub?gid=1822024061&single=true&output=csv";
 
-  const seriesRecreatif = [
-    { no: 25, heure: "18:00", categorie: "Séries récréatif", equipeA: "1er classement", equipeB: "4e classement" },
-    { no: 26, heure: "18:25", categorie: "Séries récréatif", equipeA: "2e classement", equipeB: "3e classement" },
-    { no: 28, heure: "19:45", categorie: "Finale récréative", equipeA: "Gagnant demi-finale 1", equipeB: "Gagnant demi-finale 2" },
-  ];
+  const [matchsPreliminaires, setMatchsPreliminaires] = useState([]);
+  const [seriesRecreatif, setSeriesRecreatif] = useState([]);
+  const [seriesCompetitif, setSeriesCompetitif] = useState([]);
+  const [chargementHoraire, setChargementHoraire] = useState(true);
+  const [erreurHoraire, setErreurHoraire] = useState("");
 
-  const seriesCompetitif = [
-    { no: 29, heure: "18:50", categorie: "Séries compétitif", equipeA: "1er classement", equipeB: "4e classement" },
-    { no: 30, heure: "19:15", categorie: "Séries compétitif", equipeA: "2e classement", equipeB: "3e classement" },
-    { no: 32, heure: "20:10", categorie: "Finale compétitive", equipeA: "Gagnant demi-finale 1", equipeB: "Gagnant demi-finale 2" },
-  ];
+  const normaliserEntete = (texte) =>
+    String(texte || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const lireCSV = (csv) => {
+    const lignes = csv
+      .trim()
+      .split(/\r?\n/)
+      .map((ligne) =>
+        ligne
+          .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+          .map((cell) => cell.replace(/^"|"$/g, "").replace(/""/g, '"').trim())
+      );
+
+    if (lignes.length < 2) return [];
+
+    const entetes = lignes[0].map(normaliserEntete);
+
+    const valeur = (row, nomsPossibles) => {
+      for (const nom of nomsPossibles) {
+        const index = entetes.indexOf(normaliserEntete(nom));
+
+        if (index !== -1) {
+          return row[index] || "";
+        }
+      }
+
+      return "";
+    };
+
+    return lignes
+      .slice(1)
+      .filter((row) => valeur(row, ["Match #", "Match", "No", "No."]))
+      .map((row) => {
+        const set1A = valeur(row, ["Set 1 - A", "Set 1 A"]);
+        const set1B = valeur(row, ["Set 1 - B", "Set 1 B"]);
+        const set2A = valeur(row, ["Set 2 - A", "Set 2 A"]);
+        const set2B = valeur(row, ["Set 2 - B", "Set 2 B"]);
+
+        return {
+          no: valeur(row, ["Match #", "Match", "No", "No."]),
+          heure: valeur(row, ["Heure"]),
+          categorie: valeur(row, ["Catégorie", "Categorie"]),
+          equipeA: valeur(row, ["Équipe A", "Equipe A"]),
+          equipeB: valeur(row, ["Équipe B", "Equipe B"]),
+          set1A,
+          set1B,
+          set2A,
+          set2B,
+          gagnant: valeur(row, ["Gagnant"]),
+          marqueur: valeur(row, ["Arbitre", "Arbitre (équipe)", "Marqueur"]),
+          statut: valeur(row, ["Statut"]) || "À jouer",
+        };
+      });
+  };
+
+  useEffect(() => {
+    async function chargerHoraire() {
+      try {
+        setChargementHoraire(true);
+        setErreurHoraire("");
+
+        const urls = [
+          URL_PRELIMINAIRE,
+          URL_SERIES_RECREATIF,
+          URL_SERIES_COMPETITIF,
+        ];
+
+        if (urls.some((url) => url.includes("COLLE_ICI"))) {
+          setErreurHoraire(
+            "Les liens CSV de l’horaire n’ont pas encore été ajoutés dans le code."
+          );
+          setChargementHoraire(false);
+          return;
+        }
+
+        const [prelimRes, recRes, compRes] = await Promise.all([
+          fetch(URL_PRELIMINAIRE),
+          fetch(URL_SERIES_RECREATIF),
+          fetch(URL_SERIES_COMPETITIF),
+        ]);
+
+        const [prelimCsv, recCsv, compCsv] = await Promise.all([
+          prelimRes.text(),
+          recRes.text(),
+          compRes.text(),
+        ]);
+
+        setMatchsPreliminaires(lireCSV(prelimCsv));
+        setSeriesRecreatif(lireCSV(recCsv));
+        setSeriesCompetitif(lireCSV(compCsv));
+      } catch (error) {
+        console.error("Erreur lors du chargement de l’horaire :", error);
+        setErreurHoraire(
+          "Impossible de charger l’horaire pour le moment. Veuillez réessayer plus tard."
+        );
+      } finally {
+        setChargementHoraire(false);
+      }
+    }
+
+    chargerHoraire();
+  }, []);
+
+  const resultatMatch = (match) => {
+    const aSet1 = String(match.set1A || "").trim();
+    const bSet1 = String(match.set1B || "").trim();
+    const aSet2 = String(match.set2A || "").trim();
+    const bSet2 = String(match.set2B || "").trim();
+
+    if (!aSet1 && !bSet1 && !aSet2 && !bSet2) {
+      return "—";
+    }
+
+    return `${aSet1 || "-"}-${bSet1 || "-"} / ${aSet2 || "-"}-${bSet2 || "-"}`;
+  };
+
+  const couleurCategorie = (categorie) => {
+    const texte = String(categorie || "").toLowerCase();
+
+    if (texte.includes("récréatif") || texte.includes("recreatif")) {
+      return "bg-sky-400/10 text-sky-300";
+    }
+
+    if (texte.includes("compétitif") || texte.includes("competitif")) {
+      return "bg-red-400/10 text-red-300";
+    }
+
+    return "bg-white/10 text-slate-300";
+  };
 
   const TableHoraire = ({ titre, matchs }) => (
-    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
+    <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
       <div className="bg-amber-400 px-6 py-5 text-slate-950">
         <h2 className="text-3xl font-black">{titre}</h2>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] text-left">
+        <table className="w-full min-w-[1100px] text-left">
           <thead>
             <tr className="border-b border-white/10 bg-slate-900 text-amber-300">
               <th className="px-5 py-4 font-black">Match</th>
@@ -4068,53 +4174,72 @@ function HoraireTournoi() {
               <th className="px-5 py-4 font-black">Catégorie</th>
               <th className="px-5 py-4 font-black">Équipe A</th>
               <th className="px-5 py-4 font-black">Équipe B</th>
+              <th className="px-5 py-4 font-black">Résultat</th>
               <th className="px-5 py-4 font-black">Marqueur</th>
+              <th className="px-5 py-4 font-black">Gagnant</th>
               <th className="px-5 py-4 font-black">Statut</th>
             </tr>
           </thead>
 
           <tbody>
-            {matchs.map((match) => (
-              <tr key={match.no} className="border-b border-white/10 text-white">
-                <td className="px-5 py-4 font-black text-amber-300">
-                  #{match.no}
-                </td>
+            {matchs.length > 0 ? (
+              matchs.map((match) => (
+                <tr
+                  key={`${titre}-${match.no}`}
+                  className="border-b border-white/10 text-white"
+                >
+                  <td className="px-5 py-4 font-black text-amber-300">
+                    #{match.no}
+                  </td>
 
-                <td className="px-5 py-4 font-bold">
-                  {match.heure}
-                </td>
+                  <td className="px-5 py-4 font-bold">
+                    {match.heure}
+                  </td>
 
-                <td className="px-5 py-4">
-                  <span
-                    className={`rounded-full px-3 py-1 text-sm font-bold ${
-                      match.categorie.toLowerCase().includes("récréatif")
-                        ? "bg-sky-400/10 text-sky-300"
-                        : "bg-red-400/10 text-red-300"
-                    }`}
-                  >
-                    {match.categorie}
-                  </span>
-                </td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={`rounded-full px-3 py-1 text-sm font-bold ${couleurCategorie(
+                        match.categorie
+                      )}`}
+                    >
+                      {match.categorie}
+                    </span>
+                  </td>
 
-                <td className="px-5 py-4 font-bold">
-                  {match.equipeA}
-                </td>
+                  <td className="px-5 py-4 font-bold">
+                    {match.equipeA}
+                  </td>
 
-                <td className="px-5 py-4 font-bold">
-                  {match.equipeB}
-                </td>
+                  <td className="px-5 py-4 font-bold">
+                    {match.equipeB}
+                  </td>
 
-                <td className="px-5 py-4 text-slate-300">
-                  {match.marqueur || "À confirmer"}
-                </td>
+                  <td className="px-5 py-4 text-slate-300">
+                    {resultatMatch(match)}
+                  </td>
 
-                <td className="px-5 py-4">
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-slate-300">
-                    À jouer
-                  </span>
+                  <td className="px-5 py-4 text-slate-300">
+                    {match.marqueur || "À confirmer"}
+                  </td>
+
+                  <td className="px-5 py-4 text-slate-300">
+                    {match.gagnant || "—"}
+                  </td>
+
+                  <td className="px-5 py-4">
+                    <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-slate-300">
+                      {match.statut || "À jouer"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="px-5 py-8 text-center text-slate-400">
+                  Aucun match à afficher pour le moment.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -4140,9 +4265,11 @@ function HoraireTournoi() {
       <div className="mt-10 grid gap-6 md:grid-cols-3">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="text-4xl">🏐</div>
+
           <h2 className="mt-4 text-2xl font-black text-white">
             Ronde préliminaire
           </h2>
+
           <p className="mt-3 text-slate-300">
             Parties de 2 sets de 21 points.
           </p>
@@ -4150,9 +4277,11 @@ function HoraireTournoi() {
 
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="text-4xl">📝</div>
+
           <h2 className="mt-4 text-2xl font-black text-white">
             Marqueurs
           </h2>
+
           <p className="mt-3 text-slate-300">
             Chaque équipe doit fournir un marqueur pour 2 parties durant la journée.
           </p>
@@ -4160,9 +4289,11 @@ function HoraireTournoi() {
 
         <div className="rounded-3xl border border-red-400/20 bg-red-400/10 p-6">
           <div className="text-4xl">⏱️</div>
+
           <h2 className="mt-4 text-2xl font-black text-white">
             Soyez prêts
           </h2>
+
           <p className="mt-3 text-slate-300">
             Une équipe non prête 5 minutes après la fin du match précédent perdra
             le premier set par forfait 21-0.
@@ -4170,12 +4301,40 @@ function HoraireTournoi() {
         </div>
       </div>
 
-      <TableHoraire titre="Ronde préliminaire" matchs={matchsPreliminaires} />
+      {chargementHoraire && (
+        <p className="mt-10 rounded-2xl bg-white/10 p-5 text-center text-slate-300">
+          Chargement de l’horaire...
+        </p>
+      )}
 
-      <div className="mt-16 grid gap-8 lg:grid-cols-2">
-        <TableHoraire titre="Séries récréatives" matchs={seriesRecreatif} />
-        <TableHoraire titre="Séries compétitives" matchs={seriesCompetitif} />
-      </div>
+      {erreurHoraire && (
+        <div className="mt-10 rounded-2xl border border-red-400/30 bg-red-400/10 p-5 text-center text-red-300">
+          {erreurHoraire}
+        </div>
+      )}
+
+      {!chargementHoraire && !erreurHoraire && (
+        <>
+          <div className="mt-12">
+            <TableHoraire
+              titre="Ronde préliminaire"
+              matchs={matchsPreliminaires}
+            />
+          </div>
+
+          <div className="mt-16 grid gap-8 lg:grid-cols-2">
+            <TableHoraire
+              titre="Séries récréatives"
+              matchs={seriesRecreatif}
+            />
+
+            <TableHoraire
+              titre="Séries compétitives"
+              matchs={seriesCompetitif}
+            />
+          </div>
+        </>
+      )}
 
       <div className="mt-12 rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-8">
         <h2 className="text-3xl font-black text-amber-300">
@@ -4210,7 +4369,6 @@ function HoraireTournoi() {
     </section>
   );
 }
-
 function ReglementsTournoi() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
