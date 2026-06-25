@@ -4540,9 +4540,10 @@ function ReglementsTournoi() {
           </h2>
 
           <ul className="mt-6 space-y-4 text-slate-300">
-            <li>❌ Bloquer une femme sur une action à l’attaque pour les hommes.</li>
+            <li>❌ Bloquer ou feinte de bloquer une femme sur une action à l’attaque pour les hommes.</li>
+            <li>✅ Bloc permis sur une femme uniquement lors d’un deuxième contact ou d’un retour en manchette.</li>
             <li>❌ Renvoyer en touche ou en tip, sauf pour le volet récréatif.</li>
-            <li>❌ Aucune faute de doubles touches.</li>
+            <li>❌ Aucune faute de double touche ne sera appelée.</li>
             <li>❌ Toucher le filet.</li>
             <li>❌ Traverser de l’autre côté.</li>
             <li>❌ Faire un transport.</li>
