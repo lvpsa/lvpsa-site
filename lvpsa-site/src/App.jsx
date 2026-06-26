@@ -358,254 +358,329 @@ function Accueil() {
 
   useEffect(() => {
     async function chargerStatut() {
-      const ref = doc(db, "settings", "matchStatus");
-      const snap = await getDoc(ref);
+      try {
+        const ref = doc(db, "settings", "matchStatus");
+        const snap = await getDoc(ref);
 
-      if (snap.exists()) {
-        setStatutMatchs(snap.data());
+        if (snap.exists()) {
+          setStatutMatchs(snap.data());
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement du statut :", error);
       }
     }
 
     async function chargerMeteo() {
-      const url =
-  "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,uv_index&timezone=America%2FToronto&forecast_days=1";
-      const res = await fetch(url);
-      const data = await res.json();
+      try {
+        const url =
+          "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,uv_index&timezone=America%2FToronto&forecast_days=1";
 
-      const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
+        const res = await fetch(url);
+        const data = await res.json();
 
-      const resultats = data.hourly.time
-  .map((time, index) => ({
-    time,
-    heure: time.slice(11, 16),
-    temperature: Math.round(data.hourly.temperature_2m[index]),
-    vent: Math.round(data.hourly.wind_speed_10m[index]),
-    humidite: data.hourly.relative_humidity_2m[index],
-    uv: data.hourly.uv_index[index],
-    code: data.hourly.weather_code[index],
-  }))
-  .filter((item) => heuresVoulues.includes(item.heure));
+        if (!data.hourly?.time) {
+          setMeteoHeures([]);
+          return;
+        }
 
-      setMeteoHeures(resultats);
+        const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
+
+        const resultats = data.hourly.time
+          .map((time, index) => ({
+            time,
+            heure: time.slice(11, 16),
+            temperature: Math.round(data.hourly.temperature_2m[index]),
+            vent: Math.round(data.hourly.wind_speed_10m[index]),
+            humidite: data.hourly.relative_humidity_2m[index],
+            uv: data.hourly.uv_index[index],
+            code: data.hourly.weather_code[index],
+          }))
+          .filter((item) => heuresVoulues.includes(item.heure));
+
+        setMeteoHeures(resultats);
+      } catch (error) {
+        console.error("Erreur lors du chargement de la météo :", error);
+        setMeteoHeures([]);
+      }
     }
 
     chargerStatut();
     chargerMeteo();
   }, []);
 
+  const estAnnule = statutMatchs.couleur === "red";
+
+  const iconeMeteo = (code) => {
+    if (code === 0) return "☀️";
+    if (code <= 3) return "⛅";
+    if (code < 60) return "☁️";
+    if (code < 80) return "🌧️";
+    if (code < 90) return "🌦️";
+    return "⛈️";
+  };
+
   return (
-  <>
-    <section className="relative overflow-hidden px-6 py-10">
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950 to-sky-950"></div>
-      <div className="absolute left-[-120px] top-20 h-80 w-80 rounded-full bg-amber-400/10 blur-3xl"></div>
-      <div className="absolute bottom-[-160px] right-[-100px] h-96 w-96 rounded-full bg-sky-400/10 blur-3xl"></div>
+    <>
+      <section className="relative overflow-hidden px-6 py-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-950 to-sky-950"></div>
+        <div className="absolute left-[-120px] top-20 h-80 w-80 rounded-full bg-amber-400/10 blur-3xl"></div>
+        <div className="absolute bottom-[-160px] right-[-100px] h-96 w-96 rounded-full bg-sky-400/10 blur-3xl"></div>
 
-      <div className="relative mx-auto max-w-7xl">
-
-        {/* STATUT + MÉTÉO EN HAUT */}
-        <div className="mb-12 grid gap-6 lg:grid-cols-2">
-
-          <div
-            className={`rounded-[2rem] border p-6 ${
-              statutMatchs.couleur === "red"
-                ? "border-red-400/30 bg-red-400/10"
-                : "border-emerald-400/30 bg-emerald-400/10"
-            }`}
-          >
-            <p
-              className={`text-sm font-bold uppercase tracking-[0.25em] ${
-                statutMatchs.couleur === "red"
-                  ? "text-red-300"
-                  : "text-emerald-300"
+        <div className="relative mx-auto max-w-7xl">
+          {/* STATUT + MÉTÉO EN HAUT */}
+          <div className="mb-12 grid gap-6 lg:grid-cols-2">
+            {/* STATUT DES PARTIES */}
+            <div
+              className={`relative min-h-[300px] overflow-hidden rounded-[2rem] border p-8 ${
+                estAnnule
+                  ? "border-red-400/30 bg-gradient-to-br from-red-500/20 via-red-950/30 to-slate-950"
+                  : "border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 via-cyan-500/10 to-slate-950"
               }`}
             >
-              Statut des parties
-            </p>
+              <div
+                className={`absolute -right-12 -top-12 h-44 w-44 rounded-full blur-3xl ${
+                  estAnnule ? "bg-red-400/20" : "bg-emerald-400/20"
+                }`}
+              ></div>
 
-            <h2 className="mt-3 text-3xl font-black text-white">
-              {statutMatchs.texte}
-            </h2>
+              <div
+                className={`absolute -bottom-16 left-8 h-44 w-44 rounded-full blur-3xl ${
+                  estAnnule ? "bg-orange-400/10" : "bg-amber-400/10"
+                }`}
+              ></div>
 
-            <p className="mt-2 text-slate-300">
-              {statutMatchs.message}
-            </p>
+              <div className="relative z-10 flex h-full flex-col justify-between">
+                <div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span
+                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-black uppercase tracking-[0.22em] ${
+                        estAnnule
+                          ? "bg-red-400/15 text-red-300"
+                          : "bg-emerald-400/15 text-emerald-300"
+                      }`}
+                    >
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          estAnnule ? "bg-red-300" : "bg-emerald-300"
+                        }`}
+                      ></span>
+                      Statut officiel
+                    </span>
 
-            <Link
-              to="/calendrier"
-              className="mt-6 inline-flex rounded-full border border-white/15 px-6 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              Consulter l’horaire
-            </Link>
-          </div>
-
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
-              Météo des prochaines heures
-            </p>
-
-            <div className="mt-5 grid grid-cols-5 gap-3">
-              {meteoHeures.length > 0 ? (
-                meteoHeures.map((item) => (
-                  <div
-                    key={item.heure}
-                    className="rounded-2xl border border-white/10 bg-slate-950/60 p-3 text-center"
-                  >
-                    <p className="text-sm text-slate-300">
-                      {item.heure.replace(":00", "h")}
-                    </p>
-
-                    <p className="mt-2 text-3xl">
-                      {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
-                    </p>
-
-                    <p className="mt-2 text-xl font-black text-white">
-                      {item.temperature}°
-                    </p>
-
-                    <p className="mt-1 text-xs font-bold text-amber-300">
-                      UV {item.uv !== undefined ? Number(item.uv).toFixed(1) : "--"}
-                    </p>
+                    <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-300">
+                      LVPSA
+                    </span>
                   </div>
-                ))
-              ) : (
-                <p className="col-span-5 text-sm text-slate-300">
-                  Chargement de la météo...
-                </p>
-              )}
-            </div>
 
-            <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-300">
-              <div className="rounded-full bg-white/10 px-4 py-2">
-                Vent : {meteoHeures[0]?.vent ?? "--"} km/h
-              </div>
+                  <h2 className="mt-8 max-w-2xl text-4xl font-black leading-tight text-white md:text-5xl">
+                    {statutMatchs.texte}
+                  </h2>
 
-              <div className="rounded-full bg-white/10 px-4 py-2">
-                Humidité : {meteoHeures[0]?.humidite ?? "--"}%
-              </div>
+                  <p className="mt-4 max-w-xl text-lg leading-8 text-slate-300">
+                    {statutMatchs.message}
+                  </p>
+                </div>
 
-              <div className="rounded-full bg-white/10 px-4 py-2">
-                UV : {meteoHeures[0]?.uv !== undefined ? Number(meteoHeures[0].uv).toFixed(1) : "--"}
-              </div>
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <Link
+                    to="/calendrier"
+                    className="inline-flex items-center rounded-full bg-white px-7 py-3 font-black text-slate-950 transition hover:bg-amber-300"
+                  >
+                    Consulter l’horaire
+                  </Link>
 
-              <a
-                href={meteoLink}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/15 px-4 py-2 font-bold text-amber-300 hover:border-amber-300"
-              >
-                MétéoMédia ↗
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* HERO PRINCIPAL */}
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-
-          {/* HERO GAUCHE */}
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
-              🏐 Saison 2026 · Parc Portneuf
-            </div>
-
-            <h1 className="mt-8 text-6xl font-black leading-tight text-white md:text-7xl">
-              Plus qu’une ligue.
-              <span className="block text-amber-300">
-                Une ambiance.
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-xl leading-8 text-slate-300">
-              La LVPSA rassemble les passionnés de volleyball de plage à
-              Saint-Augustin dans une atmosphère sportive, estivale et
-              conviviale.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                to="/calendrier"
-                className="inline-flex items-center rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-              >
-                Voir le calendrier
-              </Link>
-
-              <Link
-                to="/classements"
-                className="inline-flex items-center rounded-full border border-white/15 px-8 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
-              >
-                Voir les classements
-              </Link>
-            </div>
-
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <p className="text-3xl font-black text-amber-300">2</p>
-                <p className="mt-1 text-sm font-bold uppercase text-slate-300">
-                  Catégories
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <p className="text-3xl font-black text-amber-300">8</p>
-                <p className="mt-1 text-sm font-bold uppercase text-slate-300">
-                  Équipes
-                </p>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <p className="text-3xl font-black text-amber-300">1</p>
-                <p className="mt-1 text-sm font-bold uppercase text-slate-300">
-                  Communauté
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* HERO DROITE */}
-          <div className="relative">
-            <div className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-3 shadow-2xl">
-              <div className="relative h-[520px] overflow-hidden rounded-[2rem]">
-                <img
-                  src="/volley-bg.jpg"
-                  alt="Terrain LVPSA"
-                  className="h-full w-full object-cover"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="rounded-3xl border border-white/10 bg-slate-950/75 p-6 backdrop-blur-xl">
-                    <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
-                      Terrain officiel
+                  <div className="rounded-2xl border border-white/10 bg-black/20 px-5 py-4">
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                      État actuel
                     </p>
 
-                    <h2 className="mt-2 text-3xl font-black text-white">
-                      Parc Portneuf
-                    </h2>
-
-                    <p className="mt-2 text-slate-300">
-                      Volleyball de plage, ambiance estivale et soirées de ligue.
+                    <p
+                      className={`mt-1 text-lg font-black ${
+                        estAnnule ? "text-red-300" : "text-emerald-300"
+                      }`}
+                    >
+                      {estAnnule ? "Parties annulées" : "Parties confirmées"}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 hidden md:flex justify-end">
-  <div className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-5 backdrop-blur-xl">
-    <p className="text-sm font-bold uppercase text-emerald-300">
-      Saison active
-    </p>
+            {/* MÉTÉO */}
+            <div className="min-h-[300px] rounded-[2rem] border border-white/10 bg-white/5 p-8">
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
+                Météo des prochaines heures
+              </p>
 
-    <p className="mt-1 text-2xl font-black text-white">
-      Mai à août 2026
-    </p>
-  </div>
-</div>
+              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+                {meteoHeures.length > 0 ? (
+                  meteoHeures.map((item) => (
+                    <div
+                      key={item.heure}
+                      className="rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-center"
+                    >
+                      <p className="text-sm text-slate-300">
+                        {item.heure.replace(":00", "h")}
+                      </p>
+
+                      <p className="mt-3 text-4xl">
+                        {iconeMeteo(item.code)}
+                      </p>
+
+                      <p className="mt-3 text-2xl font-black text-white">
+                        {item.temperature}°
+                      </p>
+
+                      <p className="mt-2 text-xs font-bold text-amber-300">
+                        UV{" "}
+                        {item.uv !== undefined && item.uv !== null
+                          ? Number(item.uv).toFixed(1)
+                          : "--"}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="col-span-full text-sm text-slate-300">
+                    Chargement de la météo...
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-300">
+                <div className="rounded-full bg-white/10 px-4 py-2">
+                  Vent : {meteoHeures[0]?.vent ?? "--"} km/h
+                </div>
+
+                <div className="rounded-full bg-white/10 px-4 py-2">
+                  Humidité : {meteoHeures[0]?.humidite ?? "--"}%
+                </div>
+
+                <div className="rounded-full bg-white/10 px-4 py-2">
+                  UV :{" "}
+                  {meteoHeures[0]?.uv !== undefined &&
+                  meteoHeures[0]?.uv !== null
+                    ? Number(meteoHeures[0].uv).toFixed(1)
+                    : "--"}
+                </div>
+
+                <a
+                  href={meteoLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-white/15 px-4 py-2 font-bold text-amber-300 hover:border-amber-300"
+                >
+                  MétéoMédia ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* HERO PRINCIPAL */}
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            {/* HERO GAUCHE */}
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
+                🏐 Saison 2026 · Parc Portneuf
+              </div>
+
+              <h1 className="mt-8 text-6xl font-black leading-tight text-white md:text-7xl">
+                Plus qu’une ligue.
+                <span className="block text-amber-300">
+                  Une ambiance.
+                </span>
+              </h1>
+
+              <p className="mt-6 max-w-2xl text-xl leading-8 text-slate-300">
+                La LVPSA rassemble les passionnés de volleyball de plage à
+                Saint-Augustin dans une atmosphère sportive, estivale et
+                conviviale.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  to="/calendrier"
+                  className="inline-flex items-center rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+                >
+                  Voir le calendrier
+                </Link>
+
+                <Link
+                  to="/classements"
+                  className="inline-flex items-center rounded-full border border-white/15 px-8 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
+                >
+                  Voir les classements
+                </Link>
+              </div>
+
+              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-3xl font-black text-amber-300">2</p>
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-300">
+                    Catégories
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-3xl font-black text-amber-300">8</p>
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-300">
+                    Équipes
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <p className="text-3xl font-black text-amber-300">1</p>
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-300">
+                    Communauté
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* HERO DROITE */}
+            <div className="relative">
+              <div className="overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-3 shadow-2xl">
+                <div className="relative h-[520px] overflow-hidden rounded-[2rem]">
+                  <img
+                    src="/volley-bg.jpg"
+                    alt="Terrain LVPSA"
+                    className="h-full w-full object-cover"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="rounded-3xl border border-white/10 bg-slate-950/75 p-6 backdrop-blur-xl">
+                      <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
+                        Terrain officiel
+                      </p>
+
+                      <h2 className="mt-2 text-3xl font-black text-white">
+                        Parc Portneuf
+                      </h2>
+
+                      <p className="mt-2 text-slate-300">
+                        Volleyball de plage, ambiance estivale et soirées de ligue.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 hidden md:flex justify-end">
+                <div className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-5 backdrop-blur-xl">
+                  <p className="text-sm font-bold uppercase text-emerald-300">
+                    Saison active
+                  </p>
+
+                  <p className="mt-1 text-2xl font-black text-white">
+                    Mai à août 2026
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* ACCÈS RAPIDES */}
       <section className="px-6 py-12">
@@ -708,7 +783,7 @@ function Accueil() {
         </div>
       </section>
 
-      {/* TOURNOI COMPLET, SANS AFFICHE */}
+      {/* TOURNOI COMPLET */}
       <section className="px-6 py-12">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-[2rem] border border-red-400/20 bg-gradient-to-br from-red-500/10 to-slate-900 p-8 text-center">
