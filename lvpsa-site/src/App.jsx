@@ -2162,20 +2162,11 @@ const equipesCompetitives = equipes.filter(
               </h3>
 
               <p className="mt-2 text-slate-300">
-                Catégories :{" "}
-                {Array.isArray(item.categories)
-  ? item.categories.join(", ")
-  : Array.isArray(item.categorie)
-  ? item.categorie.join(", ")
-  : "Non précisées"}
-              </p>
-
-              <p className="text-slate-300">
-                Disponibilités :{" "}
-                {Array.isArray(item.disponibilites)
-                  ? item.disponibilites.join(", ")
-                  : "Non précisées"}
-              </p>
+  Catégorie :{" "}
+  {Array.isArray(item.categories)
+    ? item.categories.join(", ")
+    : item.categorie || "Non précisée"}
+</p>
 
               <p className="text-slate-300">
                 Courriel : {item.email || "Non précisé"}
@@ -3121,45 +3112,52 @@ function InscriptionLigueProtegee() {
 }
 
 function InscriptionLigue() {
-  
-const formatTelephone = (value) => {
-  const chiffres = value.replace(/\D/g, "").substring(0, 10);
+  const formatTelephone = (value) => {
+    const chiffres = value.replace(/\D/g, "").substring(0, 10);
 
-  if (chiffres.length <= 3) return chiffres;
+    if (chiffres.length <= 3) return chiffres;
 
-  if (chiffres.length <= 6) {
-    return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
-  }
+    if (chiffres.length <= 6) {
+      return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
+    }
 
-  return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
-};
-  
+    return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
+  };
+
+  const inscriptionUrl =
+    "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec";
+
   const [type, setType] = useState(null);
   const [user, setUser] = useState(null);
-  const [datesDisponibles, setDatesDisponibles] = useState([]);
-  const [disponibleEnToutTemps, setDisponibleEnToutTemps] = useState(false);
   const [userData, setUserData] = useState(null);
 
-useEffect(() => {
+  const [equipe, setEquipe] = useState({
+    capitaine: "",
+    courriel: "",
+    telephone: "",
+    nomEquipe: "",
+    categorie: "Récréatif",
+    joueurs: ["", "", "", "", "", "", "", ""],
+    notes: "",
+  });
 
-  const unsubscribe = onAuthStateChanged(
-    auth,
-    async (currentUser) => {
+  const [joueur, setJoueur] = useState({
+    nom: "",
+    courriel: "",
+    telephone: "",
+    categorie: "recreatif",
+    notes: "",
+  });
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
       if (currentUser) {
-
-        const docRef = doc(
-          db,
-          "users",
-          currentUser.uid
-        );
-
+        const docRef = doc(db, "users", currentUser.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-
           const data = docSnap.data();
 
           setUserData(data);
@@ -3177,229 +3175,131 @@ useEffect(() => {
             courriel: data.email || "",
             telephone: data.telephone || "",
           }));
-
         }
-
       }
+    });
 
-    }
-  );
-
-  return () => unsubscribe();
-
-}, []);
-const datesLigue = [
-  { id: "2026-06-22", label: "22 juin", categorie: "recreatif" },
-  { id: "2026-06-23", label: "23 juin", categorie: "competitif" },
-  { id: "2026-06-29", label: "29 juin", categorie: "recreatif" },
-  { id: "2026-06-30", label: "30 juin", categorie: "competitif" },
-  { id: "2026-07-06", label: "6 juillet", categorie: "recreatif" },
-  { id: "2026-07-07", label: "7 juillet", categorie: "competitif" },
-  { id: "2026-07-13", label: "13 juillet", categorie: "recreatif" },
-  { id: "2026-07-14", label: "14 juillet", categorie: "competitif" },
-  { id: "2026-08-03", label: "3 août", categorie: "recreatif" },
-  { id: "2026-08-04", label: "4 août", categorie: "competitif" },
-  { id: "2026-08-10", label: "10 août", categorie: "recreatif" },
-  { id: "2026-08-11", label: "11 août", categorie: "competitif" },
-  { id: "2026-08-17", label: "17 août", categorie: "recreatif" },
-  { id: "2026-08-18", label: "18 août", categorie: "competitif" },
-];
-
-const toggleDate = (dateId) => {
-  setDisponibleEnToutTemps(false);
-
-  setDatesDisponibles((dates) =>
-    dates.includes(dateId)
-      ? dates.filter((date) => date !== dateId)
-      : [...dates, dateId]
-  );
-};
-
-  const [equipe, setEquipe] = useState({
-  capitaine: "",
-  courriel: "",
-  telephone: "",
-  nomEquipe: "",
-  categorie: "Récréatif",
-  joueurs: ["", "", "", "", "", "", "", ""],
-  notes: "",
-});
-
-const [joueur, setJoueur] = useState({
-  nom: "",
-  courriel: "",
-  telephone: "",
-  categorie: "recreatif",
-  notes: "",
-});
-
-const obtenirDatesSelonCategorie = (categorie) => {
-  if (categorie === "les-deux") return datesLigue;
-  return datesLigue.filter((date) => date.categorie === categorie);
-};
-
-const datesSelonCategorie = obtenirDatesSelonCategorie(joueur.categorie);
-
-const categoriesJoueur =
-  joueur.categorie === "les-deux"
-    ? ["recreatif", "competitif"]
-    : [joueur.categorie];
-
-useEffect(() => {
-  const idsDisponiblesPourCategorie = obtenirDatesSelonCategorie(joueur.categorie).map(
-    (date) => date.id
-  );
-
-  if (disponibleEnToutTemps) {
-    setDatesDisponibles(idsDisponiblesPourCategorie);
-    return;
-  }
-
-  setDatesDisponibles((datesActuelles) =>
-    datesActuelles.filter((dateId) => idsDisponiblesPourCategorie.includes(dateId))
-  );
-}, [joueur.categorie, disponibleEnToutTemps]);
-
-  const inscriptionUrl =
-  "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec";
+    return () => unsubscribe();
+  }, []);
 
   const envoyerEquipe = () => {
-  fetch(inscriptionUrl, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({
-      type: "equipe",
-      capitaine: equipe.capitaine,
-      courriel: equipe.courriel,
-      telephone: equipe.telephone,
-      nomEquipe: equipe.nomEquipe,
-      categorie: equipe.categorie,
-      joueurs: equipe.joueurs.filter((j) => j.trim() !== ""),
-      notes: equipe.notes,
-    }),
-  });
-
-  alert("Inscription envoyée avec succès !");
-
-  setEquipe({
-    capitaine: "",
-    courriel: "",
-    telephone: "",
-    nomEquipe: "",
-    categorie: "Récréatif",
-    joueurs: ["", "", "", "", "", "", "", ""],
-    notes: "",
-  });
-
-  setType(null);
-};
-
-  const envoyerJoueur = async () => {
-  if (!user) {
-    alert("Vous devez être connecté pour vous inscrire.");
-    return;
-  }
-
-  if (!joueur.nom || !joueur.courriel || !joueur.telephone) {
-    alert("Veuillez compléter votre nom, courriel et téléphone.");
-    return;
-  }
-
-  const disponibilitesFinales = disponibleEnToutTemps
-    ? datesSelonCategorie.map((date) => date.id)
-    : datesDisponibles;
-
-  if (disponibilitesFinales.length === 0) {
-    alert("Veuillez sélectionner au moins une date de disponibilité ou l'option en tout temps.");
-    return;
-  }
-
-  try {
-    const donneesRemplacant = {
-      userId: user.uid,
-      nom: joueur.nom,
-      email: joueur.courriel,
-      courriel: joueur.courriel,
-      telephone: joueur.telephone,
-      categorie: joueur.categorie,
-      categories: categoriesJoueur,
-      enToutTemps: disponibleEnToutTemps,
-      disponibilites: disponibilitesFinales,
-      note: joueur.notes,
-      notes: joueur.notes,
-      commentaire: joueur.notes,
-      disponible: true,
-      statut: "actif",
-      updatedAt: serverTimestamp(),
-    };
-
-    // Conserve ton envoi vers Google Sheets, mais la base officielle pour les capitaines est Firestore.
     fetch(inscriptionUrl, {
       method: "POST",
       mode: "no-cors",
       body: JSON.stringify({
-        type: "joueur",
-        nom: joueur.nom,
-        courriel: joueur.courriel,
-        telephone: joueur.telephone,
-        categorie: joueur.categorie,
-        categories: categoriesJoueur.join(", "),
-        enToutTemps: disponibleEnToutTemps ? "Oui" : "Non",
-        disponibilites: disponibilitesFinales.join(", "),
-        notes: joueur.notes,
+        type: "equipe",
+        capitaine: equipe.capitaine,
+        courriel: equipe.courriel,
+        telephone: equipe.telephone,
+        nomEquipe: equipe.nomEquipe,
+        categorie: equipe.categorie,
+        joueurs: equipe.joueurs.filter((j) => j.trim() !== ""),
+        notes: equipe.notes,
       }),
     });
 
-    // Met à jour le profil du membre.
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        nom: joueur.nom,
-        email: joueur.courriel,
-        telephone: joueur.telephone,
-        categorie: joueur.categorie,
-        categories: categoriesJoueur,
-        role: "remplacant",
-        estJoueur: true,
-        estRemplacant: true,
-        equipeId: "independant",
-        enToutTemps: disponibleEnToutTemps,
-        disponibilites: disponibilitesFinales,
-        commentaire: joueur.notes,
-        statut: "actif",
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
+    alert("Inscription envoyée avec succès !");
 
-    // Ajoute/actualise le joueur dans la banque de remplaçants consultée par les capitaines.
-    await setDoc(
-      doc(db, "remplacements", user.uid),
-      {
-        ...donneesRemplacant,
-        createdAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
-
-    alert("Inscription envoyée avec succès ! Vous êtes maintenant visible pour les capitaines.");
-
-    setJoueur({
-      nom: "",
+    setEquipe({
+      capitaine: "",
       courriel: "",
       telephone: "",
-      categorie: "recreatif",
+      nomEquipe: "",
+      categorie: "Récréatif",
+      joueurs: ["", "", "", "", "", "", "", ""],
       notes: "",
     });
 
-    setDatesDisponibles([]);
-    setDisponibleEnToutTemps(false);
     setType(null);
-  } catch (error) {
-    console.error(error);
-    alert("Erreur lors de l'inscription. Veuillez réessayer.");
-  }
-};
+  };
+
+  const envoyerJoueur = async () => {
+    if (!user) {
+      alert("Vous devez être connecté pour vous inscrire.");
+      return;
+    }
+
+    if (!joueur.nom || !joueur.courriel || !joueur.telephone) {
+      alert("Veuillez compléter votre nom, courriel et téléphone.");
+      return;
+    }
+
+    const categoriesJoueur =
+      joueur.categorie === "les-deux"
+        ? ["recreatif", "competitif"]
+        : [joueur.categorie];
+
+    try {
+      const donneesRemplacant = {
+        userId: user.uid,
+        nom: joueur.nom,
+        email: joueur.courriel,
+        courriel: joueur.courriel,
+        telephone: joueur.telephone,
+        categories: categoriesJoueur,
+        note: joueur.notes,
+        disponible: true,
+        statut: "actif",
+        updatedAt: serverTimestamp(),
+      };
+
+      fetch(inscriptionUrl, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+          type: "joueur",
+          nom: joueur.nom,
+          courriel: joueur.courriel,
+          telephone: joueur.telephone,
+          categories: categoriesJoueur.join(", "),
+          notes: joueur.notes,
+        }),
+      });
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          nom: joueur.nom,
+          email: joueur.courriel,
+          telephone: joueur.telephone,
+          categories: categoriesJoueur,
+          role: "remplacant",
+          estJoueur: true,
+          estRemplacant: true,
+          equipeId: "independant",
+          commentaire: joueur.notes,
+          statut: "actif",
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+      await setDoc(
+        doc(db, "remplacements", user.uid),
+        {
+          ...donneesRemplacant,
+          createdAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+      alert("Inscription envoyée avec succès ! Vous êtes maintenant visible pour les capitaines.");
+
+      setJoueur({
+        nom: "",
+        courriel: "",
+        telephone: "",
+        categorie: "recreatif",
+        notes: "",
+      });
+
+      setType(null);
+    } catch (error) {
+      console.error(error);
+      alert("Erreur lors de l'inscription. Veuillez réessayer.");
+    }
+  };
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -3415,27 +3315,28 @@ useEffect(() => {
 
       {!type && (
         <div className="mt-12 grid gap-8 md:grid-cols-2">
-        <button
-  type="button"
-  onClick={() =>
-    alert(
-      "Les inscriptions d'équipes pour la saison 2026 sont maintenant terminées. Merci pour votre intérêt et restez à l'affût pour la saison prochaine !"
-    )
-  }
-  className="rounded-3xl border border-amber-400/40 bg-amber-400 p-8 text-left text-slate-950 hover:bg-amber-300"
->
-  <h2 className="text-3xl font-black">
-    Inscrire une équipe
-  </h2>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "Les inscriptions d'équipes pour la saison 2026 sont maintenant terminées. Merci pour votre intérêt et restez à l'affût pour la saison prochaine !"
+              )
+            }
+            className="rounded-3xl border border-amber-400/40 bg-amber-400 p-8 text-left text-slate-950 hover:bg-amber-300"
+          >
+            <h2 className="text-3xl font-black">
+              Inscrire une équipe
+            </h2>
 
-  <p className="mt-4 text-lg font-semibold">
-    Je suis capitaine et je veux inscrire mon équipe complète.
-  </p>
+            <p className="mt-4 text-lg font-semibold">
+              Je suis capitaine et je veux inscrire mon équipe complète.
+            </p>
 
-  <p className="mt-3 text-sm font-bold">
-    Inscriptions maintenant terminées, on se revoit en 2027.
-  </p>
-</button>
+            <p className="mt-3 text-sm font-bold">
+              Inscriptions maintenant terminées, on se revoit en 2027.
+            </p>
+          </button>
+
           <button
             onClick={() => setType("joueur")}
             className="rounded-3xl border border-white/10 bg-white/5 p-8 text-left hover:border-amber-300"
@@ -3443,6 +3344,7 @@ useEffect(() => {
             <h2 className="text-3xl font-black text-amber-300">
               Joueur indépendant
             </h2>
+
             <p className="mt-4 text-slate-300">
               Je veux être disponible comme remplaçant ou pour compléter une équipe.
             </p>
@@ -3459,73 +3361,78 @@ useEffect(() => {
           <h2 className="text-3xl font-black">Inscription d’équipe</h2>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="nom du capitaine"
-  value={equipe.capitaine}
-  onChange={(e) => setEquipe({ ...equipe, capitaine: e.target.value })}
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="nom du capitaine"
+              value={equipe.capitaine}
+              onChange={(e) => setEquipe({ ...equipe, capitaine: e.target.value })}
+            />
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Courriel"
-  value={equipe.courriel}
-  onChange={(e) => setEquipe({ ...equipe, courriel: e.target.value })}
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Courriel"
+              value={equipe.courriel}
+              onChange={(e) => setEquipe({ ...equipe, courriel: e.target.value })}
+            />
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Téléphone"
-  value={equipe.telephone}
-  maxLength={12}
-  onChange={(e) =>setEquipe({ ...equipe, telephone: formatTelephone(e.target.value),})
-}
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Téléphone"
+              value={equipe.telephone}
+              maxLength={12}
+              onChange={(e) =>
+                setEquipe({
+                  ...equipe,
+                  telephone: formatTelephone(e.target.value),
+                })
+              }
+            />
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="nom de l’équipe"
-  value={equipe.nomEquipe}
-  onChange={(e) => setEquipe({ ...equipe, nomEquipe: e.target.value })}
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="nom de l’équipe"
+              value={equipe.nomEquipe}
+              onChange={(e) => setEquipe({ ...equipe, nomEquipe: e.target.value })}
+            />
 
-<select
-  className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-  value={equipe.categorie}
-  onChange={(e) => setEquipe({ ...equipe, categorie: e.target.value })}
->
-  <option>Récréatif</option>
-  <option>Compétitif</option>
-</select>
+            <select
+              className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+              value={equipe.categorie}
+              onChange={(e) => setEquipe({ ...equipe, categorie: e.target.value })}
+            >
+              <option>Récréatif</option>
+              <option>Compétitif</option>
+            </select>
 
-{equipe.joueurs.map((joueurnom, index) => (
-  <input
-    key={index}
-    className="rounded-2xl px-4 py-3 text-slate-950"
-    placeholder={`Joueur ${index + 1}${index > 3 ? " optionnel" : ""}`}
-    value={joueurnom}
-    onChange={(e) => {
-      const nouveauxJoueurs = [...equipe.joueurs];
-      nouveauxJoueurs[index] = e.target.value;
-      setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
-    }}
-  />
-))}
+            {equipe.joueurs.map((joueurnom, index) => (
+              <input
+                key={index}
+                className="rounded-2xl px-4 py-3 text-slate-950"
+                placeholder={`Joueur ${index + 1}${index > 3 ? " optionnel" : ""}`}
+                value={joueurnom}
+                onChange={(e) => {
+                  const nouveauxJoueurs = [...equipe.joueurs];
+                  nouveauxJoueurs[index] = e.target.value;
+                  setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
+                }}
+              />
+            ))}
 
-<textarea
-  className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-  placeholder="Notes ou informations supplémentaires"
-  value={equipe.notes}
-  onChange={(e) => setEquipe({ ...equipe, notes: e.target.value })}
-/>
+            <textarea
+              className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+              placeholder="Notes ou informations supplémentaires"
+              value={equipe.notes}
+              onChange={(e) => setEquipe({ ...equipe, notes: e.target.value })}
+            />
           </div>
 
-<button
-  type="button"
-  onClick={envoyerEquipe}
-  className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300">
-  Envoyer l’inscription
-</button>
+          <button
+            type="button"
+            onClick={envoyerEquipe}
+            className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+          >
+            Envoyer l’inscription
+          </button>
         </div>
       )}
 
@@ -3537,110 +3444,63 @@ useEffect(() => {
 
           <h2 className="text-3xl font-black">Joueur indépendant</h2>
 
+          <p className="mt-4 text-slate-300">
+            Remplis seulement tes informations de contact et la catégorie dans laquelle tu veux être disponible.
+          </p>
+
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="nom complet"
-  value={joueur.nom}
-  onChange={(e) => setJoueur({ ...joueur, nom: e.target.value })}
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="nom complet"
+              value={joueur.nom}
+              onChange={(e) => setJoueur({ ...joueur, nom: e.target.value })}
+            />
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Courriel"
-  value={joueur.courriel}
-  onChange={(e) => setJoueur({ ...joueur, courriel: e.target.value })}
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Courriel"
+              value={joueur.courriel}
+              onChange={(e) => setJoueur({ ...joueur, courriel: e.target.value })}
+            />
 
-<input
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  placeholder="Téléphone"
-  value={joueur.telephone}
-  maxLength={12}
-  onChange={(e) =>
-    setJoueur({
-      ...joueur,
-      telephone: formatTelephone(e.target.value),
-    })
-  }
-/>
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Téléphone"
+              value={joueur.telephone}
+              maxLength={12}
+              onChange={(e) =>
+                setJoueur({
+                  ...joueur,
+                  telephone: formatTelephone(e.target.value),
+                })
+              }
+            />
 
-           <select
-  className="rounded-2xl px-4 py-3 text-slate-950"
-  value={joueur.categorie}
-  onChange={(e) => setJoueur({ ...joueur, categorie: e.target.value })}
->
-  <option value="recreatif">Récréatif</option>
-  <option value="competitif">Compétitif</option>
-  <option value="les-deux">Les deux catégories</option>
-</select>
+            <select
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              value={joueur.categorie}
+              onChange={(e) => setJoueur({ ...joueur, categorie: e.target.value })}
+            >
+              <option value="recreatif">Récréatif</option>
+              <option value="competitif">Compétitif</option>
+              <option value="les-deux">Les deux catégories</option>
+            </select>
 
-            <div className="rounded-2xl border border-white/10 bg-black/20 p-5 md:col-span-2">
-  <p className="mb-4 font-bold text-white">
-    Disponibilités comme remplaçant
-  </p>
-
-  <div className="mb-5 grid gap-3 sm:grid-cols-2">
-    <label className="flex items-center gap-3 rounded-xl bg-white/5 p-3 text-slate-200">
-      <input
-        type="radio"
-        name="disponibilite"
-        checked={!disponibleEnToutTemps}
-        onChange={() => setDisponibleEnToutTemps(false)}
-      />
-      Dates spécifiques
-    </label>
-
-    <label className="flex items-center gap-3 rounded-xl bg-amber-400/10 p-3 font-bold text-amber-300">
-      <input
-        type="radio"
-        name="disponibilite"
-        checked={disponibleEnToutTemps}
-        onChange={() => setDisponibleEnToutTemps(true)}
-      />
-      En tout temps
-    </label>
-  </div>
-
-  <p className="mb-4 text-sm text-slate-300">
-    Les dates affichées s'ajustent automatiquement selon la catégorie choisie.
-  </p>
-
-  <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-    {datesSelonCategorie.map((date) => (
-      <label
-        key={date.id}
-        className={`flex items-center gap-3 rounded-xl p-3 text-slate-200 ${
-          disponibleEnToutTemps ? "bg-emerald-400/10" : "bg-white/5"
-        }`}
-      >
-        <input
-          type="checkbox"
-          checked={datesDisponibles.includes(date.id)}
-          disabled={disponibleEnToutTemps}
-          onChange={() => toggleDate(date.id)}
-        />
-        {date.label}
-      </label>
-    ))}
-  </div>
-</div>
-            
             <textarea
-  className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-  placeholder="Expérience, position préférée ou disponibilités particulières"
-  value={joueur.notes}
-  onChange={(e) => setJoueur({ ...joueur, notes: e.target.value })}
-/>
+              className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+              placeholder="Expérience, position préférée ou commentaire optionnel"
+              value={joueur.notes}
+              onChange={(e) => setJoueur({ ...joueur, notes: e.target.value })}
+            />
           </div>
 
           <button
-  type="button"
-  onClick={envoyerJoueur}
-  className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
->
-  Envoyer mon inscription
-</button>
+            type="button"
+            onClick={envoyerJoueur}
+            className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+          >
+            Envoyer mon inscription
+          </button>
         </div>
       )}
     </section>
@@ -3791,11 +3651,7 @@ function GestionEquipe({ userData }) {
       </section>
     );
   }
-  const remplacantsFiltres = remplacants.filter(
-    (membre) =>
-      membre.enToutTemps === true ||
-      membre.disponibilites?.includes(dateSelectionnee)
-  );
+  const remplacantsFiltres = remplacants;
 
   const datesEquipe = datesLigue.filter(
     (date) => date.categorie === userData.categorie
@@ -3888,7 +3744,7 @@ function GestionEquipe({ userData }) {
         </h2>
 
         <p className="mt-4 text-slate-300">
-          Sélectionnez une date pour voir les remplaçants disponibles dans votre catégorie.
+          Voici les joueurs indépendants disponibles dans votre catégorie. Sélectionnez une date seulement lorsque vous voulez confirmer un remplacement.
         </p>
 
         <select
