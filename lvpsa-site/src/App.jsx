@@ -430,78 +430,45 @@ function Accueil() {
           {/* STATUT + MÉTÉO EN HAUT */}
           <div className="mb-12 grid gap-6 lg:grid-cols-2">
             {/* STATUT DES PARTIES */}
-            <div
-              className={`relative min-h-[300px] overflow-hidden rounded-[2rem] border p-8 ${
-                estAnnule
-                  ? "border-red-400/30 bg-gradient-to-br from-red-500/20 via-red-950/30 to-slate-950"
-                  : "border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 via-cyan-500/10 to-slate-950"
-              }`}
-            >
-              <div
-                className={`absolute -right-12 -top-12 h-44 w-44 rounded-full blur-3xl ${
-                  estAnnule ? "bg-red-400/20" : "bg-emerald-400/20"
-                }`}
-              ></div>
+<div
+  className={`rounded-[2rem] border p-6 ${
+    estAnnule
+      ? "border-red-400/30 bg-red-400/10"
+      : "border-emerald-400/30 bg-emerald-400/10"
+  }`}
+>
+  <div className="flex items-center justify-between gap-4">
+    <p
+      className={`text-sm font-bold uppercase tracking-[0.25em] ${
+        estAnnule ? "text-red-300" : "text-emerald-300"
+      }`}
+    >
+      Statut des parties
+    </p>
 
-              <div
-                className={`absolute -bottom-16 left-8 h-44 w-44 rounded-full blur-3xl ${
-                  estAnnule ? "bg-orange-400/10" : "bg-amber-400/10"
-                }`}
-              ></div>
+    <span
+      className={`rounded-full px-4 py-2 text-xs font-black uppercase ${
+        estAnnule
+          ? "bg-red-400/15 text-red-300"
+          : "bg-emerald-400/15 text-emerald-300"
+      }`}
+    >
+      {estAnnule ? "Annulées" : "Confirmées"}
+    </span>
+  </div>
 
-              <div className="relative z-10 flex h-full flex-col justify-between">
-                <div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span
-                      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-black uppercase tracking-[0.22em] ${
-                        estAnnule
-                          ? "bg-red-400/15 text-red-300"
-                          : "bg-emerald-400/15 text-emerald-300"
-                      }`}
-                    >
-                      <span
-                        className={`h-2.5 w-2.5 rounded-full ${
-                          estAnnule ? "bg-red-300" : "bg-emerald-300"
-                        }`}
-                      ></span>
-                      Statut officiel
-                    </span>
+  <h2 className="mt-6 text-3xl font-black leading-tight text-white">
+    {statutMatchs.texte}
+  </h2>
 
-                    <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-300">
-                      LVPSA
-                    </span>
-                  </div>
+  <p className="mt-3 text-lg text-slate-300">
+    {statutMatchs.message}
+  </p>
 
-                  <h2 className="mt-8 max-w-2xl text-4xl font-black leading-tight text-white md:text-5xl">
-                    {statutMatchs.texte}
-                  </h2>
-
-                  <p className="mt-4 max-w-xl text-lg leading-8 text-slate-300">
-                    {statutMatchs.message}
-                  </p>
-                </div>
-
-                <div className="mt-8 flex flex-wrap items-center gap-4">
-                  <Link
-                    to="/calendrier"
-                    className="inline-flex items-center rounded-full bg-white px-7 py-3 font-black text-slate-950 transition hover:bg-amber-300"
-                  >
-                    Consulter l’horaire
-                  </Link>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/20 px-5 py-4">
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      État actuel
-                    </p>
-
-                    <p
-                      className={`mt-1 text-lg font-black ${
-                        estAnnule ? "text-red-300" : "text-emerald-300"
-                      }`}
-                    >
-                      {estAnnule ? "Parties annulées" : "Parties confirmées"}
-                    </p>
-                  </div>
+  <p className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4 text-sm text-slate-300">
+    Mise à jour officielle de la LVPSA.
+  </p>
+</div>
                 </div>
               </div>
             </div>
