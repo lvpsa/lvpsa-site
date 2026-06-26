@@ -591,110 +591,21 @@ function Accueil() {
               </div>
             </div>
 
-            <div className="absolute -bottom-6 -left-4 hidden rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-5 backdrop-blur-xl md:block">
-              <p className="text-sm font-bold uppercase text-emerald-300">
-                Saison active
-              </p>
+            <div className="mt-6 hidden md:flex justify-end">
+  <div className="rounded-3xl border border-emerald-400/30 bg-emerald-400/10 p-5 backdrop-blur-xl">
+    <p className="text-sm font-bold uppercase text-emerald-300">
+      Saison active
+    </p>
 
-              <p className="mt-1 text-2xl font-black text-white">
-                Mai à août 2026
-              </p>
-            </div>
+    <p className="mt-1 text-2xl font-black text-white">
+      Mai à août 2026
+    </p>
+  </div>
+</div>
           </div>
         </div>
       </div>
     </section>
-
-      {/* STATUT + MÉTÉO */}
-      <section className="px-6 py-12">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
-
-          <div
-            className={`rounded-[2rem] border p-8 ${
-              statutMatchs.couleur === "red"
-                ? "border-red-400/30 bg-red-400/10"
-                : "border-emerald-400/30 bg-emerald-400/10"
-            }`}
-          >
-            <p
-              className={`text-sm font-bold uppercase tracking-[0.25em] ${
-                statutMatchs.couleur === "red"
-                  ? "text-red-300"
-                  : "text-emerald-300"
-              }`}
-            >
-              Statut des parties
-            </p>
-
-            <h2 className="mt-4 text-4xl font-black text-white">
-              {statutMatchs.texte}
-            </h2>
-
-            <p className="mt-3 text-lg text-slate-300">
-              {statutMatchs.message}
-            </p>
-
-            <Link
-              to="/calendrier"
-              className="mt-8 inline-flex rounded-full border border-white/15 px-6 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              Consulter l’horaire
-            </Link>
-          </div>
-
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8">
-            <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
-              Météo des prochaines heures
-            </p>
-
-            <div className="mt-6 grid grid-cols-5 gap-3">
-              {meteoHeures.length > 0 ? (
-                meteoHeures.map((item) => (
-                  <div
-                    key={item.heure}
-                    className="rounded-2xl border border-white/10 bg-slate-950/60 p-3 text-center"
-                  >
-                    <p className="text-sm text-slate-300">
-                      {item.heure.replace(":00", "h")}
-                    </p>
-
-                    <p className="mt-2 text-3xl">
-                      {item.code < 3 ? "☀️" : item.code < 60 ? "☁️" : "🌧️"}
-                    </p>
-
-                    <p className="mt-2 text-xl font-black text-white">
-                      {item.temperature}°
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="col-span-5 text-sm text-slate-300">
-                  Chargement de la météo...
-                </p>
-              )}
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-300">
-              <div className="rounded-full bg-white/10 px-4 py-2">
-                Vent : {meteoHeures[0]?.vent ?? "--"} km/h
-              </div>
-
-              <div className="rounded-full bg-white/10 px-4 py-2">
-                Humidité : {meteoHeures[0]?.humidite ?? "--"}%
-              </div>
-
-              <a
-                href={meteoLink}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/15 px-4 py-2 font-bold text-amber-300 hover:border-amber-300"
-              >
-                MétéoMédia ↗
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ACCÈS RAPIDES */}
       <section className="px-6 py-12">
