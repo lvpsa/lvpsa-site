@@ -563,22 +563,6 @@ return (
                 conviviale.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  to="/calendrier"
-                  className="inline-flex items-center rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-                >
-                  Voir le calendrier
-                </Link>
-
-                <Link
-                  to="/classements"
-                  className="inline-flex items-center rounded-full border border-white/15 px-8 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
-                >
-                  Voir les classements
-                </Link>
-              </div>
-
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
                   <p className="text-3xl font-black text-amber-300">2</p>
