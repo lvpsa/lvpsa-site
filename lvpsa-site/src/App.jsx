@@ -2360,21 +2360,15 @@ return <Boutique />;
 function Boutique() {
   const formatTelephone = (value) => {
     const chiffres = value.replace(/\D/g, "").substring(0, 10);
-
     if (chiffres.length <= 3) return chiffres;
     if (chiffres.length <= 6) return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
-
     return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
   };
 
   const [user, setUser] = useState(null);
   const [produitSelectionne, setProduitSelectionne] = useState(null);
   const [vueProduit, setVueProduit] = useState("devant");
-
-  const [popupCommande, setPopupCommande] = useState({
-    taille: "M",
-    quantite: 1,
-  });
+  const [popupCommande, setPopupCommande] = useState({ taille: "M", quantite: 1 });
 
   const [commande, setCommande] = useState({
     articles: [],
@@ -2409,80 +2403,114 @@ function Boutique() {
 
   const produits = [
     {
-      categorie: "T-shirts homme",
-      modele: "1",
+      type: "T-shirt",
+      categorie: "T-shirt Homme",
+      sexe: "homme",
+      couleur: "Or",
       prix: 20,
-      imageDevant: "/tshirt-homme-1.png",
-      imageDos: "/tshirt-homme-2.png",
+      imageDevant: "/tshirt-homme-or-devant.png",
+      imageDos: "/tshirt-homme-or-dos.png",
     },
     {
-      categorie: "T-shirts homme",
-      modele: "2",
+      type: "T-shirt",
+      categorie: "T-shirt Homme",
+      sexe: "homme",
+      couleur: "Sable",
       prix: 20,
-      imageDevant: "/tshirt-homme-3.png",
-      imageDos: "/tshirt-homme-4.png",
+      imageDevant: "/tshirt-homme-sable-devant.png",
+      imageDos: "/tshirt-homme-sable-dos.png",
     },
     {
-      categorie: "T-shirts femme",
-      modele: "1",
+      type: "T-shirt",
+      categorie: "T-shirt Femme",
+      sexe: "femme",
+      couleur: "Blanc",
       prix: 20,
-      imageDevant: "/tshirt-femme-1.png",
-      imageDos: "/tshirt-femme-2.png",
+      imageDevant: "/tshirt-femme-blanc-devant.png",
+      imageDos: "/tshirt-femme-blanc-dos.png",
     },
     {
-      categorie: "T-shirts femme",
-      modele: "2",
+      type: "T-shirt",
+      categorie: "T-shirt Femme",
+      sexe: "femme",
+      couleur: "Rose",
       prix: 20,
-      imageDevant: "/tshirt-femme-3.png",
-      imageDos: "/tshirt-femme-4.png",
+      imageDevant: "/tshirt-femme-rose-devant.png",
+      imageDos: "/tshirt-femme-rose-dos.png",
     },
     {
-      categorie: "Camisoles homme",
-      modele: "1",
+      type: "Camisole",
+      categorie: "Camisole Homme",
+      sexe: "homme",
+      couleur: "Blanc",
       prix: 20,
-      imageDevant: "/camisole-homme-1.png",
-      imageDos: "/camisole-homme-2.png",
+      imageDevant: "/camisole-homme-blanc-devant.png",
+      imageDos: "/camisole-homme-blanc-dos.png",
     },
     {
-      categorie: "Camisoles homme",
-      modele: "2",
+      type: "Camisole",
+      categorie: "Camisole Homme",
+      sexe: "homme",
+      couleur: "Marin",
       prix: 20,
-      imageDevant: "/camisole-homme-3.png",
-      imageDos: "/camisole-homme-4.png",
+      imageDevant: "/camisole-homme-marin-devant.png",
+      imageDos: "/camisole-homme-marin-dos.png",
     },
     {
-      categorie: "Camisoles femme",
-      modele: "1",
+      type: "Camisole",
+      categorie: "Camisole Femme",
+      sexe: "femme",
+      couleur: "Bleue",
       prix: 20,
-      imageDevant: "/camisole-femme-1.png",
-      imageDos: "/camisole-femme-2.png",
+      imageDevant: "/camisole-femme-bleue-devant.png",
+      imageDos: "/camisole-femme-bleue-dos.png",
     },
     {
-      categorie: "Camisoles femme",
-      modele: "2",
+      type: "Camisole",
+      categorie: "Camisole Femme",
+      sexe: "femme",
+      couleur: "Rose",
       prix: 20,
-      imageDevant: "/camisole-femme-3.png",
-      imageDos: "/camisole-femme-4.png",
+      imageDevant: "/camisole-femme-rose-devant.png",
+      imageDos: "/camisole-femme-rose-dos.png",
     },
     {
-      categorie: "Hoodies unisex",
-      modele: "1",
+      type: "Hoodie",
+      categorie: "Hoodie Unisex",
+      sexe: "unisex",
+      couleur: "Marin",
       prix: 40,
-      imageDevant: "/hoodie-unisex-1.png",
-      imageDos: "/hoodie-unisex-2.png",
+      imageDevant: "/hoodie-unisex-marin-devant.png",
+      imageDos: "/hoodie-unisex-marin-dos.png",
     },
     {
-      categorie: "Hoodies unisex",
-      modele: "2",
+      type: "Hoodie",
+      categorie: "Hoodie Unisex",
+      sexe: "unisex",
+      couleur: "Or",
       prix: 40,
-      imageDevant: "/hoodie-unisex-3.png",
-      imageDos: "/hoodie-unisex-4.png",
+      imageDevant: "/hoodie-unisex-or-devant.png",
+      imageDos: "/hoodie-unisex-or-dos.png",
     },
   ];
 
+  const grandeursDisponibles = (produit) => {
+    if (produit.sexe === "homme") return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
+    if (produit.sexe === "femme") return ["XS", "S", "M", "L", "XL", "XXL"];
+    return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
+  };
+
+  const estEnInventaire = (produit, taille) => {
+    if (produit.sexe === "homme") return ["M", "L", "XL", "XXL"].includes(taille);
+    if (produit.sexe === "femme") return ["S", "M", "L"].includes(taille);
+    return false;
+  };
+
   const retirerArticle = (index) => {
-    const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
-    setCommande({ ...commande, articles: nouveauxArticles });
+    setCommande({
+      ...commande,
+      articles: commande.articles.filter((_, i) => i !== index),
+    });
   };
 
   const totalCommande = commande.articles.reduce(
@@ -2505,7 +2533,7 @@ function Boutique() {
       commande.articles
         .map(
           (article, index) =>
-            `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
+            `Article #${index + 1} : ${article.categorie} ${article.couleur} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
         )
         .join("\n") + `\n\nTOTAL : ${totalCommande} $`;
 
@@ -2525,13 +2553,14 @@ function Boutique() {
         method: "POST",
         mode: "no-cors",
         body: JSON.stringify({
+          type: "boutique",
           nom: commande.nom,
           courriel: commande.courriel,
           telephone: commande.telephone,
           notes: commande.notes,
           total: totalCommande,
           articles: commande.articles.map((article) => ({
-            modele: `${article.categorie} - Modèle ${article.modele}`,
+            modele: `${article.categorie} - ${article.couleur}`,
             taille: article.taille,
             quantite: article.quantite,
             prix: article.prix,
@@ -2594,12 +2623,13 @@ function Boutique() {
         </div>
       )}
 
-      <div className="mt-8 mb-10 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
-        <h2 className="text-2xl font-black text-amber-300">Comment commander</h2>
+      <div className="mt-8 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
+        <h2 className="text-2xl font-black text-amber-300">
+          Comment commander
+        </h2>
 
         <p className="mt-3 text-slate-300">
-          Cliquez sur le vêtement désiré, choisissez la taille et la quantité.
-          Vous pourrez voir le devant et le dos de chaque modèle avant de l’ajouter à votre commande.
+          Cliquez sur un vêtement pour voir le devant et le dos, choisir la grandeur et l’ajouter à votre commande.
         </p>
       </div>
 
@@ -2611,46 +2641,43 @@ function Boutique() {
         />
       </div>
 
-      <div className="mt-12 space-y-10">
-        {[
-          ["T-shirts homme", "T-shirts femme"],
-          ["Camisoles homme", "Camisoles femme"],
-          ["Hoodies unisex"],
-        ].map((rangee) => (
-          <div key={rangee.join("-")}>
-            <h2 className="mb-4 text-2xl font-black text-amber-300">
-              {rangee.join(" / ")}
+      <div className="mt-12 space-y-12">
+        {["T-shirt", "Camisole", "Hoodie"].map((type) => (
+          <div key={type}>
+            <h2 className="mb-5 text-3xl font-black text-amber-300">
+              {type === "Hoodie" ? "Hoodies" : `${type}s`}
             </h2>
 
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {produits
-                .filter((produit) => rangee.includes(produit.categorie))
+                .filter((produit) => produit.type === type)
                 .map((produit) => (
                   <button
-                    key={`${produit.categorie}-${produit.modele}`}
+                    key={`${produit.categorie}-${produit.couleur}`}
                     type="button"
                     onClick={() => {
                       setProduitSelectionne(produit);
                       setVueProduit("devant");
-                      setPopupCommande({
-                        taille: "M",
-                        quantite: 1,
-                      });
+                      setPopupCommande({ taille: "M", quantite: 1 });
                     }}
-                    className="rounded-3xl border border-white/10 bg-white/5 p-3 text-left hover:border-amber-300"
+                    className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left hover:border-amber-300"
                   >
                     <img
                       src={produit.imageDevant}
-                      alt={`${produit.categorie} modèle ${produit.modele}`}
-                      className="h-40 w-full rounded-2xl bg-white/10 object-cover"
+                      alt={`${produit.categorie} ${produit.couleur}`}
+                      className="h-52 w-full rounded-2xl bg-white object-contain"
                     />
 
-                    <p className="mt-3 text-sm font-bold text-white">
+                    <p className="mt-4 text-lg font-black text-white">
                       {produit.categorie}
                     </p>
 
-                    <p className="text-sm text-amber-300">
-                      Modèle {produit.modele} — {produit.prix} $
+                    <p className="text-sm text-slate-300">
+                      Couleur : {produit.couleur}
+                    </p>
+
+                    <p className="mt-2 text-lg font-black text-amber-300">
+                      {produit.prix} $
                     </p>
                   </button>
                 ))}
@@ -2661,7 +2688,7 @@ function Boutique() {
 
       {produitSelectionne && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
-          <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl">
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="text-sm uppercase tracking-wider text-amber-300">
@@ -2673,7 +2700,7 @@ function Boutique() {
                 </h2>
 
                 <p className="mt-1 text-slate-300">
-                  Modèle {produitSelectionne.modele} — {produitSelectionne.prix} $
+                  Couleur : {produitSelectionne.couleur} — {produitSelectionne.prix} $
                 </p>
               </div>
 
@@ -2686,129 +2713,160 @@ function Boutique() {
               </button>
             </div>
 
-            <div className="mt-6">
-              <img
-                src={
-                  vueProduit === "devant"
-                    ? produitSelectionne.imageDevant
-                    : produitSelectionne.imageDos
-                }
-                alt={produitSelectionne.categorie}
-                className="h-72 w-full rounded-2xl bg-white object-contain"
-              />
-
-              <div className="mt-4 flex justify-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setVueProduit("devant")}
-                  className={`rounded-full px-5 py-2 font-bold ${
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <div>
+                <img
+                  src={
                     vueProduit === "devant"
-                      ? "bg-amber-400 text-slate-950"
-                      : "border border-white/15 text-white"
-                  }`}
+                      ? produitSelectionne.imageDevant
+                      : produitSelectionne.imageDos
+                  }
+                  alt={produitSelectionne.categorie}
+                  className="h-80 w-full rounded-2xl bg-white object-contain"
+                />
+
+                <div className="mt-4 flex justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setVueProduit("devant")}
+                    className={`rounded-full px-5 py-2 font-bold ${
+                      vueProduit === "devant"
+                        ? "bg-amber-400 text-slate-950"
+                        : "border border-white/15 text-white"
+                    }`}
+                  >
+                    Devant
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setVueProduit("dos")}
+                    className={`rounded-full px-5 py-2 font-bold ${
+                      vueProduit === "dos"
+                        ? "bg-amber-400 text-slate-950"
+                        : "border border-white/15 text-white"
+                    }`}
+                  >
+                    Dos
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-bold text-slate-300">
+                  Grandeur
+                </label>
+
+                <select
+                  className="mt-2 w-full rounded-2xl px-4 py-3 text-slate-950"
+                  value={popupCommande.taille}
+                  onChange={(e) =>
+                    setPopupCommande({
+                      ...popupCommande,
+                      taille: e.target.value,
+                    })
+                  }
                 >
-                  Devant
-                </button>
+                  {grandeursDisponibles(produitSelectionne).map((taille) => (
+                    <option key={taille} value={taille}>
+                      {taille}
+                      {estEnInventaire(produitSelectionne, taille)
+                        ? " — en inventaire"
+                        : " — sur commande"}
+                    </option>
+                  ))}
+                </select>
+
+                <label className="mt-5 block text-sm font-bold text-slate-300">
+                  Quantité
+                </label>
+
+                <input
+                  type="number"
+                  min="1"
+                  className="mt-2 w-full rounded-2xl px-4 py-3 text-slate-950"
+                  value={popupCommande.quantite}
+                  onChange={(e) =>
+                    setPopupCommande({
+                      ...popupCommande,
+                      quantite: e.target.value,
+                    })
+                  }
+                />
 
                 <button
                   type="button"
-                  onClick={() => setVueProduit("dos")}
-                  className={`rounded-full px-5 py-2 font-bold ${
-                    vueProduit === "dos"
-                      ? "bg-amber-400 text-slate-950"
-                      : "border border-white/15 text-white"
-                  }`}
+                  onClick={() => {
+                    setCommande({
+                      ...commande,
+                      articles: [
+                        ...commande.articles,
+                        {
+                          categorie: produitSelectionne.categorie,
+                          couleur: produitSelectionne.couleur,
+                          prix: produitSelectionne.prix,
+                          quantite: popupCommande.quantite,
+                          taille: popupCommande.taille,
+                          image: produitSelectionne.imageDevant,
+                        },
+                      ],
+                    });
+
+                    setProduitSelectionne(null);
+                  }}
+                  className="mt-6 w-full rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
                 >
-                  Dos
+                  Ajouter au panier
                 </button>
               </div>
             </div>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <select
-                className="rounded-2xl px-4 py-3 text-slate-950"
-                value={popupCommande.taille}
-                onChange={(e) =>
-                  setPopupCommande({ ...popupCommande, taille: e.target.value })
-                }
-              >
-                <option>XS</option>
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-                <option>XXL</option>
-              </select>
-
-              <input
-                type="number"
-                min="1"
-                className="rounded-2xl px-4 py-3 text-slate-950"
-                value={popupCommande.quantite}
-                onChange={(e) =>
-                  setPopupCommande({
-                    ...popupCommande,
-                    quantite: e.target.value,
-                  })
-                }
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setCommande({
-                  ...commande,
-                  articles: [
-                    ...commande.articles,
-                    {
-                      categorie: produitSelectionne.categorie,
-                      modele: produitSelectionne.modele,
-                      prix: produitSelectionne.prix,
-                      quantite: popupCommande.quantite,
-                      taille: popupCommande.taille,
-                    },
-                  ],
-                });
-
-                setProduitSelectionne(null);
-              }}
-              className="mt-6 w-full rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-            >
-              Ajouter à ma commande
-            </button>
           </div>
         </div>
       )}
 
       <div className="mt-16 grid gap-8 lg:grid-cols-2">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h2 className="text-3xl font-black">Résumé de la commande</h2>
+          <h2 className="text-3xl font-black">Panier</h2>
 
           <div className="mt-6 space-y-3">
             {commande.articles.length === 0 ? (
               <p className="text-slate-400">Aucun article sélectionné.</p>
             ) : (
               commande.articles.map((article, index) => (
-                <button
+                <div
                   key={index}
-                  type="button"
-                  onClick={() => retirerArticle(index)}
-                  className="w-full rounded-2xl border border-white/10 bg-black/20 p-4 text-left hover:border-red-400/50"
+                  className="rounded-2xl border border-white/10 bg-black/20 p-4"
                 >
-                  <div className="font-bold text-amber-300">
-                    {article.categorie}
-                  </div>
+                  <div className="flex gap-4">
+                    <img
+                      src={article.image}
+                      alt={article.categorie}
+                      className="h-20 w-20 rounded-xl bg-white object-contain"
+                    />
 
-                  <div className="text-sm text-slate-300">
-                    Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite} • Total :{" "}
-                    {Number(article.prix) * Number(article.quantite)} $
-                  </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-amber-300">
+                        {article.categorie}
+                      </p>
 
-                  <div className="mt-2 text-xs text-red-300">
-                    Cliquer pour retirer
+                      <p className="text-sm text-slate-300">
+                        Couleur {article.couleur} • Taille {article.taille} • Qté {article.quantite}
+                      </p>
+
+                      <p className="mt-1 text-sm font-bold text-white">
+                        Total : {Number(article.prix) * Number(article.quantite)} $
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={() => retirerArticle(index)}
+                        className="mt-2 text-xs text-red-300 hover:underline"
+                      >
+                        Retirer
+                      </button>
+                    </div>
                   </div>
-                </button>
+                </div>
               ))
             )}
           </div>
@@ -2829,9 +2887,7 @@ function Boutique() {
               className="rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Votre courriel"
               value={commande.courriel}
-              onChange={(e) =>
-                setCommande({ ...commande, courriel: e.target.value })
-              }
+              onChange={(e) => setCommande({ ...commande, courriel: e.target.value })}
             />
 
             <input
@@ -2851,9 +2907,7 @@ function Boutique() {
               className="min-h-32 rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Notes ou demandes spéciales"
               value={commande.notes}
-              onChange={(e) =>
-                setCommande({ ...commande, notes: e.target.value })
-              }
+              onChange={(e) => setCommande({ ...commande, notes: e.target.value })}
             />
 
             {commande.articles.length > 0 && (
