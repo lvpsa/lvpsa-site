@@ -2368,7 +2368,10 @@ function Boutique() {
   const [user, setUser] = useState(null);
   const [produitSelectionne, setProduitSelectionne] = useState(null);
   const [vueProduit, setVueProduit] = useState("devant");
-  const [popupCommande, setPopupCommande] = useState({ taille: "M", quantite: 1 });
+  const [popupCommande, setPopupCommande] = useState({
+    taille: "M",
+    quantite: 1,
+  });
 
   const [commande, setCommande] = useState({
     articles: [],
@@ -2405,6 +2408,7 @@ function Boutique() {
     {
       type: "T-shirt",
       categorie: "T-shirt Homme",
+      modele: "T-shirts homme Or",
       sexe: "homme",
       couleur: "Or",
       prix: 20,
@@ -2414,6 +2418,7 @@ function Boutique() {
     {
       type: "T-shirt",
       categorie: "T-shirt Homme",
+      modele: "T-shirts homme Sable",
       sexe: "homme",
       couleur: "Sable",
       prix: 20,
@@ -2423,6 +2428,7 @@ function Boutique() {
     {
       type: "T-shirt",
       categorie: "T-shirt Femme",
+      modele: "T-shirts femme Blanc",
       sexe: "femme",
       couleur: "Blanc",
       prix: 20,
@@ -2432,6 +2438,7 @@ function Boutique() {
     {
       type: "T-shirt",
       categorie: "T-shirt Femme",
+      modele: "T-shirts femme Rose",
       sexe: "femme",
       couleur: "Rose",
       prix: 20,
@@ -2441,6 +2448,7 @@ function Boutique() {
     {
       type: "Camisole",
       categorie: "Camisole Homme",
+      modele: "Camisoles homme Blanc",
       sexe: "homme",
       couleur: "Blanc",
       prix: 20,
@@ -2450,8 +2458,9 @@ function Boutique() {
     {
       type: "Camisole",
       categorie: "Camisole Homme",
+      modele: "Camisoles homme Marine",
       sexe: "homme",
-      couleur: "Marin",
+      couleur: "Marine",
       prix: 20,
       imageDevant: "/camisole-homme-marin-devant.png",
       imageDos: "/camisole-homme-marin-dos.png",
@@ -2459,8 +2468,9 @@ function Boutique() {
     {
       type: "Camisole",
       categorie: "Camisole Femme",
+      modele: "Camisoles femme Bleu",
       sexe: "femme",
-      couleur: "Bleue",
+      couleur: "Bleu",
       prix: 20,
       imageDevant: "/camisole-femme-bleue-devant.png",
       imageDos: "/camisole-femme-bleue-dos.png",
@@ -2468,6 +2478,7 @@ function Boutique() {
     {
       type: "Camisole",
       categorie: "Camisole Femme",
+      modele: "Camisoles femme Rose",
       sexe: "femme",
       couleur: "Rose",
       prix: 20,
@@ -2477,8 +2488,9 @@ function Boutique() {
     {
       type: "Hoodie",
       categorie: "Hoodie Unisex",
+      modele: "Hoodies unisex Marine",
       sexe: "unisex",
-      couleur: "Marin",
+      couleur: "Marine",
       prix: 40,
       imageDevant: "/hoodie-unisex-marin-devant.png",
       imageDos: "/hoodie-unisex-marin-dos.png",
@@ -2486,6 +2498,7 @@ function Boutique() {
     {
       type: "Hoodie",
       categorie: "Hoodie Unisex",
+      modele: "Hoodies unisex Or",
       sexe: "unisex",
       couleur: "Or",
       prix: 40,
@@ -2495,14 +2508,30 @@ function Boutique() {
   ];
 
   const grandeursDisponibles = (produit) => {
-    if (produit.sexe === "homme") return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
-    if (produit.sexe === "femme") return ["XS", "S", "M", "L", "XL", "XXL"];
+    if (produit.sexe === "homme") {
+      return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
+    }
+
+    if (produit.sexe === "femme") {
+      return ["XS", "S", "M", "L", "XL", "XXL"];
+    }
+
     return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
   };
 
   const estEnInventaire = (produit, taille) => {
-    if (produit.sexe === "homme") return ["M", "L", "XL", "XXL"].includes(taille);
-    if (produit.sexe === "femme") return ["S", "M", "L"].includes(taille);
+    if (produit.sexe === "homme") {
+      return ["M", "L", "XL", "XXL"].includes(taille);
+    }
+
+    if (produit.sexe === "femme") {
+      return ["S", "M", "L"].includes(taille);
+    }
+
+    if (produit.sexe === "unisex") {
+      return ["S", "M", "L", "XL", "XXL"].includes(taille);
+    }
+
     return false;
   };
 
@@ -2514,7 +2543,8 @@ function Boutique() {
   };
 
   const totalCommande = commande.articles.reduce(
-    (total, article) => total + Number(article.prix) * Number(article.quantite),
+    (total, article) =>
+      total + Number(article.prix) * Number(article.quantite),
     0
   );
 
@@ -2533,7 +2563,7 @@ function Boutique() {
       commande.articles
         .map(
           (article, index) =>
-            `Article #${index + 1} : ${article.categorie} ${article.couleur} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
+            `Article #${index + 1} : ${article.modele} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
         )
         .join("\n") + `\n\nTOTAL : ${totalCommande} $`;
 
@@ -2560,10 +2590,10 @@ function Boutique() {
           notes: commande.notes,
           total: totalCommande,
           articles: commande.articles.map((article) => ({
-            modele: `${article.categorie} - ${article.couleur}`,
+            modele: article.modele,
             taille: article.taille,
-            quantite: article.quantite,
-            prix: article.prix,
+            quantite: Number(article.quantite),
+            prix: Number(article.prix),
             total: Number(article.prix) * Number(article.quantite),
           })),
         }),
@@ -2572,8 +2602,18 @@ function Boutique() {
 
     Promise.all([
       googleSheetPromise,
-      emailjs.send("service_f4h3rii", "template_nwl643g", params, "ZooBSx9i6qVl5HI8T"),
-      emailjs.send("service_f4h3rii", "template_c5ab7bt", params, "ZooBSx9i6qVl5HI8T"),
+      emailjs.send(
+        "service_f4h3rii",
+        "template_nwl643g",
+        params,
+        "ZooBSx9i6qVl5HI8T"
+      ),
+      emailjs.send(
+        "service_f4h3rii",
+        "template_c5ab7bt",
+        params,
+        "ZooBSx9i6qVl5HI8T"
+      ),
     ])
       .then(() => {
         alert("Commande envoyée avec succès !");
@@ -2596,7 +2636,9 @@ function Boutique() {
 
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">LVPSA</p>
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        LVPSA
+      </p>
 
       <h1 className="mt-2 text-5xl font-black">Boutique</h1>
 
@@ -2611,7 +2653,8 @@ function Boutique() {
           </h2>
 
           <p className="mt-3 text-slate-300">
-            Vous pouvez consulter la boutique, mais vous devez avoir un compte LVPSA pour envoyer une commande.
+            Vous pouvez consulter la boutique, mais vous devez avoir un compte
+            LVPSA pour envoyer une commande.
           </p>
 
           <Link
@@ -2629,7 +2672,8 @@ function Boutique() {
         </h2>
 
         <p className="mt-3 text-slate-300">
-          Cliquez sur un vêtement pour voir le devant et le dos, choisir la grandeur et l’ajouter à votre commande.
+          Cliquez sur un vêtement pour voir le devant et le dos, choisir la
+          grandeur et l’ajouter à votre commande.
         </p>
       </div>
 
@@ -2653,7 +2697,7 @@ function Boutique() {
                 .filter((produit) => produit.type === type)
                 .map((produit) => (
                   <button
-                    key={`${produit.categorie}-${produit.couleur}`}
+                    key={produit.modele}
                     type="button"
                     onClick={() => {
                       setProduitSelectionne(produit);
@@ -2664,7 +2708,7 @@ function Boutique() {
                   >
                     <img
                       src={produit.imageDevant}
-                      alt={`${produit.categorie} ${produit.couleur}`}
+                      alt={produit.modele}
                       className="h-52 w-full rounded-2xl bg-white object-contain"
                     />
 
@@ -2700,7 +2744,8 @@ function Boutique() {
                 </h2>
 
                 <p className="mt-1 text-slate-300">
-                  Couleur : {produitSelectionne.couleur} — {produitSelectionne.prix} $
+                  Couleur : {produitSelectionne.couleur} —{" "}
+                  {produitSelectionne.prix} $
                 </p>
               </div>
 
@@ -2721,7 +2766,7 @@ function Boutique() {
                       ? produitSelectionne.imageDevant
                       : produitSelectionne.imageDos
                   }
-                  alt={produitSelectionne.categorie}
+                  alt={produitSelectionne.modele}
                   className="h-80 w-full rounded-2xl bg-white object-contain"
                 />
 
@@ -2797,15 +2842,21 @@ function Boutique() {
                 <button
                   type="button"
                   onClick={() => {
+                    const quantite = Math.max(
+                      1,
+                      Number(popupCommande.quantite) || 1
+                    );
+
                     setCommande({
                       ...commande,
                       articles: [
                         ...commande.articles,
                         {
                           categorie: produitSelectionne.categorie,
+                          modele: produitSelectionne.modele,
                           couleur: produitSelectionne.couleur,
                           prix: produitSelectionne.prix,
-                          quantite: popupCommande.quantite,
+                          quantite: quantite,
                           taille: popupCommande.taille,
                           image: produitSelectionne.imageDevant,
                         },
@@ -2840,7 +2891,7 @@ function Boutique() {
                   <div className="flex gap-4">
                     <img
                       src={article.image}
-                      alt={article.categorie}
+                      alt={article.modele}
                       className="h-20 w-20 rounded-xl bg-white object-contain"
                     />
 
@@ -2850,11 +2901,13 @@ function Boutique() {
                       </p>
 
                       <p className="text-sm text-slate-300">
-                        Couleur {article.couleur} • Taille {article.taille} • Qté {article.quantite}
+                        Couleur {article.couleur} • Taille {article.taille} •
+                        Qté {article.quantite}
                       </p>
 
                       <p className="mt-1 text-sm font-bold text-white">
-                        Total : {Number(article.prix) * Number(article.quantite)} $
+                        Total :{" "}
+                        {Number(article.prix) * Number(article.quantite)} $
                       </p>
 
                       <button
@@ -2880,14 +2933,18 @@ function Boutique() {
               className="rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Votre nom"
               value={commande.nom}
-              onChange={(e) => setCommande({ ...commande, nom: e.target.value })}
+              onChange={(e) =>
+                setCommande({ ...commande, nom: e.target.value })
+              }
             />
 
             <input
               className="rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Votre courriel"
               value={commande.courriel}
-              onChange={(e) => setCommande({ ...commande, courriel: e.target.value })}
+              onChange={(e) =>
+                setCommande({ ...commande, courriel: e.target.value })
+              }
             />
 
             <input
@@ -2907,7 +2964,9 @@ function Boutique() {
               className="min-h-32 rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Notes ou demandes spéciales"
               value={commande.notes}
-              onChange={(e) => setCommande({ ...commande, notes: e.target.value })}
+              onChange={(e) =>
+                setCommande({ ...commande, notes: e.target.value })
+              }
             />
 
             {commande.articles.length > 0 && (
