@@ -3800,7 +3800,6 @@ function GestionEquipe({ userData }) {
                   <p className="mt-4 text-slate-300">
   Voici les joueurs indépendants disponibles dans votre catégorie. Sélectionnez une date seulement lorsque vous voulez confirmer officiellement un remplacement.
 </p>
-                  )}
 
                   {membre.commentaire && (
                     <p className="mt-4 text-slate-300">
@@ -3831,10 +3830,10 @@ function GestionEquipe({ userData }) {
               ))
             ) : (
               <p className="text-slate-300">
-                Aucun remplaçant disponible pour cette date.
+                Aucun remplaçant disponible dans votre catégorie.
               </p>
+            )}
           </div>
-        )}
       </div>
     </section>
   );
