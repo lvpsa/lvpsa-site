@@ -2358,418 +2358,522 @@ return <Boutique />;
 }
 
 function Boutique() {
+  const formatTelephone = (value) => {
+    const chiffres = value.replace(/\D/g, "").substring(0, 10);
 
- const formatTelephone = (value) => {
-  const chiffres = value.replace(/\D/g, "").substring(0, 10);
+    if (chiffres.length <= 3) return chiffres;
+    if (chiffres.length <= 6) return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
 
-  if (chiffres.length <= 3) return chiffres;
+    return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
+  };
 
-  if (chiffres.length <= 6) {
-    return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
-  }
-
-  return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
-}; 
-
+  const [user, setUser] = useState(null);
   const [produitSelectionne, setProduitSelectionne] = useState(null);
-const [popupCommande, setPopupCommande] = useState({
-  taille: "M",
-  couleur: "Noir",
-  quantite: 1,
-});
-const produits = [
-  { categorie: "T-shirts homme", modele: "1", image: "/tshirt-homme-1.png" },
-  { categorie: "T-shirts homme", modele: "2", image: "/tshirt-homme-2.png" },
-  { categorie: "T-shirts homme", modele: "3", image: "/tshirt-homme-3.png" },
-  { categorie: "T-shirts homme", modele: "4", image: "/tshirt-homme-4.png" },
-  { categorie: "T-shirts femme", modele: "1", image: "/tshirt-femme-1.png" },
-  { categorie: "T-shirts femme", modele: "2", image: "/tshirt-femme-2.png" },
-  { categorie: "T-shirts femme", modele: "3", image: "/tshirt-femme-3.png" },
-  { categorie: "T-shirts femme", modele: "4", image: "/tshirt-femme-4.png" },
+  const [vueProduit, setVueProduit] = useState("devant");
 
-  { categorie: "Camisoles homme", modele: "1", image: "/camisole-homme-1.png" },
-  { categorie: "Camisoles homme", modele: "2", image: "/camisole-homme-2.png" },
-  { categorie: "Camisoles homme", modele: "3", image: "/camisole-homme-3.png" },
-  { categorie: "Camisoles homme", modele: "4", image: "/camisole-homme-4.png" },
-  { categorie: "Camisoles femme", modele: "1", image: "/camisole-femme-1.png" },
-  { categorie: "Camisoles femme", modele: "2", image: "/camisole-femme-2.png" },
-  { categorie: "Camisoles femme", modele: "3", image: "/camisole-femme-3.png" },
-  { categorie: "Camisoles femme", modele: "4", image: "/camisole-femme-4.png" },
-
-  { categorie: "Hoodies homme", modele: "1", image: "/hoodie-homme-1.png" },
-  { categorie: "Hoodies homme", modele: "2", image: "/hoodie-homme-2.png" },
-  { categorie: "Hoodies homme", modele: "3", image: "/hoodie-homme-3.png" },
-  { categorie: "Hoodies homme", modele: "4", image: "/hoodie-homme-4.png" },
-  { categorie: "Hoodies femme", modele: "1", image: "/hoodie-femme-1.png" },
-  { categorie: "Hoodies femme", modele: "2", image: "/hoodie-femme-2.png" },
-  { categorie: "Hoodies femme", modele: "3", image: "/hoodie-femme-3.png" },
-  { categorie: "Hoodies femme", modele: "4", image: "/hoodie-femme-4.png" },
-];
+  const [popupCommande, setPopupCommande] = useState({
+    taille: "M",
+    quantite: 1,
+  });
 
   const [commande, setCommande] = useState({
-  articles: [],
-  nom: "",
-  courriel: "",
-  telephone: "",
-  notes: "",
-});
+    articles: [],
+    nom: "",
+    courriel: "",
+    telephone: "",
+    notes: "",
+  });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (currentUser) {
+        const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          setCommande((prev) => ({
+            ...prev,
+            nom: data.nom || "",
+            courriel: data.email || "",
+            telephone: data.telephone || "",
+          }));
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const produits = [
+    {
+      categorie: "T-shirts homme",
+      modele: "1",
+      prix: 20,
+      imageDevant: "/tshirt-homme-1.png",
+      imageDos: "/tshirt-homme-2.png",
+    },
+    {
+      categorie: "T-shirts homme",
+      modele: "2",
+      prix: 20,
+      imageDevant: "/tshirt-homme-3.png",
+      imageDos: "/tshirt-homme-4.png",
+    },
+    {
+      categorie: "T-shirts femme",
+      modele: "1",
+      prix: 20,
+      imageDevant: "/tshirt-femme-1.png",
+      imageDos: "/tshirt-femme-2.png",
+    },
+    {
+      categorie: "T-shirts femme",
+      modele: "2",
+      prix: 20,
+      imageDevant: "/tshirt-femme-3.png",
+      imageDos: "/tshirt-femme-4.png",
+    },
+    {
+      categorie: "Camisoles homme",
+      modele: "1",
+      prix: 20,
+      imageDevant: "/camisole-homme-1.png",
+      imageDos: "/camisole-homme-2.png",
+    },
+    {
+      categorie: "Camisoles homme",
+      modele: "2",
+      prix: 20,
+      imageDevant: "/camisole-homme-3.png",
+      imageDos: "/camisole-homme-4.png",
+    },
+    {
+      categorie: "Camisoles femme",
+      modele: "1",
+      prix: 20,
+      imageDevant: "/camisole-femme-1.png",
+      imageDos: "/camisole-femme-2.png",
+    },
+    {
+      categorie: "Camisoles femme",
+      modele: "2",
+      prix: 20,
+      imageDevant: "/camisole-femme-3.png",
+      imageDos: "/camisole-femme-4.png",
+    },
+    {
+      categorie: "Hoodies unisex",
+      modele: "1",
+      prix: 40,
+      imageDevant: "/hoodie-unisex-1.png",
+      imageDos: "/hoodie-unisex-2.png",
+    },
+    {
+      categorie: "Hoodies unisex",
+      modele: "2",
+      prix: 40,
+      imageDevant: "/hoodie-unisex-3.png",
+      imageDos: "/hoodie-unisex-4.png",
+    },
+  ];
 
   const retirerArticle = (index) => {
-  const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
-  setCommande({ ...commande, articles: nouveauxArticles });
-};
+    const nouveauxArticles = commande.articles.filter((_, i) => i !== index);
+    setCommande({ ...commande, articles: nouveauxArticles });
+  };
 
-const prixArticle = (categorie) => {
-  if (categorie.toLowerCase().includes("hoodie")) return 40;
-  return 20;
-};
+  const totalCommande = commande.articles.reduce(
+    (total, article) => total + Number(article.prix) * Number(article.quantite),
+    0
+  );
 
-const totalCommande = commande.articles.reduce(
-  (total, article) =>
-    total + prixArticle(article.categorie) * Number(article.quantite),
-  0
-);
-                                                    
-const envoyerCommande = () => {
-const resumeCommande =
-  commande.articles
-    .map(
-      (article, index) =>
-        `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} • Taille ${article.taille} • Qté ${article.quantite} • ${prixArticle(article.categorie)} $`
-    )
-    .join("\n") +
-  `\n\nTOTAL : ${totalCommande} $`;
+  const envoyerCommande = () => {
+    if (!user) {
+      alert("Vous devez être connecté pour passer une commande.");
+      return;
+    }
 
-     const params = {
-  nom: commande.nom,
-  courriel: commande.courriel,
-  telephone: commande.telephone,
-  commande: resumeCommande,
-  notes: commande.notes,
-  total_commande: totalCommande,
-  to_email: commande.courriel,
-};
-  
-const googleSheetPromise = fetch(
-  "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec",
-  {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({
+    if (commande.articles.length === 0) {
+      alert("Veuillez sélectionner au moins un article.");
+      return;
+    }
+
+    const resumeCommande =
+      commande.articles
+        .map(
+          (article, index) =>
+            `Article #${index + 1} : ${article.categorie} | Modèle ${article.modele} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
+        )
+        .join("\n") + `\n\nTOTAL : ${totalCommande} $`;
+
+    const params = {
       nom: commande.nom,
       courriel: commande.courriel,
       telephone: commande.telephone,
+      commande: resumeCommande,
       notes: commande.notes,
-      articles: commande.articles.map((article) => ({
-        modele: `${article.categorie} - Modèle ${article.modele}`,
-        taille: article.taille,
-        quantite: article.quantite,
-        prix: prixArticle(article.categorie),
-        total: prixArticle(article.categorie) * Number(article.quantite),
-      })),
-    }),
-  }
-);
+      total_commande: totalCommande,
+      to_email: commande.courriel,
+    };
 
-Promise.all([
-  googleSheetPromise,
-  emailjs.send(
-    "service_f4h3rii",
-    "template_nwl643g",
-    params,
-    "ZooBSx9i6qVl5HI8T"
-  ),
-  emailjs.send(
-    "service_f4h3rii",
-    "template_c5ab7bt",
-    params,
-    "ZooBSx9i6qVl5HI8T"
-  ),
-])
-  .then(() => {
-    alert("Commande envoyée avec succès !");
+    const googleSheetPromise = fetch(
+      "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec",
+      {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+          nom: commande.nom,
+          courriel: commande.courriel,
+          telephone: commande.telephone,
+          notes: commande.notes,
+          total: totalCommande,
+          articles: commande.articles.map((article) => ({
+            modele: `${article.categorie} - Modèle ${article.modele}`,
+            taille: article.taille,
+            quantite: article.quantite,
+            prix: article.prix,
+            total: Number(article.prix) * Number(article.quantite),
+          })),
+        }),
+      }
+    );
 
-    setCommande({
-      articles: [],
-      nom: "",
-      courriel: "",
-      telephone: "",
-      notes: "",
-    });
+    Promise.all([
+      googleSheetPromise,
+      emailjs.send("service_f4h3rii", "template_nwl643g", params, "ZooBSx9i6qVl5HI8T"),
+      emailjs.send("service_f4h3rii", "template_c5ab7bt", params, "ZooBSx9i6qVl5HI8T"),
+    ])
+      .then(() => {
+        alert("Commande envoyée avec succès !");
 
-    setProduitSelectionne(null);
-  })
-  .catch((error) => {
-    alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
-    console.error(error);
-  });
-};
+        setCommande({
+          articles: [],
+          nom: commande.nom,
+          courriel: commande.courriel,
+          telephone: commande.telephone,
+          notes: "",
+        });
+
+        setProduitSelectionne(null);
+      })
+      .catch((error) => {
+        alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
+        console.error(error);
+      });
+  };
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        LVPSA
-      </p>
+      <p className="font-bold uppercase tracking-wider text-amber-300">LVPSA</p>
 
       <h1 className="mt-2 text-5xl font-black">Boutique</h1>
 
       <p className="mt-4 text-xl text-slate-300">
-  Collection Beach Volleyball 2026
-</p>
+        Collection Beach Volleyball 2026
+      </p>
 
-<div className="mt-8 mb-10 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
-  <h2 className="text-2xl font-black text-amber-300">
-    Comment commander
-  </h2>
-
-  <p className="mt-3 text-slate-300">
-    Cliquez simplement sur le vêtement désiré pour l'ajouter à votre commande.
-    Une fenêtre s'ouvrira afin de sélectionner la taille et la quantité.
-    Les articles sélectionnés apparaîtront automatiquement dans le résumé de la commande.
-  </p>
-
-</div>
-      
-      <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
-  <img
-    src="/boutique-lvpsa.png"
-    alt="Collection LVPSA"
-    className="w-full object-cover"
-  />
-</div>
-
-     <div className="mt-12 space-y-10">
-  {[
-    ["T-shirts homme", "T-shirts femme"],
-    ["Camisoles homme", "Camisoles femme"],
-    ["Hoodies homme", "Hoodies femme"],
-  ].map((rangee) => (
-    <div key={rangee.join("-")}>
-      <h2 className="mb-4 text-2xl font-black text-amber-300">
-        {rangee.join(" / ")}
-      </h2>
-
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8">
-        {produits
-          .filter((produit) => rangee.includes(produit.categorie))
-          .map((produit) => (
-            <button
-              key={`${produit.categorie}-${produit.modele}`}
-              type="button"
-              onClick={() => {
-                setProduitSelectionne(produit);
-                setPopupCommande({
-                  taille: "M",
-                  couleur: "Noir",
-                  quantite: 1,
-                });
-              }}
-              className="rounded-3xl border border-white/10 bg-white/5 p-3 text-left hover:border-amber-300"
-            >
-              <img
-                src={produit.image}
-                alt={`${produit.categorie} modèle ${produit.modele}`}
-                className="h-40 w-full rounded-2xl object-cover bg-white/10"
-              />
-
-              <p className="mt-3 text-sm font-bold text-white">
-                {produit.categorie}
-              </p>
-
-              <p className="text-sm text-amber-300">
-                Modèle {produit.modele}
-              </p>
-            </button>
-          ))}
-      </div>
-    </div>
-  ))}
-</div>
-
-{produitSelectionne && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
-    <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <p className="text-sm uppercase tracking-wider text-amber-300">
-            Ajouter à la commande
-          </p>
-
-          <h2 className="mt-2 text-3xl font-black">
-            {produitSelectionne.categorie}
+      {!user && (
+        <div className="mt-8 rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
+          <h2 className="text-2xl font-black text-amber-300">
+            Connexion requise pour commander
           </h2>
 
-          <p className="mt-1 text-slate-300">
-            Modèle {produitSelectionne.modele}
+          <p className="mt-3 text-slate-300">
+            Vous pouvez consulter la boutique, mais vous devez avoir un compte LVPSA pour envoyer une commande.
           </p>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => setProduitSelectionne(null)}
-          className="rounded-full border border-white/10 px-4 py-2 text-sm"
-        >
-          Fermer
-        </button>
+          <Link
+            to="/connexion"
+            className="mt-5 inline-flex rounded-full bg-amber-400 px-7 py-3 font-black text-slate-950 hover:bg-amber-300"
+          >
+            Se connecter
+          </Link>
+        </div>
+      )}
+
+      <div className="mt-8 mb-10 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
+        <h2 className="text-2xl font-black text-amber-300">Comment commander</h2>
+
+        <p className="mt-3 text-slate-300">
+          Cliquez sur le vêtement désiré, choisissez la taille et la quantité.
+          Vous pourrez voir le devant et le dos de chaque modèle avant de l’ajouter à votre commande.
+        </p>
       </div>
 
-      <img
-        src={produitSelectionne.image}
-        alt={produitSelectionne.categorie}
-        className="mt-6 h-72 w-full rounded-2xl object-contain bg-white"
-      />
-
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <select
-          className="rounded-2xl px-4 py-3 text-slate-950"
-          value={popupCommande.taille}
-          onChange={(e) =>
-            setPopupCommande({ ...popupCommande, taille: e.target.value })
-          }
-        >
-          <option>XS</option>
-          <option>S</option>
-          <option>M</option>
-          <option>L</option>
-          <option>XL</option>
-          <option>XXL</option>
-        </select>
-
-        <input
-          type="number"
-          min="1"
-          className="rounded-2xl px-4 py-3 text-slate-950"
-          value={popupCommande.quantite}
-          onChange={(e) =>
-            setPopupCommande({ ...popupCommande, quantite: e.target.value })
-          }
+      <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
+        <img
+          src="/boutique-lvpsa.png"
+          alt="Collection LVPSA"
+          className="w-full object-cover"
         />
       </div>
 
-      <button
-        type="button"
-        onClick={() => {
-          setCommande({
-            ...commande,
-            articles: [
-              ...commande.articles,
-              {
-  categorie: produitSelectionne.categorie,
-  modele: produitSelectionne.modele,
-  quantite: popupCommande.quantite,
-  taille: popupCommande.taille,
-}
-            ],
-          });
+      <div className="mt-12 space-y-10">
+        {[
+          ["T-shirts homme", "T-shirts femme"],
+          ["Camisoles homme", "Camisoles femme"],
+          ["Hoodies unisex"],
+        ].map((rangee) => (
+          <div key={rangee.join("-")}>
+            <h2 className="mb-4 text-2xl font-black text-amber-300">
+              {rangee.join(" / ")}
+            </h2>
 
-          setProduitSelectionne(null);
-        }}
-        className="mt-6 w-full rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-      >
-        Ajouter à ma commande
-      </button>
-    </div>
-  </div>
-)}
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5">
+              {produits
+                .filter((produit) => rangee.includes(produit.categorie))
+                .map((produit) => (
+                  <button
+                    key={`${produit.categorie}-${produit.modele}`}
+                    type="button"
+                    onClick={() => {
+                      setProduitSelectionne(produit);
+                      setVueProduit("devant");
+                      setPopupCommande({
+                        taille: "M",
+                        quantite: 1,
+                      });
+                    }}
+                    className="rounded-3xl border border-white/10 bg-white/5 p-3 text-left hover:border-amber-300"
+                  >
+                    <img
+                      src={produit.imageDevant}
+                      alt={`${produit.categorie} modèle ${produit.modele}`}
+                      className="h-40 w-full rounded-2xl bg-white/10 object-cover"
+                    />
+
+                    <p className="mt-3 text-sm font-bold text-white">
+                      {produit.categorie}
+                    </p>
+
+                    <p className="text-sm text-amber-300">
+                      Modèle {produit.modele} — {produit.prix} $
+                    </p>
+                  </button>
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {produitSelectionne && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
+          <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-6">
+              <div>
+                <p className="text-sm uppercase tracking-wider text-amber-300">
+                  Ajouter à la commande
+                </p>
+
+                <h2 className="mt-2 text-3xl font-black">
+                  {produitSelectionne.categorie}
+                </h2>
+
+                <p className="mt-1 text-slate-300">
+                  Modèle {produitSelectionne.modele} — {produitSelectionne.prix} $
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setProduitSelectionne(null)}
+                className="rounded-full border border-white/10 px-4 py-2 text-sm"
+              >
+                Fermer
+              </button>
+            </div>
+
+            <div className="mt-6">
+              <img
+                src={
+                  vueProduit === "devant"
+                    ? produitSelectionne.imageDevant
+                    : produitSelectionne.imageDos
+                }
+                alt={produitSelectionne.categorie}
+                className="h-72 w-full rounded-2xl bg-white object-contain"
+              />
+
+              <div className="mt-4 flex justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setVueProduit("devant")}
+                  className={`rounded-full px-5 py-2 font-bold ${
+                    vueProduit === "devant"
+                      ? "bg-amber-400 text-slate-950"
+                      : "border border-white/15 text-white"
+                  }`}
+                >
+                  Devant
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setVueProduit("dos")}
+                  className={`rounded-full px-5 py-2 font-bold ${
+                    vueProduit === "dos"
+                      ? "bg-amber-400 text-slate-950"
+                      : "border border-white/15 text-white"
+                  }`}
+                >
+                  Dos
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <select
+                className="rounded-2xl px-4 py-3 text-slate-950"
+                value={popupCommande.taille}
+                onChange={(e) =>
+                  setPopupCommande({ ...popupCommande, taille: e.target.value })
+                }
+              >
+                <option>XS</option>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+                <option>XXL</option>
+              </select>
+
+              <input
+                type="number"
+                min="1"
+                className="rounded-2xl px-4 py-3 text-slate-950"
+                value={popupCommande.quantite}
+                onChange={(e) =>
+                  setPopupCommande({
+                    ...popupCommande,
+                    quantite: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setCommande({
+                  ...commande,
+                  articles: [
+                    ...commande.articles,
+                    {
+                      categorie: produitSelectionne.categorie,
+                      modele: produitSelectionne.modele,
+                      prix: produitSelectionne.prix,
+                      quantite: popupCommande.quantite,
+                      taille: popupCommande.taille,
+                    },
+                  ],
+                });
+
+                setProduitSelectionne(null);
+              }}
+              className="mt-6 w-full rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+            >
+              Ajouter à ma commande
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-16 grid gap-8 lg:grid-cols-2">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-3xl font-black">Résumé de la commande</h2>
 
-  <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-    <h2 className="text-3xl font-black">
-      Résumé de la commande
-    </h2>
+          <div className="mt-6 space-y-3">
+            {commande.articles.length === 0 ? (
+              <p className="text-slate-400">Aucun article sélectionné.</p>
+            ) : (
+              commande.articles.map((article, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => retirerArticle(index)}
+                  className="w-full rounded-2xl border border-white/10 bg-black/20 p-4 text-left hover:border-red-400/50"
+                >
+                  <div className="font-bold text-amber-300">
+                    {article.categorie}
+                  </div>
 
-    <div className="mt-6 space-y-3">
-      {commande.articles.length === 0 ? (
-        <p className="text-slate-400">
-          Aucun article sélectionné.
-        </p>
-      ) : (
-        commande.articles.map((article, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => retirerArticle(index)}
-            className="w-full rounded-2xl border border-white/10 bg-black/20 p-4 text-left hover:border-red-400/50"
-          >
-            <div className="font-bold text-amber-300">
-              {article.categorie}
-            </div>
+                  <div className="text-sm text-slate-300">
+                    Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite} • Total :{" "}
+                    {Number(article.prix) * Number(article.quantite)} $
+                  </div>
 
-            <div className="text-sm text-slate-300">
-              Modèle {article.modele} • Taille {article.taille} • Qté {article.quantite} • Total : {prixArticle(article.categorie) * Number(article.quantite)} $
-            </div>
+                  <div className="mt-2 text-xs text-red-300">
+                    Cliquer pour retirer
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        </div>
 
-            <div className="mt-2 text-xs text-red-300">
-              Cliquer pour retirer
-            </div>
-          </button>
-        ))
-      )}
-    </div>
-  </div>
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-3xl font-black">Informations du client</h2>
 
-  <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-    <h2 className="text-3xl font-black">
-      Informations du client
-    </h2>
+          <div className="mt-5 grid gap-4">
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Votre nom"
+              value={commande.nom}
+              onChange={(e) => setCommande({ ...commande, nom: e.target.value })}
+            />
 
-    <div className="mt-5 grid gap-4">
-      <input
-        className="rounded-2xl px-4 py-3 text-slate-950"
-        placeholder="Votre nom"
-        value={commande.nom}
-        onChange={(e) =>
-          setCommande({ ...commande, nom: e.target.value })
-        }
-      />
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Votre courriel"
+              value={commande.courriel}
+              onChange={(e) =>
+                setCommande({ ...commande, courriel: e.target.value })
+              }
+            />
 
-      <input
-        className="rounded-2xl px-4 py-3 text-slate-950"
-        placeholder="Votre courriel"
-        value={commande.courriel}
-        onChange={(e) =>
-          setCommande({ ...commande, courriel: e.target.value })
-        }
-      />
+            <input
+              className="rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Téléphone"
+              value={commande.telephone}
+              maxLength={12}
+              onChange={(e) =>
+                setCommande({
+                  ...commande,
+                  telephone: formatTelephone(e.target.value),
+                })
+              }
+            />
 
-      <input
-        className="rounded-2xl px-4 py-3 text-slate-950"
-        placeholder="Téléphone"
-        value={commande.telephone}
-        maxLength={12}
-        onChange={(e) =>
-          setCommande({...commande,telephone: formatTelephone(e.target.value),})
-        }
-      />
+            <textarea
+              className="min-h-32 rounded-2xl px-4 py-3 text-slate-950"
+              placeholder="Notes ou demandes spéciales"
+              value={commande.notes}
+              onChange={(e) =>
+                setCommande({ ...commande, notes: e.target.value })
+              }
+            />
 
-      <textarea
-        className="min-h-32 rounded-2xl px-4 py-3 text-slate-950"
-        placeholder="Notes ou demandes spéciales"
-        value={commande.notes}
-        onChange={(e) =>
-          setCommande({ ...commande, notes: e.target.value })
-        }
-      />
+            {commande.articles.length > 0 && (
+              <div className="mt-6 rounded-2xl bg-amber-400 p-4 text-right text-xl font-black text-slate-950">
+                Total : {totalCommande} $
+              </div>
+            )}
 
-       {commande.articles.length > 0 && (
-  <div className="mt-6 rounded-2xl bg-amber-400 p-4 text-right text-xl font-black text-slate-950">
-    Total : {totalCommande} $
-  </div>
-)}
-
-      <button
-        type="button"
-        onClick={envoyerCommande}
-        className="rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-      >
-        Envoyer ma commande
-      </button>
-    </div>
-  </div>
-</div>
-
-      </section>
-);
+            <button
+              type="button"
+              onClick={envoyerCommande}
+              className="rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
+            >
+              Envoyer ma commande
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function Calendrier() {
