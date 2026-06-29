@@ -3537,44 +3537,80 @@ function GestionEquipe({ userData }) {
   ];
 
   useEffect(() => {
-    const chargerRemplacants = async () => {
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      const remplacementsSnapshot = await getDocs(collection(db, "remplacements"));
+  const normaliserCategorie = (valeur) => {
+    const texte = String(valeur || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-")
+      .trim();
 
-      const listeUsers = usersSnapshot.docs.map((docItem) => ({
-        id: docItem.id,
-        ...docItem.data(),
-      }));
+    if (texte.includes("recreatif")) return "recreatif";
+    if (texte.includes("competitif")) return "competitif";
+    if (texte.includes("deux")) return "les-deux";
 
-      const listeRemplacants = remplacementsSnapshot.docs.map((docItem) => ({
-        id: docItem.id,
-        ...docItem.data(),
-      }));
+    return texte;
+  };
 
-      setRemplacants(
-        listeRemplacants.filter((membre) => {
-          const categories = Array.isArray(membre.categories)
-            ? membre.categories
-            : [membre.categorie].filter(Boolean);
+  const extraireCategories = (membre) => {
+    const valeurs = Array.isArray(membre.categories)
+      ? membre.categories
+      : [membre.categorie].filter(Boolean);
 
-          return (
-            membre.disponible === true &&
-            categories.includes(userData.categorie)
-          );
-        })
-      );
-      
-      setJoueurs(
-        listeUsers.filter(
-          (membre) =>
-            membre.equipeId === userData.equipeId &&
-            membre.role === "joueur"
-        )
-      );
-    };
+    const categories = valeurs.flatMap((valeur) => {
+      const categorie = normaliserCategorie(valeur);
 
-    chargerRemplacants();
-  }, [userData.categorie, userData.equipeId]);
+      if (categorie === "les-deux") {
+        return ["recreatif", "competitif"];
+      }
+
+      return [categorie];
+    });
+
+    return [...new Set(categories)];
+  };
+
+  const chargerRemplacants = async () => {
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    const remplacementsSnapshot = await getDocs(collection(db, "remplacements"));
+
+    const listeUsers = usersSnapshot.docs.map((docItem) => ({
+      id: docItem.id,
+      ...docItem.data(),
+    }));
+
+    const listeRemplacants = remplacementsSnapshot.docs.map((docItem) => ({
+      id: docItem.id,
+      ...docItem.data(),
+    }));
+
+    const categorieEquipe = normaliserCategorie(userData.categorie);
+
+    setRemplacants(
+      listeRemplacants.filter((membre) => {
+        const categoriesRemplacant = extraireCategories(membre);
+
+        return (
+          membre.disponible === true &&
+          (
+            !categorieEquipe ||
+            categoriesRemplacant.includes(categorieEquipe)
+          )
+        );
+      })
+    );
+
+    setJoueurs(
+      listeUsers.filter(
+        (membre) =>
+          membre.equipeId === userData.equipeId &&
+          membre.role === "joueur"
+      )
+    );
+  };
+
+  chargerRemplacants();
+}, [userData.categorie, userData.equipeId]);
     if (userData?.role !== "capitaine" && !userData?.isAdmin) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
@@ -3742,7 +3778,6 @@ function GestionEquipe({ userData }) {
   </div>
 )}
 
-        {dateSelectionnee && (
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {remplacantsFiltres.length > 0 ? (
               remplacantsFiltres.map((membre) => (
@@ -3762,10 +3797,9 @@ function GestionEquipe({ userData }) {
                     📧 {membre.email || "Courriel non disponible"}
                   </p>
 
-                  {membre.enToutTemps && (
-                    <p className="mt-4 font-bold text-emerald-300">
-                      Disponible en tout temps
-                    </p>
+                  <p className="mt-4 text-slate-300">
+  Voici les joueurs indépendants disponibles dans votre catégorie. Sélectionnez une date seulement lorsque vous voulez confirmer officiellement un remplacement.
+</p>
                   )}
 
                   {membre.commentaire && (
@@ -3799,7 +3833,6 @@ function GestionEquipe({ userData }) {
               <p className="text-slate-300">
                 Aucun remplaçant disponible pour cette date.
               </p>
-            )}
           </div>
         )}
       </div>
