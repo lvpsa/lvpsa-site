@@ -33,6 +33,8 @@ import { produitsBoutique } from "./data/produits";
 
 import { useInventaire } from "./hooks/useInventaire";
 
+import BoutiquesV2 from "./pages/BoutiquesV2";
+
 import {
   Calendar,
   Trophy,
@@ -69,6 +71,7 @@ export default function App() {
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/tournoi/horaire" element={<HoraireTournoi />} />
           <Route path="/boutique" element={<BoutiqueProtegee />} />
+          <Route path="/boutique-v2" element={<BoutiquesV2 />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           <Route path="/ligue" element={<Ligue />} />
