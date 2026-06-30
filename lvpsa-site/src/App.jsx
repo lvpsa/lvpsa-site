@@ -29,6 +29,8 @@ import {
 
 import { produitsBoutique } from "./boutique/produits";
 
+import { produitsBoutique } from "./data/produits";
+
 import {
   Calendar,
   Trophy,
