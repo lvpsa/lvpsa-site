@@ -16,8 +16,6 @@ import {
 } from "firebase/auth";
 
 import {
-  collection,
-  getDocs,
   doc,
   getDoc,
   setDoc,
@@ -2428,31 +2426,6 @@ function Boutique() {
     telephone: "",
     notes: "",
   });
-
-  const [inventaire, setInventaire] = useState({});
-const [chargementInventaire, setChargementInventaire] = useState(true);
-
-useEffect(() => {
-  const chargerInventaire = async () => {
-    try {
-      const snap = await getDocs(collection(db, "inventaireBoutique"));
-
-      const data = {};
-
-      snap.docs.forEach((docItem) => {
-        data[docItem.id] = docItem.data();
-      });
-
-      setInventaire(data);
-    } catch (error) {
-      console.error("Erreur inventaire :", error);
-    } finally {
-      setChargementInventaire(false);
-    }
-  };
-
-  chargerInventaire();
-}, []);
   
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -2479,12 +2452,11 @@ useEffect(() => {
 
   const produits = produitsBoutique;
 
-  const {
-  chargementInventaire,
+ const {
   statutInventaire,
   deduireInventaire,
 } = useInventaire();
-
+  
   const grandeursDisponibles = (produit) => {
     if (produit.sexe === "homme") {
       return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
