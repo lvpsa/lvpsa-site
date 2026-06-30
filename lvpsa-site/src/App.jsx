@@ -2666,17 +2666,21 @@ function Boutique() {
         </div>
       )}
 
-      <div className="mt-8 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
+<div className="mt-8 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
   <h2 className="text-2xl font-black text-amber-300">
     Comment commander
   </h2>
 
   <p className="mt-3 text-slate-300 leading-relaxed">
-    Cliquez sur un vêtement pour voir les photos du devant et du dos, sélectionnez
-    la grandeur désirée, puis ajoutez-le à votre commande. Une fois votre commande
-    prête, nous communiquerons avec vous pour la récupération. Le paiement
-    s'effectuera au moment de la récupération, en argent comptant ou par virement
-    Interac à <span className="font-semibold text-amber-300">liguevpsa@gmail.com</span>.
+    Bienvenue dans la boutique officielle de la LVPSA! Parcourez notre collection,
+    sélectionnez le vêtement de votre choix, choisissez la grandeur désirée et
+    ajoutez-le à votre commande. Dès que celle-ci sera prête, nous communiquerons
+    avec vous afin de convenir d'un moment pour la récupération. Le paiement
+    s'effectue lors de la remise de votre commande, en argent comptant ou par
+    virement Interac à
+    <span className="font-semibold text-amber-300">
+      {" "}liguevpsa@gmail.com
+    </span>.
   </p>
 </div>
 
