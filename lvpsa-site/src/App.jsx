@@ -25,8 +25,6 @@ import {
   increment,
 } from "firebase/firestore";
 
-import { produitsBoutique } from "./boutique/produits";
-
 import { produitsBoutique } from "./data/produits";
 
 import { useInventaire } from "./hooks/useInventaire";
