@@ -15,7 +15,19 @@ import {
   sendPasswordResetEmail
 } from "firebase/auth";
 
-import { collection, getDocs, doc, getDoc, setDoc, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+  serverTimestamp,
+  writeBatch,
+  increment,
+} from "firebase/firestore";
+
+import { produitsBoutique } from "./boutique/produits";
 
 import {
   Calendar,
@@ -2381,6 +2393,31 @@ function Boutique() {
     notes: "",
   });
 
+  const [inventaire, setInventaire] = useState({});
+const [chargementInventaire, setChargementInventaire] = useState(true);
+
+useEffect(() => {
+  const chargerInventaire = async () => {
+    try {
+      const snap = await getDocs(collection(db, "inventaireBoutique"));
+
+      const data = {};
+
+      snap.docs.forEach((docItem) => {
+        data[docItem.id] = docItem.data();
+      });
+
+      setInventaire(data);
+    } catch (error) {
+      console.error("Erreur inventaire :", error);
+    } finally {
+      setChargementInventaire(false);
+    }
+  };
+
+  chargerInventaire();
+}, []);
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -2404,108 +2441,7 @@ function Boutique() {
     return () => unsubscribe();
   }, []);
 
-  const produits = [
-    {
-      type: "T-shirt",
-      categorie: "T-shirt Homme",
-      modele: "T-shirts homme Or",
-      sexe: "homme",
-      couleur: "Or",
-      prix: 20,
-      imageDevant: "/tshirt-homme-or-devant.png",
-      imageDos: "/tshirt-homme-or-dos.png",
-    },
-    {
-      type: "T-shirt",
-      categorie: "T-shirt Homme",
-      modele: "T-shirts homme Sable",
-      sexe: "homme",
-      couleur: "Sable",
-      prix: 20,
-      imageDevant: "/tshirt-homme-sable-devant.png",
-      imageDos: "/tshirt-homme-sable-dos.png",
-    },
-    {
-      type: "T-shirt",
-      categorie: "T-shirt Femme",
-      modele: "T-shirts femme Blanc",
-      sexe: "femme",
-      couleur: "Blanc",
-      prix: 20,
-      imageDevant: "/tshirt-femme-blanc-devant.png",
-      imageDos: "/tshirt-femme-blanc-dos.png",
-    },
-    {
-      type: "T-shirt",
-      categorie: "T-shirt Femme",
-      modele: "T-shirts femme Rose",
-      sexe: "femme",
-      couleur: "Rose",
-      prix: 20,
-      imageDevant: "/tshirt-femme-rose-devant.png",
-      imageDos: "/tshirt-femme-rose-dos.png",
-    },
-    {
-      type: "Camisole",
-      categorie: "Camisole Homme",
-      modele: "Camisoles homme Blanc",
-      sexe: "homme",
-      couleur: "Blanc",
-      prix: 20,
-      imageDevant: "/camisole-homme-blanc-devant.png",
-      imageDos: "/camisole-homme-blanc-dos.png",
-    },
-    {
-      type: "Camisole",
-      categorie: "Camisole Homme",
-      modele: "Camisoles homme Marine",
-      sexe: "homme",
-      couleur: "Marine",
-      prix: 20,
-      imageDevant: "/camisole-homme-marin-devant.png",
-      imageDos: "/camisole-homme-marin-dos.png",
-    },
-    {
-      type: "Camisole",
-      categorie: "Camisole Femme",
-      modele: "Camisoles femme Bleu",
-      sexe: "femme",
-      couleur: "Bleu",
-      prix: 20,
-      imageDevant: "/camisole-femme-bleue-devant.png",
-      imageDos: "/camisole-femme-bleue-dos.png",
-    },
-    {
-      type: "Camisole",
-      categorie: "Camisole Femme",
-      modele: "Camisoles femme Rose",
-      sexe: "femme",
-      couleur: "Rose",
-      prix: 20,
-      imageDevant: "/camisole-femme-rose-devant.png",
-      imageDos: "/camisole-femme-rose-dos.png",
-    },
-    {
-      type: "Hoodie",
-      categorie: "Hoodie Unisex",
-      modele: "Hoodies unisex Marine",
-      sexe: "unisex",
-      couleur: "Marine",
-      prix: 40,
-      imageDevant: "/hoodie-unisex-marin-devant.png",
-      imageDos: "/hoodie-unisex-marin-dos.png",
-    },
-    {
-      type: "Hoodie",
-      categorie: "Hoodie Unisex",
-      modele: "Hoodies unisex Or",
-      sexe: "unisex",
-      couleur: "Or",
-      prix: 40,
-      imageDevant: "/hoodie-unisex-or-devant.png",
-      imageDos: "/hoodie-unisex-or-dos.png",
-    },
-  ];
+  const produits = produitsBoutique;
 
   const grandeursDisponibles = (produit) => {
     if (produit.sexe === "homme") {
@@ -2519,21 +2455,22 @@ function Boutique() {
     return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
   };
 
-  const estEnInventaire = (produit, taille) => {
-    if (produit.sexe === "homme") {
-      return ["M", "L", "XL", "XXL"].includes(taille);
-    }
+  const cleInventaire = (produit, taille) => {
+  return `${produit.id}_${taille}`;
+};
 
-    if (produit.sexe === "femme") {
-      return ["S", "M", "L"].includes(taille);
-    }
+const quantiteInventaire = (produit, taille) => {
+  const cle = cleInventaire(produit, taille);
+  return Number(inventaire[cle]?.quantite || 0);
+};
 
-    if (produit.sexe === "unisex") {
-      return ["S", "M", "L", "XL", "XXL"].includes(taille);
-    }
+const statutInventaire = (produit, taille) => {
+  const quantite = quantiteInventaire(produit, taille);
 
-    return false;
-  };
+  if (quantite >= 4) return "🟢 en inventaire";
+  if (quantite >= 1) return "🟡 dernières quantités";
+  return "🔶 sur commande";
+};
 
   const retirerArticle = (index) => {
     setCommande({
@@ -2548,7 +2485,7 @@ function Boutique() {
     0
   );
 
-  const envoyerCommande = () => {
+  const envoyerCommande = async () => {
     if (!user) {
       alert("Vous devez être connecté pour passer une commande.");
       return;
@@ -2600,38 +2537,59 @@ function Boutique() {
       }
     );
 
-    Promise.all([
-      googleSheetPromise,
-      emailjs.send(
-        "service_f4h3rii",
-        "template_nwl643g",
-        params,
-        "ZooBSx9i6qVl5HI8T"
-      ),
-      emailjs.send(
-        "service_f4h3rii",
-        "template_c5ab7bt",
-        params,
-        "ZooBSx9i6qVl5HI8T"
-      ),
-    ])
-      .then(() => {
-        alert("Commande envoyée avec succès !");
+    try {
+  await Promise.all([
+    googleSheetPromise,
+    emailjs.send(
+      "service_f4h3rii",
+      "template_nwl643g",
+      params,
+      "ZooBSx9i6qVl5HI8T"
+    ),
+    emailjs.send(
+      "service_f4h3rii",
+      "template_c5ab7bt",
+      params,
+      "ZooBSx9i6qVl5HI8T"
+    ),
+  ]);
 
-        setCommande({
-          articles: [],
-          nom: commande.nom,
-          courriel: commande.courriel,
-          telephone: commande.telephone,
-          notes: "",
-        });
+  const batch = writeBatch(db);
 
-        setProduitSelectionne(null);
-      })
-      .catch((error) => {
-        alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
-        console.error(error);
-      });
+  commande.articles.forEach((article) => {
+    const ref = doc(
+      db,
+      "inventaireBoutique",
+      `${article.produitId}_${article.taille}`
+    );
+
+    batch.set(
+      ref,
+      {
+        quantite: increment(-Number(article.quantite)),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  });
+
+  await batch.commit();
+
+  alert("Commande envoyée avec succès !");
+
+  setCommande({
+    articles: [],
+    nom: commande.nom,
+    courriel: commande.courriel,
+    telephone: commande.telephone,
+    notes: "",
+  });
+
+  setProduitSelectionne(null);
+} catch (error) {
+  alert("Erreur lors de l’envoi de la commande. Veuillez réessayer.");
+  console.error(error);
+}
   };
 
   return (
@@ -2822,9 +2780,7 @@ function Boutique() {
                   {grandeursDisponibles(produitSelectionne).map((taille) => (
                     <option key={taille} value={taille}>
                       {taille}
-                      {estEnInventaire(produitSelectionne, taille)
-                        ? " — en inventaire"
-                        : " — sur commande"}
+                      {` — ${statutInventaire(produitSelectionne, taille)}`}
                     </option>
                   ))}
                 </select>
@@ -2859,6 +2815,7 @@ function Boutique() {
                       articles: [
                         ...commande.articles,
                         {
+                          produitId: produitSelectionne.id,
                           categorie: produitSelectionne.categorie,
                           modele: produitSelectionne.modele,
                           couleur: produitSelectionne.couleur,
@@ -2866,7 +2823,7 @@ function Boutique() {
                           quantite: quantite,
                           taille: popupCommande.taille,
                           image: produitSelectionne.imageDevant,
-                        },
+                        }
                       ],
                     });
 
