@@ -31,6 +31,8 @@ import { produitsBoutique } from "./boutique/produits";
 
 import { produitsBoutique } from "./data/produits";
 
+import { useInventaire } from "./hooks/useInventaire";
+
 import {
   Calendar,
   Trophy,
@@ -2445,6 +2447,12 @@ useEffect(() => {
 
   const produits = produitsBoutique;
 
+  const {
+  chargementInventaire,
+  statutInventaire,
+  deduireInventaire,
+} = useInventaire();
+
   const grandeursDisponibles = (produit) => {
     if (produit.sexe === "homme") {
       return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
@@ -2456,23 +2464,6 @@ useEffect(() => {
 
     return ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
   };
-
-  const cleInventaire = (produit, taille) => {
-  return `${produit.id}_${taille}`;
-};
-
-const quantiteInventaire = (produit, taille) => {
-  const cle = cleInventaire(produit, taille);
-  return Number(inventaire[cle]?.quantite || 0);
-};
-
-const statutInventaire = (produit, taille) => {
-  const quantite = quantiteInventaire(produit, taille);
-
-  if (quantite >= 4) return "🟢 en inventaire";
-  if (quantite >= 1) return "🟡 dernières quantités";
-  return "🔶 sur commande";
-};
 
   const retirerArticle = (index) => {
     setCommande({
@@ -2556,26 +2547,7 @@ const statutInventaire = (produit, taille) => {
     ),
   ]);
 
-  const batch = writeBatch(db);
-
-  commande.articles.forEach((article) => {
-    const ref = doc(
-      db,
-      "inventaireBoutique",
-      `${article.produitId}_${article.taille}`
-    );
-
-    batch.set(
-      ref,
-      {
-        quantite: increment(-Number(article.quantite)),
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
-  });
-
-  await batch.commit();
+  await deduireInventaire(commande.articles);
 
   alert("Commande envoyée avec succès !");
 
@@ -2782,7 +2754,7 @@ const statutInventaire = (produit, taille) => {
                   {grandeursDisponibles(produitSelectionne).map((taille) => (
                     <option key={taille} value={taille}>
                       {taille}
-                      {` — ${statutInventaire(produitSelectionne, taille)}`}
+                      {` — ${statutInventaire(produitSelectionne.id, taille)}`}
                     </option>
                   ))}
                 </select>
