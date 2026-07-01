@@ -118,7 +118,7 @@ export default function BoutiquesV2() {
                       </p>
 
                       <p className="mt-2 text-sm font-bold text-slate-300">
-                        {statutInventaire(produit.id, tailleDefaut)}
+                        {statutInventaire(produit.id, produit.couleurs[0].id, tailleDefaut)}
                       </p>
 
                       <p className="mt-2 text-xl font-black text-amber-300">
@@ -227,7 +227,7 @@ export default function BoutiquesV2() {
                   </p>
 
                   <p className="mt-1 text-lg font-black text-amber-300">
-                    {statutInventaire(produitSelectionne.id, taille)}
+                    {statutInventaire(produitSelectionne.id, couleurSelectionnee.id, taille).id, taille)}
                   </p>
 
                   <p className="mt-1 text-sm text-slate-400">
