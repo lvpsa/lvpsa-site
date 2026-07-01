@@ -347,13 +347,6 @@ export default function BoutiquesV2() {
         </div>
       )}
 
-<PanierV2
-  panier={panier}
-  setPanier={setPanier}
-  total={total}
-  onCommander={() => alert("Prochaine étape : formulaire de commande")}
-/>
-
                   <div className="flex-1">
                     <p className="font-bold text-amber-300">{article.nom}</p>
 
