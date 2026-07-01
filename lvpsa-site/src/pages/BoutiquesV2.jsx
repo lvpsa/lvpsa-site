@@ -227,7 +227,7 @@ export default function BoutiquesV2() {
                   </p>
 
                   <p className="mt-1 text-lg font-black text-amber-300">
-                    {statutInventaire(produitSelectionne.id, couleurSelectionnee.id, taille).id, taille)}
+                    {statutInventaire(produitSelectionne.id, couleurSelectionnee.id, taille)}
                   </p>
 
                   <p className="mt-1 text-sm text-slate-400">
