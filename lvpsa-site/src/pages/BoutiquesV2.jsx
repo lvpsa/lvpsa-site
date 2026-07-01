@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { chargerProduitsBoutique } from "../services/firebaseBoutique";
 import { useInventaire } from "../hooks/useInventaire";
+import PanierV2 from "../components/boutique/PanierV2";
 
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
@@ -346,24 +347,12 @@ export default function BoutiquesV2() {
         </div>
       )}
 
-      <div className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h2 className="text-3xl font-black">Panier de test</h2>
-
-        <div className="mt-6 space-y-3">
-          {panier.length === 0 ? (
-            <p className="text-slate-400">Aucun article sélectionné.</p>
-          ) : (
-            panier.map((article, index) => (
-              <div
-                key={`${article.produitId}-${article.couleurId}-${article.taille}-${index}`}
-                className="rounded-2xl border border-white/10 bg-black/20 p-4"
-              >
-                <div className="flex gap-4">
-                  <img
-                    src={article.image}
-                    alt={article.nom}
-                    className="h-20 w-20 rounded-xl bg-white object-contain"
-                  />
+<PanierV2
+  panier={panier}
+  setPanier={setPanier}
+  total={total}
+  onCommander={() => alert("Prochaine étape : formulaire de commande")}
+/>
 
                   <div className="flex-1">
                     <p className="font-bold text-amber-300">{article.nom}</p>
