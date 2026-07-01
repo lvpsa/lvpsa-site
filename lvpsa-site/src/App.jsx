@@ -4,7 +4,7 @@ import ScrollToTop from "./ScrollToTop";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "./firebase";
-
+import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -2348,6 +2348,7 @@ const equipesCompetitives = equipes.filter(
       À utiliser une seule fois. Cette action crée les produits et les quantités
       initiales dans Firebase.
     </p>
+    <AdminCommandesBoutique />
   </div>
 )}
     </section>
