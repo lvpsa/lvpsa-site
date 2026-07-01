@@ -256,3 +256,21 @@ export async function deduireInventaireBoutique(articles) {
 
   await batch.commit();
 }
+
+export async function chargerCommandesBoutique() {
+  const snap = await getDocs(collection(db, "commandesBoutique"));
+
+  return snap.docs.map((docItem) => ({
+    id: docItem.id,
+    ...docItem.data(),
+  }));
+}
+
+export async function modifierStatutCommandeBoutique(commandeId, statut) {
+  const ref = doc(db, "commandesBoutique", commandeId);
+
+  await updateDoc(ref, {
+    statut,
+    updatedAt: serverTimestamp(),
+  });
+}
