@@ -79,10 +79,6 @@ export default function BoutiquesV2() {
     setProduitSelectionne(null);
   };
 
-  const retirerArticle = (index) => {
-    setPanier((prev) => prev.filter((_, i) => i !== index));
-  };
-
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -128,18 +124,6 @@ export default function BoutiquesV2() {
                     ? "M"
                     : produit.grandeurs?.[0];
 
-                  console.log("INVENTAIRE DEBUG", {
-  produit: produitSelectionne?.id,
-  couleur: couleurSelectionnee?.id,
-  taille,
-  cle: produitSelectionne && couleurSelectionnee
-    ? `${produitSelectionne.id}_${couleurSelectionnee.id}_${taille}`
-    : null,
-  quantite: produitSelectionne && couleurSelectionnee
-    ? quantiteInventaire(produitSelectionne.id, couleurSelectionnee.id, taille)
-    : null,
-});
-                  
                   return (
                     <button
                       key={produit.id}
@@ -315,11 +299,6 @@ export default function BoutiquesV2() {
                       taille
                     )}
                   </p>
-
-                  <p className="mt-2 text-xs text-slate-500">
-                    Clé : {produitSelectionne.id}_{couleurSelectionnee.id}_
-                    {taille}
-                  </p>
                 </div>
 
                 <label className="mt-5 block text-sm font-bold text-slate-300">
@@ -347,33 +326,7 @@ export default function BoutiquesV2() {
         </div>
       )}
 
-                  <div className="flex-1">
-                    <p className="font-bold text-amber-300">{article.nom}</p>
-
-                    <p className="text-sm text-slate-300">
-                      Couleur {article.couleurNom} • Taille {article.taille} •
-                      Qté {article.quantite}
-                    </p>
-
-                    <p className="mt-1 text-sm font-bold text-white">
-                      Total : {Number(article.prix) * Number(article.quantite)} $
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={() => retirerArticle(index)}
-                      className="mt-2 text-xs text-red-300 hover:underline"
-                    >
-                      Retirer
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-             <PanierV2
+      <PanierV2
         panier={panier}
         setPanier={setPanier}
         total={total}
