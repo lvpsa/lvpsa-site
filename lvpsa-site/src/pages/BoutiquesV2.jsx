@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { chargerProduitsBoutique } from "../services/firebaseBoutique";
 import { useInventaire } from "../hooks/useInventaire";
 import PanierV2 from "../components/boutique/PanierV2";
+import FormulaireCommandeV2 from "../components/boutique/FormulaireCommandeV2";
 
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
@@ -17,6 +18,14 @@ export default function BoutiquesV2() {
   const [taille, setTaille] = useState("M");
   const [quantite, setQuantite] = useState(1);
   const [panier, setPanier] = useState([]);
+  const [formulaireOuvert, setFormulaireOuvert] = useState(false);
+
+const [commande, setCommande] = useState({
+  nom: "",
+  courriel: "",
+  telephone: "",
+  notes: "",
+});
 
   useEffect(() => {
     const chargerProduits = async () => {
@@ -330,8 +339,18 @@ export default function BoutiquesV2() {
         panier={panier}
         setPanier={setPanier}
         total={total}
-        onCommander={() => alert("Prochaine étape : formulaire de commande")}
+        onCommander={() => setFormulaireOuvert(true)}
       />
+
+      <FormulaireCommandeV2
+  ouvert={formulaireOuvert}
+  onFermer={() => setFormulaireOuvert(false)}
+  panier={panier}
+  total={total}
+  commande={commande}
+  setCommande={setCommande}
+  onEnvoyer={() => alert("Prochaine étape : envoi Firebase + courriels")}
+/>
 
       <div className="mt-8">
         <Link to="/boutique" className="text-amber-300 hover:underline">
