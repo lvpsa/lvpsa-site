@@ -380,12 +380,12 @@ export default function BoutiquesV2() {
           )}
         </div>
 
-        {panier.length > 0 && (
-          <div className="mt-6 rounded-2xl bg-amber-400 p-4 text-right text-xl font-black text-slate-950">
-            Total : {total} $
-          </div>
-        )}
-      </div>
+             <PanierV2
+        panier={panier}
+        setPanier={setPanier}
+        total={total}
+        onCommander={() => alert("Prochaine étape : formulaire de commande")}
+      />
 
       <div className="mt-8">
         <Link to="/boutique" className="text-amber-300 hover:underline">
