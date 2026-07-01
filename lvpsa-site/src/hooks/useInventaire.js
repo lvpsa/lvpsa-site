@@ -18,7 +18,7 @@ export function useInventaire() {
     try {
       setChargementInventaire(true);
 
-      const snap = await getDocs(collection(db, "inventaireBoutique"));
+      const snap = await getDocs(collection(db, "inventaireBoutiqueV2"));
       const data = {};
 
       snap.docs.forEach((docItem) => {
@@ -38,7 +38,7 @@ export function useInventaire() {
   }, []);
 
   const cleInventaire = (produitId, taille) => {
-    return `${produitId}_${taille}`;
+    return `${produitId}_${couleurId}_${taille}`;
   };
 
   const quantiteInventaire = (produitId, taille) => {
