@@ -8,6 +8,8 @@ import {
   creerCommandeBoutique,
   deduireInventaireBoutique,
 } from "../services/firebaseBoutique";
+import { envoyerCommandeGoogleSheet } from "../services/googleSheet";
+import { envoyerCourrielsCommande } from "../services/emailService";
 
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
@@ -103,18 +105,21 @@ const [commande, setCommande] = useState({
     return;
   }
 
-  try {
-    await creerCommandeBoutique({
-      nom: commande.nom,
-      courriel: commande.courriel,
-      telephone: commande.telephone,
-      notes: commande.notes,
-      articles: panier,
-      total,
-      source: "boutique-v2",
-    });
+  const commandeComplete = {
+    nom: commande.nom,
+    courriel: commande.courriel,
+    telephone: commande.telephone,
+    notes: commande.notes,
+    articles: panier,
+    total,
+    source: "boutique-v2",
+  };
 
+  try {
+    await creerCommandeBoutique(commandeComplete);
     await deduireInventaireBoutique(panier);
+    await envoyerCommandeGoogleSheet(commandeComplete);
+    await envoyerCourrielsCommande(commandeComplete);
 
     alert("Commande envoyée avec succès!");
 
