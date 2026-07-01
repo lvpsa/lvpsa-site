@@ -4,6 +4,10 @@ import { chargerProduitsBoutique } from "../services/firebaseBoutique";
 import { useInventaire } from "../hooks/useInventaire";
 import PanierV2 from "../components/boutique/PanierV2";
 import FormulaireCommandeV2 from "../components/boutique/FormulaireCommandeV2";
+import {
+  creerCommandeBoutique,
+  deduireInventaireBoutique,
+} from "../services/firebaseBoutique";
 
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
@@ -88,6 +92,46 @@ const [commande, setCommande] = useState({
     setProduitSelectionne(null);
   };
 
+  const envoyerCommande = async () => {
+  if (panier.length === 0) {
+    alert("Votre panier est vide.");
+    return;
+  }
+
+  if (!commande.nom || !commande.courriel || !commande.telephone) {
+    alert("Veuillez compléter votre nom, courriel et téléphone.");
+    return;
+  }
+
+  try {
+    await creerCommandeBoutique({
+      nom: commande.nom,
+      courriel: commande.courriel,
+      telephone: commande.telephone,
+      notes: commande.notes,
+      articles: panier,
+      total,
+      source: "boutique-v2",
+    });
+
+    await deduireInventaireBoutique(panier);
+
+    alert("Commande envoyée avec succès!");
+
+    setPanier([]);
+    setCommande({
+      nom: "",
+      courriel: "",
+      telephone: "",
+      notes: "",
+    });
+    setFormulaireOuvert(false);
+  } catch (error) {
+    console.error(error);
+    alert("Erreur lors de l’envoi de la commande.");
+  }
+};
+  
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <p className="font-bold uppercase tracking-wider text-amber-300">
@@ -349,7 +393,7 @@ const [commande, setCommande] = useState({
   total={total}
   commande={commande}
   setCommande={setCommande}
-  onEnvoyer={() => alert("Prochaine étape : envoi Firebase + courriels")}
+  onEnvoyer={envoyerCommande}
 />
 
       <div className="mt-8">
