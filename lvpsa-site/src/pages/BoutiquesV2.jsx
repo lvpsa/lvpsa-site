@@ -127,6 +127,18 @@ export default function BoutiquesV2() {
                     ? "M"
                     : produit.grandeurs?.[0];
 
+                  console.log("INVENTAIRE DEBUG", {
+  produit: produitSelectionne?.id,
+  couleur: couleurSelectionnee?.id,
+  taille,
+  cle: produitSelectionne && couleurSelectionnee
+    ? `${produitSelectionne.id}_${couleurSelectionnee.id}_${taille}`
+    : null,
+  quantite: produitSelectionne && couleurSelectionnee
+    ? quantiteInventaire(produitSelectionne.id, couleurSelectionnee.id, taille)
+    : null,
+});
+                  
                   return (
                     <button
                       key={produit.id}
