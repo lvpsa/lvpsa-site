@@ -1,18 +1,40 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { produitsBoutique } from "../data/produits";
+import { chargerProduitsBoutique } from "../services/firebaseBoutique";
 import { useInventaire } from "../hooks/useInventaire";
 
 export default function BoutiquesV2() {
-  const produits = produitsBoutique;
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
     useInventaire();
 
+  const [produits, setProduits] = useState([]);
+  const [chargementProduits, setChargementProduits] = useState(true);
+
   const [produitSelectionne, setProduitSelectionne] = useState(null);
+  const [couleurId, setCouleurId] = useState("");
   const [vueProduit, setVueProduit] = useState("devant");
   const [taille, setTaille] = useState("M");
   const [quantite, setQuantite] = useState(1);
   const [panier, setPanier] = useState([]);
+
+  useEffect(() => {
+    const chargerProduits = async () => {
+      try {
+        const data = await chargerProduitsBoutique();
+        setProduits(data);
+      } catch (error) {
+        console.error("Erreur chargement produits :", error);
+      } finally {
+        setChargementProduits(false);
+      }
+    };
+
+    chargerProduits();
+  }, []);
+
+  const couleurSelectionnee = produitSelectionne?.couleurs?.find(
+    (couleur) => couleur.id === couleurId
+  );
 
   const total = useMemo(() => {
     return panier.reduce(
@@ -22,26 +44,34 @@ export default function BoutiquesV2() {
   }, [panier]);
 
   const ouvrirProduit = (produit) => {
+    const couleurDefaut = produit.couleurs?.[0];
+    const tailleDefaut = produit.grandeurs?.includes("M")
+      ? "M"
+      : produit.grandeurs?.[0];
+
     setProduitSelectionne(produit);
+    setCouleurId(couleurDefaut?.id || "");
+    setTaille(tailleDefaut || "M");
     setVueProduit("devant");
-    setTaille(produit.grandeurs?.includes("M") ? "M" : produit.grandeurs?.[0]);
     setQuantite(1);
   };
 
   const ajouterAuPanier = () => {
-    if (!produitSelectionne) return;
+    if (!produitSelectionne || !couleurSelectionnee) return;
 
     setPanier((prev) => [
       ...prev,
       {
         produitId: produitSelectionne.id,
+        nom: produitSelectionne.nom,
+        type: produitSelectionne.type,
         categorie: produitSelectionne.categorie,
-        modele: produitSelectionne.modele,
-        couleur: produitSelectionne.couleur,
+        couleurId: couleurSelectionnee.id,
+        couleurNom: couleurSelectionnee.nom,
         prix: produitSelectionne.prix,
         taille,
         quantite: Math.max(1, Number(quantite) || 1),
-        image: produitSelectionne.imageDevant,
+        image: couleurSelectionnee.imageDevant,
       },
     ]);
 
@@ -70,14 +100,14 @@ export default function BoutiquesV2() {
         </h2>
 
         <p className="mt-3 text-slate-300">
-          Cette version sert à valider la nouvelle boutique avec inventaire
-          Firebase avant de remplacer la boutique actuelle.
+          Cette version utilise la nouvelle structure Firebase : produits,
+          couleurs, grandeurs et inventaire dynamique.
         </p>
       </div>
 
-      {chargementInventaire && (
+      {(chargementProduits || chargementInventaire) && (
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
-          Chargement de l’inventaire...
+          Chargement de la boutique...
         </div>
       )}
 
@@ -92,6 +122,7 @@ export default function BoutiquesV2() {
               {produits
                 .filter((produit) => produit.type === type)
                 .map((produit) => {
+                  const couleurDefaut = produit.couleurs?.[0];
                   const tailleDefaut = produit.grandeurs?.includes("M")
                     ? "M"
                     : produit.grandeurs?.[0];
@@ -104,21 +135,26 @@ export default function BoutiquesV2() {
                       className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left transition hover:-translate-y-1 hover:border-amber-300"
                     >
                       <img
-                        src={produit.imageDevant}
-                        alt={produit.modele}
+                        src={couleurDefaut?.imageDevant}
+                        alt={produit.nom}
                         className="h-56 w-full rounded-2xl bg-white object-contain"
                       />
 
                       <p className="mt-4 text-lg font-black text-white">
-                        {produit.categorie}
+                        {produit.nom}
                       </p>
 
                       <p className="text-sm text-slate-300">
-                        Couleur : {produit.couleur}
+                        {produit.couleurs?.length || 0} couleur(s) disponible(s)
                       </p>
 
                       <p className="mt-2 text-sm font-bold text-slate-300">
-                        {statutInventaire(produit.id, produit.couleurs[0].id, tailleDefaut)}
+                        {couleurDefaut &&
+                          statutInventaire(
+                            produit.id,
+                            couleurDefaut.id,
+                            tailleDefaut
+                          )}
                       </p>
 
                       <p className="mt-2 text-xl font-black text-amber-300">
@@ -132,7 +168,7 @@ export default function BoutiquesV2() {
         ))}
       </div>
 
-      {produitSelectionne && (
+      {produitSelectionne && couleurSelectionnee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
           <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl">
             <div className="flex items-start justify-between gap-6">
@@ -142,11 +178,11 @@ export default function BoutiquesV2() {
                 </p>
 
                 <h2 className="mt-2 text-3xl font-black">
-                  {produitSelectionne.categorie}
+                  {produitSelectionne.nom}
                 </h2>
 
                 <p className="mt-1 text-slate-300">
-                  Couleur : {produitSelectionne.couleur} —{" "}
+                  Couleur : {couleurSelectionnee.nom} —{" "}
                   {produitSelectionne.prix} $
                 </p>
               </div>
@@ -165,10 +201,10 @@ export default function BoutiquesV2() {
                 <img
                   src={
                     vueProduit === "devant"
-                      ? produitSelectionne.imageDevant
-                      : produitSelectionne.imageDos
+                      ? couleurSelectionnee.imageDevant
+                      : couleurSelectionnee.imageDos
                   }
-                  alt={produitSelectionne.modele}
+                  alt={produitSelectionne.nom}
                   className="h-96 w-full rounded-2xl bg-white object-contain"
                 />
 
@@ -201,6 +237,30 @@ export default function BoutiquesV2() {
 
               <div>
                 <label className="text-sm font-bold text-slate-300">
+                  Couleur
+                </label>
+
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {produitSelectionne.couleurs.map((couleur) => (
+                    <button
+                      key={couleur.id}
+                      type="button"
+                      onClick={() => {
+                        setCouleurId(couleur.id);
+                        setVueProduit("devant");
+                      }}
+                      className={`rounded-2xl border px-4 py-3 font-black ${
+                        couleurId === couleur.id
+                          ? "border-amber-400 bg-amber-400 text-slate-950"
+                          : "border-white/10 bg-white/5 text-white"
+                      }`}
+                    >
+                      {couleur.nom}
+                    </button>
+                  ))}
+                </div>
+
+                <label className="mt-6 block text-sm font-bold text-slate-300">
                   Grandeur
                 </label>
 
@@ -223,16 +283,29 @@ export default function BoutiquesV2() {
 
                 <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-sm text-slate-300">
-                    Statut pour {taille}
+                    Statut pour {couleurSelectionnee.nom} / {taille}
                   </p>
 
                   <p className="mt-1 text-lg font-black text-amber-300">
-                    {statutInventaire(produitSelectionne.id, couleurSelectionnee.id, taille)}
+                    {statutInventaire(
+                      produitSelectionne.id,
+                      couleurSelectionnee.id,
+                      taille
+                    )}
                   </p>
 
                   <p className="mt-1 text-sm text-slate-400">
                     Quantité actuelle :{" "}
-                    {quantiteInventaire(produitSelectionne.id, taille)}
+                    {quantiteInventaire(
+                      produitSelectionne.id,
+                      couleurSelectionnee.id,
+                      taille
+                    )}
+                  </p>
+
+                  <p className="mt-2 text-xs text-slate-500">
+                    Clé : {produitSelectionne.id}_{couleurSelectionnee.id}_
+                    {taille}
                   </p>
                 </div>
 
@@ -270,24 +343,22 @@ export default function BoutiquesV2() {
           ) : (
             panier.map((article, index) => (
               <div
-                key={`${article.produitId}-${article.taille}-${index}`}
+                key={`${article.produitId}-${article.couleurId}-${article.taille}-${index}`}
                 className="rounded-2xl border border-white/10 bg-black/20 p-4"
               >
                 <div className="flex gap-4">
                   <img
                     src={article.image}
-                    alt={article.modele}
+                    alt={article.nom}
                     className="h-20 w-20 rounded-xl bg-white object-contain"
                   />
 
                   <div className="flex-1">
-                    <p className="font-bold text-amber-300">
-                      {article.categorie}
-                    </p>
+                    <p className="font-bold text-amber-300">{article.nom}</p>
 
                     <p className="text-sm text-slate-300">
-                      Couleur {article.couleur} • Taille {article.taille} • Qté{" "}
-                      {article.quantite}
+                      Couleur {article.couleurNom} • Taille {article.taille} •
+                      Qté {article.quantite}
                     </p>
 
                     <p className="mt-1 text-sm font-bold text-white">
