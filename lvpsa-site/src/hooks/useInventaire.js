@@ -37,17 +37,17 @@ export function useInventaire() {
     chargerInventaire();
   }, []);
 
-  const cleInventaire = (produitId, taille) => {
+  const cleInventaire = (produitId, couleurId, taille) => {
     return `${produitId}_${couleurId}_${taille}`;
   };
 
-  const quantiteInventaire = (produitId, taille) => {
-    const cle = cleInventaire(produitId, taille);
+  const quantiteInventaire = (produitId, couleurId, taille) => {
+    const cle = cleInventaire(produitId, couleurId, taille);
     return Number(inventaire[cle]?.quantite || 0);
   };
 
-  const statutInventaire = (produitId, taille) => {
-    const quantite = quantiteInventaire(produitId, taille);
+  const statutInventaire = (produitId, couleurId, taille) => {
+    const quantite = quantiteInventaire(produitId, couleurId, taille);
 
     if (quantite >= 4) return "🟢 en inventaire";
     if (quantite >= 1) return "🟡 dernières quantités";
@@ -60,14 +60,15 @@ export function useInventaire() {
     articles.forEach((article) => {
       const ref = doc(
         db,
-        "inventaireBoutique",
-        cleInventaire(article.produitId, article.taille)
+        "inventaireBoutiqueV2",
+        cleInventaire(article.produitId, article.couleurId, article.taille)
       );
 
       batch.set(
         ref,
         {
           produitId: article.produitId,
+          couleurId: article.couleurId,
           taille: article.taille,
           quantite: increment(-Number(article.quantite)),
           updatedAt: serverTimestamp(),
@@ -80,13 +81,18 @@ export function useInventaire() {
     await chargerInventaire();
   };
 
-  const ajusterInventaire = async (produitId, taille, variation) => {
-    const ref = doc(db, "inventaireBoutique", cleInventaire(produitId, taille));
+  const ajusterInventaire = async (produitId, couleurId, taille, variation) => {
+    const ref = doc(
+      db,
+      "inventaireBoutiqueV2",
+      cleInventaire(produitId, couleurId, taille)
+    );
 
     await setDoc(
       ref,
       {
         produitId,
+        couleurId,
         taille,
         quantite: increment(Number(variation)),
         updatedAt: serverTimestamp(),
