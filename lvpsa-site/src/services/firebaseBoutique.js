@@ -260,15 +260,6 @@ export async function deduireInventaireBoutique(articles) {
 export async function chargerCommandesBoutique() {
   const snap = await getDocs(collection(db, "commandesBoutique"));
 
-  return snap.docs.map((docItem) => ({
-    id: docItem.id,
-    ...docItem.data(),
-  }));
-}
-
-export async function chargerCommandesBoutique() {
-  const snap = await getDocs(collection(db, "commandesBoutique"));
-
   return snap.docs
     .map((docItem) => ({
       id: docItem.id,
