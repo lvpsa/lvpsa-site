@@ -5,6 +5,7 @@ import {
   chargerInventaireBoutiqueV2,
   ajusterInventaireBoutiqueV2,
   chargerProduitsBoutique,
+  annulerCommandeBoutique,
 } from "../../../services/firebaseBoutique";
 
 export default function AdminBoutiqueV2() {
@@ -51,10 +52,22 @@ export default function AdminBoutiqueV2() {
     [commandes]
   );
 
-  const changerStatut = async (id, statut) => {
-    await modifierStatutCommandeBoutique(id, statut);
+  const changerStatut = async (commande, statut) => {
+  if (statut === "annulee" && !commande.inventaireRemis) {
+    const confirmer = window.confirm(
+      "Annuler cette commande et remettre les articles en inventaire?"
+    );
+
+    if (!confirmer) return;
+
+    await annulerCommandeBoutique(commande.id, commande.articles || []);
     await charger();
-  };
+    return;
+  }
+
+  await modifierStatutCommandeBoutique(commande.id, statut);
+  await charger();
+};
 
   const ajusterStock = async (produitId, couleurId, taille, variation) => {
     await ajusterInventaireBoutiqueV2(produitId, couleurId, taille, variation);
@@ -130,7 +143,7 @@ export default function AdminBoutiqueV2() {
                     <select
                       value={commande.statut || "en_attente"}
                       onChange={(e) =>
-                        changerStatut(commande.id, e.target.value)
+                        changerStatut(commande, e.target.value)
                       }
                       className="mt-3 rounded-2xl px-4 py-3 text-slate-950"
                     >
