@@ -33,6 +33,8 @@ import BoutiquesV2 from "./pages/BoutiquesV2";
 
 import { initialiserBoutiqueFirebase } from "./services/firebaseBoutique";
 
+import AdminBoutiqueV2 from "./components/admin/boutique/AdminBoutiqueV2";
+
 import {
   Calendar,
   Trophy,
@@ -2313,44 +2315,7 @@ const equipesCompetitives = equipes.filter(
         </div>
       )}
 
-      {onglet === "boutique" && (
-  <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-    <h2 className="text-3xl font-black text-amber-300">
-      Boutique V2
-    </h2>
-
-    <p className="mt-4 text-slate-300">
-      Initialisation de la nouvelle structure Firebase pour la boutique LVPSA :
-      produits, couleurs, grandeurs et inventaire.
-    </p>
-
-    <button
-      type="button"
-      onClick={async () => {
-        if (!window.confirm("Initialiser la Boutique V2 dans Firebase?")) {
-          return;
-        }
-
-        try {
-          await initialiserBoutiqueFirebase();
-          alert("Boutique V2 initialisée avec succès!");
-        } catch (error) {
-          console.error(error);
-          alert("Erreur lors de l'initialisation de la Boutique V2.");
-        }
-      }}
-      className="mt-6 rounded-full bg-amber-400 px-8 py-3 font-black text-slate-950 hover:bg-amber-300"
-    >
-      Initialiser Boutique V2
-    </button>
-
-    <p className="mt-4 text-sm text-slate-400">
-      À utiliser une seule fois. Cette action crée les produits et les quantités
-      initiales dans Firebase.
-    </p>
-    <AdminCommandesBoutique />
-  </div>
-)}
+      {onglet === "boutique" && <AdminBoutiqueV2 />}
     </section>
   );
 }
