@@ -305,3 +305,37 @@ export async function ajusterInventaireBoutiqueV2(
     { merge: true }
   );
 }
+
+export async function annulerCommandeBoutique(commandeId, articles = []) {
+  const batch = writeBatch(db);
+
+  articles.forEach((article) => {
+    const ref = doc(
+      db,
+      "inventaireBoutiqueV2",
+      `${article.produitId}_${article.couleurId}_${article.taille}`
+    );
+
+    batch.set(
+      ref,
+      {
+        produitId: article.produitId,
+        couleurId: article.couleurId,
+        taille: article.taille,
+        quantite: increment(Number(article.quantite)),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  });
+
+  const commandeRef = doc(db, "commandesBoutique", commandeId);
+
+  batch.update(commandeRef, {
+    statut: "annulee",
+    inventaireRemis: true,
+    updatedAt: serverTimestamp(),
+  });
+
+  await batch.commit();
+}
