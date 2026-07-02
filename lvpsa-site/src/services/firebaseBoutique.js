@@ -266,14 +266,6 @@ export async function chargerCommandesBoutique() {
   }));
 }
 
-export async function modifierStatutCommandeBoutique(commandeId, statut) {
-  const ref = doc(db, "commandesBoutique", commandeId);
-
-  await updateDoc(ref, {
-    statut,
-    updatedAt: serverTimestamp(),
-  });
-}
 export async function chargerCommandesBoutique() {
   const snap = await getDocs(collection(db, "commandesBoutique"));
 
