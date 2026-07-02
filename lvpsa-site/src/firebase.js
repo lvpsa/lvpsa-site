@@ -38,28 +38,3 @@ export async function modifierStatutCommandeBoutique(commandeId, statut) {
     updatedAt: serverTimestamp(),
   });
 }
-
-export async function ajusterInventaireBoutiqueV2(
-  produitId,
-  couleurId,
-  taille,
-  variation
-) {
-  const ref = doc(
-    db,
-    "inventaireBoutiqueV2",
-    `${produitId}_${couleurId}_${taille}`
-  );
-
-  await setDoc(
-    ref,
-    {
-      produitId,
-      couleurId,
-      taille,
-      quantite: increment(Number(variation)),
-      updatedAt: serverTimestamp(),
-    },
-    { merge: true }
-  );
-}
