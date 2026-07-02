@@ -274,3 +274,51 @@ export async function modifierStatutCommandeBoutique(commandeId, statut) {
     updatedAt: serverTimestamp(),
   });
 }
+export async function chargerCommandesBoutique() {
+  const snap = await getDocs(collection(db, "commandesBoutique"));
+
+  return snap.docs
+    .map((docItem) => ({
+      id: docItem.id,
+      ...docItem.data(),
+    }))
+    .sort((a, b) => {
+      const dateA = a.createdAt?.seconds || 0;
+      const dateB = b.createdAt?.seconds || 0;
+      return dateB - dateA;
+    });
+}
+
+export async function modifierStatutCommandeBoutique(commandeId, statut) {
+  const ref = doc(db, "commandesBoutique", commandeId);
+
+  await updateDoc(ref, {
+    statut,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function ajusterInventaireBoutiqueV2(
+  produitId,
+  couleurId,
+  taille,
+  variation
+) {
+  const ref = doc(
+    db,
+    "inventaireBoutiqueV2",
+    `${produitId}_${couleurId}_${taille}`
+  );
+
+  await setDoc(
+    ref,
+    {
+      produitId,
+      couleurId,
+      taille,
+      quantite: increment(Number(variation)),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+}
