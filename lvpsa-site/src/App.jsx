@@ -1961,6 +1961,124 @@ function Admin() {
     window.location.href = "/";
   }
 
+  async function handleSynchroniserRemplacantsDepuisUsers() {
+  const confirmation = window.confirm(
+    "Cette action va synchroniser les utilisateurs remplaçants vers la collection remplacements, sans supprimer aucun champ existant. Continuer?"
+  );
+
+  if (!confirmation) return;
+
+  try {
+    const [usersSnap, remplacementsSnap] = await Promise.all([
+      getDocs(collection(db, "users")),
+      getDocs(collection(db, "remplacements")),
+    ]);
+
+    const idsRemplacementsExistants = new Set(
+      remplacementsSnap.docs.map((docItem) => docItem.id)
+    );
+
+    const batch = writeBatch(db);
+
+    let compteur = 0;
+
+    usersSnap.docs.forEach((docItem) => {
+      const data = docItem.data();
+
+      const estRemplacant =
+        data.estRemplacant === true ||
+        data.role === "remplacant" ||
+        normaliserTexteGlobal(data.equipeId) === "independant";
+
+      if (!estRemplacant) return;
+
+      const valeursCategories = Array.isArray(data.categories)
+        ? data.categories
+        : [data.categorie, data.catégorie].filter(Boolean);
+
+      const categoriesNormalisees = valeursCategories.flatMap((valeur) => {
+        const categorie = normaliserCategorieGlobal(valeur);
+
+        if (categorie === "les-deux") {
+          return ["recreatif", "competitif"];
+        }
+
+        return categorie ? [categorie] : [];
+      });
+
+      const categoriesFinales = [...new Set(categoriesNormalisees)];
+
+      const emailFinal = data.email || data.courriel || "";
+
+      const refUser = doc(db, "users", docItem.id);
+      const refRemplacement = doc(db, "remplacements", docItem.id);
+
+      const donneesRemplacement = {
+        userId: docItem.id,
+        nom: data.nom || "",
+        email: emailFinal,
+        courriel: emailFinal,
+        telephone: data.telephone || "",
+        categories: categoriesFinales,
+        note: data.note || data.commentaire || "",
+        disponible: data.disponible === false ? false : true,
+        statut: data.statut || "actif",
+        updatedAt: serverTimestamp(),
+      };
+
+      if (!idsRemplacementsExistants.has(docItem.id)) {
+        donneesRemplacement.createdAt = data.createdAt || serverTimestamp();
+      }
+
+      batch.set(refRemplacement, donneesRemplacement, { merge: true });
+
+      const updatesUser = {
+        role: "remplacant",
+        estJoueur: true,
+        estRemplacant: true,
+        categories: categoriesFinales,
+        updatedAt: serverTimestamp(),
+      };
+
+      if (!data.equipeId) {
+        updatesUser.equipeId = "independant";
+      }
+
+      batch.set(refUser, updatesUser, { merge: true });
+
+      compteur++;
+    });
+
+    if (compteur > 0) {
+      await batch.commit();
+    }
+
+    const [nouveauxUsersSnap, nouveauxRemplacementsSnap] = await Promise.all([
+      getDocs(collection(db, "users")),
+      getDocs(collection(db, "remplacements")),
+    ]);
+
+    setMembres(
+      nouveauxUsersSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
+
+    setRemplacements(
+      nouveauxRemplacementsSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
+
+    alert(`${compteur} remplaçant(s) synchronisé(s).`);
+  } catch (error) {
+    console.error("Erreur synchronisation remplaçants :", error);
+    alert("Erreur lors de la synchronisation des remplaçants.");
+  }
+}
+  
   async function handleUniformiserJoueurs() {
   const confirmation = window.confirm(
     "Cette action va uniformiser les rôles des utilisateurs sans supprimer aucun champ existant. Continuer?"
@@ -2522,6 +2640,9 @@ const membresSansEquipe = membres.filter((membre) => {
 >
   Uniformiser les joueurs/membres
 </button>
+          <p className="mt-3 text-slate-300">
+  Total de remplaçants inscrits : {totalRemplacantsDisponibles}
+</p>
 
           <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {membresSansEquipe.length > 0 ? (
