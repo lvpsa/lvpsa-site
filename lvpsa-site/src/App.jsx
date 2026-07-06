@@ -142,6 +142,109 @@ async function chargerEquipesLVPSA() {
   return Array.from(uniques.values());
 }
 
+const estRemplacantGlobal = (data) => {
+  const equipeId = normaliserTexteGlobal(data.equipeId);
+
+  return (
+    data.estRemplacant === true ||
+    data.role === "remplacant" ||
+    equipeId === "independant"
+  );
+};
+
+const extraireCategoriesRemplacantGlobal = (data) => {
+  const valeurs = Array.isArray(data.categories)
+    ? data.categories
+    : [data.categorie, data.catégorie, data.type].filter(Boolean);
+
+  const categories = valeurs.flatMap((valeur) => {
+    const categorie = normaliserCategorieGlobal(valeur);
+
+    if (categorie === "les-deux") {
+      return ["recreatif", "competitif"];
+    }
+
+    return categorie ? [categorie] : [];
+  });
+
+  return [...new Set(categories)];
+};
+
+const convertirUserEnRemplacantGlobal = (id, data) => {
+  const emailFinal = data.email || data.courriel || "";
+
+  return {
+    id,
+    userId: id,
+    nom: data.nom || "",
+    email: emailFinal,
+    courriel: emailFinal,
+    telephone: data.telephone || "",
+    categories: extraireCategoriesRemplacantGlobal(data),
+    note: data.note || data.commentaire || "",
+    disponible: data.disponible === false ? false : true,
+    statut: data.statut || "actif",
+    source: "users",
+    ...data,
+  };
+};
+
+const normaliserRemplacementGlobal = (id, data) => {
+  const emailFinal = data.email || data.courriel || "";
+
+  return {
+    id,
+    ...data,
+    userId: data.userId || id,
+    nom: data.nom || "",
+    email: emailFinal,
+    courriel: data.courriel || emailFinal,
+    telephone: data.telephone || "",
+    categories: extraireCategoriesRemplacantGlobal(data),
+    note: data.note || data.commentaire || "",
+    disponible: data.disponible === false ? false : true,
+    statut: data.statut || "actif",
+    source: "remplacements",
+  };
+};
+
+const fusionnerRemplacementsGlobal = (remplacementsFirestore, usersFirestore) => {
+  const map = new Map();
+
+  remplacementsFirestore.forEach((item) => {
+    map.set(item.id, normaliserRemplacementGlobal(item.id, item));
+  });
+
+  usersFirestore.forEach((user) => {
+    if (!estRemplacantGlobal(user)) return;
+
+    const depuisUser = convertirUserEnRemplacantGlobal(user.id, user);
+    const existant = map.get(user.id);
+
+    if (existant) {
+      map.set(user.id, {
+        ...depuisUser,
+        ...existant,
+        nom: existant.nom || depuisUser.nom,
+        email: existant.email || depuisUser.email,
+        courriel: existant.courriel || depuisUser.courriel,
+        telephone: existant.telephone || depuisUser.telephone,
+        categories:
+          existant.categories?.length > 0
+            ? existant.categories
+            : depuisUser.categories,
+        note: existant.note || depuisUser.note,
+      });
+    } else {
+      map.set(user.id, depuisUser);
+    }
+  });
+
+  return Array.from(map.values()).sort((a, b) =>
+    String(a.nom || "").localeCompare(String(b.nom || ""), "fr")
+  );
+};
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -1925,22 +2028,23 @@ function Admin() {
     const historiqueSnap = await getDocs(collection(db, "historiqueRemplacements"));
     const equipesChargees = await chargerEquipesLVPSA();
 
-    setMembres(
-      membresSnap.docs.map((docItem) => ({
-        id: docItem.id,
-        ...docItem.data(),
-      }))
-    );
+    const listeMembres = membresSnap.docs.map((docItem) => ({
+  id: docItem.id,
+  ...docItem.data(),
+}));
 
-    setEquipes(equipesChargees);
+const listeRemplacementsFirestore = remplacementsSnap.docs.map((docItem) => ({
+  id: docItem.id,
+  ...docItem.data(),
+}));
 
-    setRemplacements(
-      remplacementsSnap.docs.map((docItem) => ({
-        id: docItem.id,
-        ...docItem.data(),
-      }))
-    );
+setMembres(listeMembres);
 
+setEquipes(equipesChargees);
+
+setRemplacements(
+  fusionnerRemplacementsGlobal(listeRemplacementsFirestore, listeMembres)
+);
     setHistoriqueRemplacements(
       historiqueSnap.docs.map((docItem) => ({
         id: docItem.id,
@@ -4089,10 +4193,15 @@ useEffect(() => {
       ...docItem.data(),
     }));
 
-    const listeRemplacants = remplacementsSnapshot.docs.map((docItem) => ({
-      id: docItem.id,
-      ...docItem.data(),
-    }));
+    const listeRemplacementsFirestore = remplacementsSnapshot.docs.map((docItem) => ({
+  id: docItem.id,
+  ...docItem.data(),
+}));
+
+const listeRemplacants = fusionnerRemplacementsGlobal(
+  listeRemplacementsFirestore,
+  listeUsers
+);
 
     const equipeTrouvee =
       equipesChargees.find((equipe) => {
