@@ -6,6 +6,7 @@ export async function envoyerCommandeGoogleSheet(commande) {
       mode: "no-cors",
       body: JSON.stringify({
         type: "boutique-v2",
+        numeroCommande: commande.numeroCommande || "",
         nom: commande.nom,
         courriel: commande.courriel,
         telephone: commande.telephone,
