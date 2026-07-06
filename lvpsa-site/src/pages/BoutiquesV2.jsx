@@ -10,6 +10,7 @@ import {
 } from "../services/firebaseBoutique";
 import { envoyerCommandeGoogleSheet } from "../services/googleSheet";
 import { envoyerCourrielsCommande } from "../services/emailService";
+import { getCharteGrandeur } from "../data/chartesGrandeurs";
 
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
@@ -142,6 +143,8 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
     alert("Erreur lors de l’envoi de la commande.");
   }
 };
+
+  const charteProduit = getCharteGrandeur(produitSelectionne);
   
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -369,6 +372,57 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
                     )}
                   </p>
                 </div>
+
+                {charteProduit && (
+  <details className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+    <summary className="cursor-pointer font-black text-amber-300">
+      Voir la charte des grandeurs
+    </summary>
+
+    <div className="mt-4 overflow-x-auto">
+      <p className="mb-3 text-sm text-slate-300">
+        {getCharteGrandeur(produitSelectionne).titre} —{" "}
+        modèle {getCharteGrandeur(produitSelectionne).modele}. Mesures en{" "}
+        {getCharteGrandeur(produitSelectionne).unite}.
+      </p>
+
+      <table className="w-full min-w-[650px] text-left text-sm">
+        <thead>
+          <tr className="border-b border-white/10 text-amber-300">
+            <th className="px-3 py-3 font-black">Mesure</th>
+
+            {getCharteGrandeur(produitSelectionne).tailles.map((taille) => (
+              <th key={taille} className="px-3 py-3 font-black">
+                {taille}
+              </th>
+            ))}
+          </tr>
+        </thead>
+
+        <tbody>
+          {getCharteGrandeur(produitSelectionne).mesures.map((ligne) => (
+            <tr key={ligne.nom} className="border-b border-white/10">
+              <td className="px-3 py-3 font-bold text-white">
+                {ligne.nom}
+              </td>
+
+              {ligne.valeurs.map((valeur, index) => (
+                <td key={`${ligne.nom}-${index}`} className="px-3 py-3 text-slate-300">
+                  {valeur}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p className="mt-3 text-xs text-slate-400">
+        Les mesures sont celles du vêtement à plat ou complètes selon la ligne indiquée.
+        Elles peuvent varier légèrement selon les tolérances du manufacturier.
+      </p>
+    </div>
+  </details>
+)}
 
                 <label className="mt-5 block text-sm font-bold text-slate-300">
                   Quantité
