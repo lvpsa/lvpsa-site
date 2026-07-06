@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -22,6 +22,7 @@ import {
   collection,
   setDoc,
   addDoc,
+  updateDoc,
   serverTimestamp,
   writeBatch,
   increment,
@@ -268,6 +269,8 @@ export default function App() {
           <Route path="/ligue" element={<Ligue />} />
           <Route path="/inscription-ligue" element={<InscriptionLigueProtegee />} />
           <Route path="/gestion-equipe" element={<Protegee />} />
+          <Route path="/mes-demandes" element={<MesDemandesRemplacement />} />
+          <Route path="/demande-remplacement/:demandeId/:action" element={<ReponseDemandeRemplacement />} />
           <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/membres" element={<Membres />} />
@@ -337,14 +340,20 @@ function Header() {
   };
 
   const ligueItems = [
-    { label: "Calendrier", to: "/calendrier" },
-    { label: "Classements", to: "/classements" },
-    { label: "Inscriptions", to: "/inscription-ligue" },
-    ...((userData?.role === "capitaine" || userData?.isAdmin)
-      ? [{ label: "Gestion d'équipe", to: "/gestion-equipe" }]
-      : []),
-    { label: "Règlements Ligue", to: "/reglements" },
-  ];
+  { label: "Calendrier", to: "/calendrier" },
+  { label: "Classements", to: "/classements" },
+  { label: "Inscriptions", to: "/inscription-ligue" },
+
+  ...((userData?.role === "capitaine" || userData?.isAdmin)
+    ? [{ label: "Gestion d'équipe", to: "/gestion-equipe" }]
+    : []),
+
+  ...((userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin)
+    ? [{ label: "Mes demandes", to: "/mes-demandes" }]
+    : []),
+
+  { label: "Règlements Ligue", to: "/reglements" },
+];
 
   const tournoiItems = [
     { label: "Informations", to: "/tournoi" },
@@ -445,6 +454,12 @@ function Header() {
                     Gestion d'équipe
                   </Link>
                 )}
+
+                {(userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin) && (
+  <Link to="/mes-demandes" onClick={() => setMenuOpen(false)}>
+    Mes demandes
+  </Link>
+)}
 
                 <Link to="/reglements" onClick={() => setMenuOpen(false)}>Règlements Ligue</Link>
               </div>
@@ -4349,29 +4364,72 @@ const datesEquipe = datesLigue.filter((date) => {
 
   const joueurAbsent = joueurs.find((joueur) => joueur.id === joueurAbsentId);
   const remplacant = remplacantsFiltres.find((membre) => membre.id === remplacantId);
+  const dateInfo = datesLigue.find((date) => date.id === dateSelectionnee);
 
-await addDoc(collection(db, "historiqueRemplacements"), {
-  date: dateSelectionnee,
-  categorie: categorieEquipeActive,
-  equipeId: userData.equipeId || equipeActuelle?.id || "",
-  equipeNom:
-    userData.equipenom ||
-    userData.equipeNom ||
-    nomEquipeGlobal(equipeActuelle) ||
-    "",
-  joueurRemplaceId: joueurAbsent?.id || "",
-  joueurRemplaceNom: joueurAbsent?.nom || "",
-  remplacantId: remplacant?.id || "",
-  remplacantNom: remplacant?.nom || "",
-  remplacantEmail: remplacant?.email || remplacant?.courriel || "",
-  remplacantTelephone: remplacant?.telephone || "",
-  capitaineId: user?.uid || "",
-  createdAt: serverTimestamp(),
-});
+  if (!joueurAbsent || !remplacant) {
+    alert("Impossible de trouver le joueur absent ou le remplaçant.");
+    return;
+  }
 
-  alert("Remplacement confirmé !");
-  setJoueurAbsentId("");
-  setRemplacantId("");
+  const demande = {
+    date: dateSelectionnee,
+    dateLabel: dateInfo?.label || dateSelectionnee,
+    categorie: categorieEquipeActive,
+
+    equipeId: userData.equipeId || equipeActuelle?.id || "",
+    equipeNom:
+      userData.equipenom ||
+      userData.equipeNom ||
+      nomEquipeGlobal(equipeActuelle) ||
+      "",
+
+    joueurRemplaceId: joueurAbsent?.id || "",
+    joueurRemplaceNom: joueurAbsent?.nom || "",
+
+    remplacantId: remplacant?.userId || remplacant?.id || "",
+    remplacantNom: remplacant?.nom || "",
+    remplacantEmail: remplacant?.email || remplacant?.courriel || "",
+    remplacantTelephone: remplacant?.telephone || "",
+
+    capitaineId: user?.uid || "",
+    capitaineNom: userData?.nom || "",
+
+    statut: "en_attente",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  try {
+    const demandeRef = await addDoc(collection(db, "demandesRemplacements"), demande);
+
+    const lienAccepter = `${window.location.origin}/demande-remplacement/${demandeRef.id}/accepter`;
+    const lienRefuser = `${window.location.origin}/demande-remplacement/${demandeRef.id}/refuser`;
+
+    await emailjs.send(
+      "service_f4h3rii",
+      "template_demande_remplacement",
+      {
+        to_email: demande.remplacantEmail,
+        remplacant_nom: demande.remplacantNom,
+        equipe_nom: demande.equipeNom,
+        date_remplacement: demande.dateLabel,
+        joueur_remplace: demande.joueurRemplaceNom,
+        capitaine_nom: demande.capitaineNom,
+        lien_accepter: lienAccepter,
+        lien_refuser: lienRefuser,
+      },
+      "ZooBSx9i6qVl5HI8T"
+    );
+
+    alert("Demande envoyée au remplaçant par courriel.");
+
+    setDateSelectionnee("");
+    setJoueurAbsentId("");
+    setRemplacantId("");
+  } catch (error) {
+    console.error("Erreur lors de la demande de remplacement :", error);
+    alert("Erreur lors de l'envoi de la demande. Veuillez réessayer.");
+  }
 };
   
   return (
