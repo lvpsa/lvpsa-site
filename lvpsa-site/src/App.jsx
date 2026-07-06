@@ -1961,6 +1961,137 @@ function Admin() {
     window.location.href = "/";
   }
 
+  async function handleUniformiserJoueurs() {
+  const confirmation = window.confirm(
+    "Cette action va uniformiser les rôles des utilisateurs sans supprimer aucun champ existant. Continuer?"
+  );
+
+  if (!confirmation) return;
+
+  try {
+    const [usersSnap, equipesChargees] = await Promise.all([
+      getDocs(collection(db, "users")),
+      chargerEquipesLVPSA(),
+    ]);
+
+    const batch = writeBatch(db);
+    let compteur = 0;
+
+    const trouverEquipePourMembre = (membre) => {
+      const membreEquipeId = String(membre.equipeId || membre.idEquipe || "").trim();
+
+      const membreEquipeNom =
+        membre.equipeNom ||
+        membre.equipenom ||
+        membre.nomEquipe ||
+        membre.equipe ||
+        "";
+
+      return (
+        equipesChargees.find((equipe) => {
+          const equipeId = String(equipe.id || equipe.equipeId || "").trim();
+          const equipeNom = nomEquipeGlobal(equipe);
+
+          return (
+            (membreEquipeId &&
+              equipeId &&
+              normaliserTexteGlobal(membreEquipeId) ===
+                normaliserTexteGlobal(equipeId)) ||
+            (membreEquipeNom &&
+              equipeNom &&
+              normaliserTexteGlobal(membreEquipeNom) ===
+                normaliserTexteGlobal(equipeNom))
+          );
+        }) || null
+      );
+    };
+
+    usersSnap.docs.forEach((docItem) => {
+      const data = docItem.data();
+      const ref = doc(db, "users", docItem.id);
+      const updates = {};
+
+      const equipeId = String(data.equipeId || data.idEquipe || "").trim();
+      const equipeIdNormalise = normaliserTexteGlobal(equipeId);
+
+      const estIndependant = equipeIdNormalise === "independant";
+      const estDansEquipe = Boolean(equipeId) && !estIndependant;
+
+      const estRemplacant =
+        data.estRemplacant === true ||
+        estIndependant ||
+        data.role === "remplacant";
+
+      let roleFinal = "membre";
+
+      if (estRemplacant) {
+        roleFinal = "remplacant";
+      } else if (estDansEquipe) {
+        roleFinal = data.role === "capitaine" ? "capitaine" : "joueur";
+      }
+
+      const estJoueurFinal = estDansEquipe || estRemplacant;
+      const estRemplacantFinal = estRemplacant;
+
+      if (data.role !== roleFinal) {
+        updates.role = roleFinal;
+      }
+
+      if (data.estJoueur !== estJoueurFinal) {
+        updates.estJoueur = estJoueurFinal;
+      }
+
+      if (data.estRemplacant !== estRemplacantFinal) {
+        updates.estRemplacant = estRemplacantFinal;
+      }
+
+      if (estDansEquipe) {
+        const equipeTrouvee = trouverEquipePourMembre(data);
+
+        if (equipeTrouvee) {
+          const equipeNomFinal = nomEquipeGlobal(equipeTrouvee);
+
+          const categorieFinale = normaliserCategorieGlobal(
+            data.categorie || equipeTrouvee.categorie || equipeTrouvee.catégorie
+          );
+
+          if (!data.equipeNom && !data.equipenom && equipeNomFinal) {
+            updates.equipeNom = equipeNomFinal;
+          }
+
+          if ((!data.categorie || data.categorie === null) && categorieFinale) {
+            updates.categorie = categorieFinale;
+          }
+        }
+      }
+
+      if (Object.keys(updates).length > 0) {
+        updates.updatedAt = serverTimestamp();
+        batch.update(ref, updates);
+        compteur++;
+      }
+    });
+
+    if (compteur > 0) {
+      await batch.commit();
+    }
+
+    const membresSnap = await getDocs(collection(db, "users"));
+
+    setMembres(
+      membresSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
+
+    alert(`${compteur} profil(s) uniformisé(s).`);
+  } catch (error) {
+    console.error("Erreur uniformisation joueurs/membres :", error);
+    alert("Erreur lors de l'uniformisation des joueurs/membres.");
+  }
+}
+  
   async function handleUniformiserRemplacements() {
   const confirmation = window.confirm(
     "Cette action va uniformiser les remplaçants sans supprimer aucun champ existant. Continuer?"
@@ -2037,6 +2168,20 @@ const equipesCompetitives = equipes.filter(
   });
 
   const totalRemplacantsDisponibles = remplacements.length;
+
+  const membreEstDansUneEquipe = (membre) => {
+  const equipeId = String(membre.equipeId || membre.idEquipe || "").trim();
+
+  return equipeId && normaliserTexteGlobal(equipeId) !== "independant";
+};
+
+const membresSansEquipe = membres.filter((membre) => {
+  return (
+    !membreEstDansUneEquipe(membre) &&
+    membre.role !== "remplacant" &&
+    !membre.estRemplacant
+  );
+});
   
   const totalRemplacementsParRemplacant = historiqueRemplacements.reduce((acc, item) => {
     const nom = item.remplacantNom || "Sans nom";
@@ -2048,7 +2193,7 @@ const equipesCompetitives = equipes.filter(
     ["statut", "Statut des parties"],
     ["equipes", "Équipes"],
     ["remplacements", "Remplacements"],
-    ["membres", "Membres"],
+    ["membres", "Membres sans équipe"],
     ["boutique", "Boutique"],
   ];
   
@@ -2365,14 +2510,22 @@ const equipesCompetitives = equipes.filter(
               </h2>
 
               <p className="mt-3 text-slate-300">
-                Total de membres inscrits : {membres.length}
+                Total de membres sans équipe : {membresSansEquipe.length}
               </p>
             </div>
           </div>
 
+          <button
+  type="button"
+  onClick={handleUniformiserJoueurs}
+  className="mt-5 rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+>
+  Uniformiser les joueurs/membres
+</button>
+
           <div className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {membres.length > 0 ? (
-              membres.map((membre) => (
+            {membresSansEquipe.length > 0 ? (
+              membresSansEquipe.map((membre) => (
                 <div
                   key={membre.id}
                   className="rounded-2xl border border-white/10 bg-black/20 p-5"
@@ -2432,7 +2585,7 @@ const equipesCompetitives = equipes.filter(
               ))
             ) : (
               <p className="text-slate-500">
-                Aucun membre inscrit pour le moment.
+                Aucun membre sans équipe pour le moment.
               </p>
             )}
           </div>
