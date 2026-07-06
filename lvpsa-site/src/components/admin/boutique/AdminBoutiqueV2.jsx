@@ -227,7 +227,7 @@ export default function AdminBoutiqueV2() {
                       </p>
 
                       <p className="mt-2 text-xs text-slate-500">
-                        ID : {commande.id}
+                        Commande : {commande.numeroCommande || commande.id}
                       </p>
                     </div>
 
@@ -394,7 +394,7 @@ export default function AdminBoutiqueV2() {
                 </p>
 
                 <p className="mt-1 text-xs text-slate-500">
-                  ID : {commandeActive.id}
+                  Commande : {commandeActive.numeroCommande || commandeActive.id}
                 </p>
               </div>
 
