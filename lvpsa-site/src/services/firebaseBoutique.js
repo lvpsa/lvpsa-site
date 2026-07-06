@@ -346,3 +346,28 @@ export async function annulerCommandeBoutique(commandeId, articles = []) {
 
   await batch.commit();
 }
+export async function deduireInventaireBoutique(articles) {
+  const batch = writeBatch(db);
+
+  articles.forEach((article) => {
+    const ref = doc(
+      db,
+      "inventaireBoutiqueV2",
+      `${article.produitId}_${article.couleurId}_${article.taille}`
+    );
+
+    batch.set(
+      ref,
+      {
+        produitId: article.produitId,
+        couleurId: article.couleurId,
+        taille: article.taille,
+        quantite: increment(-Number(article.quantite)),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  });
+
+  await batch.commit();
+}
