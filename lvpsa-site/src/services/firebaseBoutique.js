@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   writeBatch,
   increment,
+  runTransaction,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -223,13 +224,6 @@ export async function chargerInventaireBoutiqueV2() {
 }
 
 export async function creerCommandeBoutique(commande) {
-  return addDoc(collection(db, "commandesBoutique"), {
-    ...commande,
-    statut: "en_attente",
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
-}
 
 export async function deduireInventaireBoutique(articles) {
   const batch = writeBatch(db);
