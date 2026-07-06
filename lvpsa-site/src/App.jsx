@@ -53,6 +53,7 @@ import {
 } from "lucide-react";
 import "./index.css";
 import emailjs from "@emailjs/browser";
+import { formatTelephone } from "./utils/telephone";
 
 const email = "liguevpsa@gmail.com";
 const tournoiLink = "https://forms.gle/csLUt6NmcjNADcBm7";
@@ -1844,9 +1845,10 @@ function CreerCompte() {
 
           <input
             value={telephone}
-            onChange={(e) => setTelephone(e.target.value)}
+            onChange={(e) => setTelephone(formatTelephone(e.target.value))}
             type="tel"
             placeholder="Téléphone"
+            maxLength={13}
             required
             className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
           />
@@ -2744,7 +2746,7 @@ const membresSansEquipe = membres.filter((membre) => {
               </p>
 
              <p className="text-slate-300">
-  Téléphone : {item.telephone || "Non précisé"}
+  Téléphone : {formatTelephone(item.telephone) || "Non précisé"}
 </p>
 
 <div className="mt-4 rounded-xl bg-white/5 p-4">
@@ -2899,7 +2901,7 @@ const membresSansEquipe = membres.filter((membre) => {
 
                     <p>
                       <span className="font-bold text-white">Téléphone :</span>{" "}
-                      {membre.telephone || "Non précisé"}
+                      {formatTelephone(membre.telephone) || "Non précisé"}
                     </p>
 
                     <p>
@@ -2994,12 +2996,6 @@ return <Boutique />;
 }
 
 function Boutique() {
-  const formatTelephone = (value) => {
-    const chiffres = value.replace(/\D/g, "").substring(0, 10);
-    if (chiffres.length <= 3) return chiffres;
-    if (chiffres.length <= 6) return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
-    return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
-  };
 
   const [user, setUser] = useState(null);
   const [produitSelectionne, setProduitSelectionne] = useState(null);
@@ -3483,7 +3479,7 @@ function Boutique() {
               className="rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Téléphone"
               value={commande.telephone}
-              maxLength={12}
+              maxLength={13}
               onChange={(e) =>
                 setCommande({
                   ...commande,
@@ -4061,17 +4057,6 @@ function InscriptionLigueProtegee() {
 }
 
 function InscriptionLigue() {
-  const formatTelephone = (value) => {
-    const chiffres = value.replace(/\D/g, "").substring(0, 10);
-
-    if (chiffres.length <= 3) return chiffres;
-
-    if (chiffres.length <= 6) {
-      return `${chiffres.slice(0, 3)}-${chiffres.slice(3)}`;
-    }
-
-    return `${chiffres.slice(0, 3)}-${chiffres.slice(3, 6)}-${chiffres.slice(6)}`;
-  };
 
   const inscriptionUrl =
     "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec";
@@ -4328,7 +4313,7 @@ function InscriptionLigue() {
               className="rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Téléphone"
               value={equipe.telephone}
-              maxLength={12}
+              maxLength={13}
               onChange={(e) =>
                 setEquipe({
                   ...equipe,
@@ -4416,7 +4401,7 @@ function InscriptionLigue() {
               className="rounded-2xl px-4 py-3 text-slate-950"
               placeholder="Téléphone"
               value={joueur.telephone}
-              maxLength={12}
+              maxLength={13}
               onChange={(e) =>
                 setJoueur({
                   ...joueur,
@@ -4844,7 +4829,7 @@ const datesEquipe = datesLigue.filter((date) => {
           </p>
 
           <p className="text-slate-300">
-            📞 {joueur.telephone || joueur.téléphone || "Téléphone non disponible"}
+            📞 {formatTelephone(joueur.telephone || joueur.téléphone) || "Téléphone non disponible"}
           </p>
         </div>
       ))
@@ -4931,7 +4916,7 @@ const datesEquipe = datesLigue.filter((date) => {
                   </h3>
 
                   <p className="mt-3 text-slate-300">
-                    📞 {membre.telephone || "Téléphone non disponible"}
+                    📞 {formatTelephone(membre.telephone) || "Téléphone non disponible"}
                   </p>
 
                   <p className="text-slate-300">
