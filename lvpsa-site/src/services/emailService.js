@@ -2,13 +2,14 @@ import emailjs from "@emailjs/browser";
 
 export async function envoyerCourrielsCommande(commande) {
   const resumeCommande =
-    commande.articles
-      .map(
-        (article, index) =>
-          `Article #${index + 1} : ${article.nom} • ${article.couleurNom} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
-      )
-      .join("\n") + `\n\nTOTAL : ${commande.total} $`;
-
+  `Numéro de commande : ${commande.numeroCommande || "À confirmer"}\n\n` +
+  commande.articles
+    .map(
+      (article, index) =>
+        `Article #${index + 1} : ${article.nom} • ${article.couleurNom} • Taille ${article.taille} • Qté ${article.quantite} • ${article.prix} $`
+    )
+    .join("\n") +
+  `\n\nTOTAL : ${commande.total} $`;
   const params = {
     nom: commande.nom,
     courriel: commande.courriel,
