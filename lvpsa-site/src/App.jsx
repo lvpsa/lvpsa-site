@@ -37,6 +37,8 @@ import { initialiserBoutiqueFirebase } from "./services/firebaseBoutique";
 
 import AdminBoutiqueV2 from "./components/admin/boutique/AdminBoutiqueV2";
 
+import { uniformiserRemplacementsSansSupprimer } from "./firebase";
+
 import {
   Calendar,
   Trophy,
@@ -1959,6 +1961,32 @@ function Admin() {
     window.location.href = "/";
   }
 
+  async function handleUniformiserRemplacements() {
+  const confirmation = window.confirm(
+    "Cette action va uniformiser les remplaçants sans supprimer aucun champ existant. Continuer?"
+  );
+
+  if (!confirmation) return;
+
+  try {
+    const total = await uniformiserRemplacementsSansSupprimer();
+
+    const remplacementsSnap = await getDocs(collection(db, "remplacements"));
+
+    setRemplacements(
+      remplacementsSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
+
+    alert(`${total} remplaçant(s) uniformisé(s).`);
+  } catch (error) {
+    console.error("Erreur uniformisation remplaçants :", error);
+    alert("Erreur lors de l'uniformisation des remplaçants.");
+  }
+}
+
   if (chargement) {
     return null;
   }
@@ -2193,6 +2221,14 @@ const equipesCompetitives = equipes.filter(
       <p className="mt-3 text-slate-300">
         Total de remplaçants inscrits : {totalRemplacantsDisponibles}
       </p>
+
+      <button
+  type="button"
+  onClick={handleUniformiserRemplacements}
+  className="mt-5 rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+>
+  Uniformiser les remplaçants
+</button>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         {remplacements.length > 0 ? (
