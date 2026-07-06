@@ -5453,6 +5453,7 @@ function ReglementsTournoi() {
             <li>✅ Phase préliminaire : 2 sets de 21 points</li>
             <li>✅ Phase séries : 2 sets de 25 points, un set de 15 points si égalité.</li>
             <li>⚠️ Si une équipe joue à 3, un joueur fantôme perdra un point à sa rotation au service.</li>
+            <li>⚠️ Pour qu'un joueur/joueuse soit admissible à la phase ''série'', il/elle doit avoir jouer au moins une match complet en ronde préléminaire.</li>
           </ul>
         </div>
 
