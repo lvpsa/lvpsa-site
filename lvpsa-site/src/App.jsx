@@ -3123,13 +3123,7 @@ function Boutique() {
     try {
   await Promise.all([
     googleSheetPromise,
-    emailjs.send(
-      "service_f4h3rii",
-      "template_nwl643g",
-      params,
-      "ZooBSx9i6qVl5HI8T"
-    ),
-    emailjs.send(
+     emailjs.send(
       "service_f4h3rii",
       "template_c5ab7bt",
       params,
