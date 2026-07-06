@@ -11,6 +11,7 @@ import {
 import { envoyerCommandeGoogleSheet } from "../services/googleSheet";
 import { envoyerCourrielsCommande } from "../services/emailService";
 import { getCharteGrandeur } from "../data/chartesGrandeurs";
+import { formatTelephone } from "../utils/telephone";
 
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
@@ -106,15 +107,15 @@ const [commande, setCommande] = useState({
     return;
   }
 
-  const commandeComplete = {
-    nom: commande.nom,
-    courriel: commande.courriel,
-    telephone: commande.telephone,
-    notes: commande.notes,
-    articles: panier,
-    total,
-    source: "boutique-v2",
-  };
+const commandeComplete = {
+  nom: commande.nom,
+  courriel: commande.courriel,
+  telephone: formatTelephone(commande.telephone),
+  notes: commande.notes,
+  articles: panier,
+  total,
+  source: "boutique-v2",
+};
 
   try {
     const resultatCommande = await creerCommandeBoutique(commandeComplete);
