@@ -4841,10 +4841,6 @@ const datesEquipe = datesLigue.filter((date) => {
           Remplaçants disponibles
         </h2>
 
-        <p className="mt-4 text-slate-300">
-          Voici les joueurs indépendants disponibles dans votre catégorie. Sélectionnez une date seulement lorsque vous voulez confirmer un remplacement.
-        </p>
-
         <select
           value={dateSelectionnee}
           onChange={(e) => setDateSelectionnee(e.target.value)}
@@ -4926,31 +4922,11 @@ const datesEquipe = datesLigue.filter((date) => {
   Voici les joueurs indépendants disponibles dans votre catégorie. Sélectionnez une date seulement lorsque vous voulez confirmer officiellement un remplacement.
 </p>
 
-                  {membre.commentaire && (
-                    <p className="mt-4 text-slate-300">
-                      Note : {membre.commentaire}
-                    </p>
-                  )}
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {membre.telephone && (
-                      <a
-                        href={`tel:${membre.telephone}`}
-                        className="rounded-full bg-amber-400 px-5 py-3 font-black text-slate-950"
-                      >
-                        Appeler
-                      </a>
-                    )}
-
-                    {membre.email && (
-                      <a
-                        href={`mailto:${membre.email}`}
-                        className="rounded-full border border-white/15 px-5 py-3 font-black text-white"
-                      >
-                        Écrire
-                      </a>
-                    )}
-                  </div>
+{(membre.note || membre.commentaire) && (
+  <p className="mt-4 text-slate-300">
+    Note : {membre.note || membre.commentaire}
+  </p>
+)}
                 </div>
               ))
             ) : (
