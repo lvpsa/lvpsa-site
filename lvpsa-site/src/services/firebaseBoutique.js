@@ -224,31 +224,44 @@ export async function chargerInventaireBoutiqueV2() {
 }
 
 export async function creerCommandeBoutique(commande) {
+  const compteurRef = doc(db, "settings", "compteurCommandesBoutique");
 
-export async function deduireInventaireBoutique(articles) {
-  const batch = writeBatch(db);
+  return runTransaction(db, async (transaction) => {
+    const compteurSnap = await transaction.get(compteurRef);
 
-  articles.forEach((article) => {
-    const ref = doc(
-      db,
-      "inventaireBoutiqueV2",
-      `${article.produitId}_${article.couleurId}_${article.taille}`
-    );
+    const dernierNumero = compteurSnap.exists()
+      ? Number(compteurSnap.data().dernierNumero || 1000)
+      : 1000;
 
-    batch.set(
-      ref,
+    const nouveauNumero = dernierNumero + 1;
+    const numeroCommande = `LVPSA-${nouveauNumero}`;
+
+    transaction.set(
+      compteurRef,
       {
-        produitId: article.produitId,
-        couleurId: article.couleurId,
-        taille: article.taille,
-        quantite: increment(-Number(article.quantite)),
+        dernierNumero: nouveauNumero,
         updatedAt: serverTimestamp(),
       },
       { merge: true }
     );
-  });
 
-  await batch.commit();
+    const commandeRef = doc(collection(db, "commandesBoutique"));
+
+    transaction.set(commandeRef, {
+      ...commande,
+      numeroCommande,
+      numeroCommandeSimple: nouveauNumero,
+      statut: "en_attente",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+
+    return {
+      id: commandeRef.id,
+      numeroCommande,
+      numeroCommandeSimple: nouveauNumero,
+    };
+  });
 }
 
 export async function chargerCommandesBoutique() {
