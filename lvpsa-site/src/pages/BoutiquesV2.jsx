@@ -180,6 +180,14 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
         </div>
       )}
 
+      <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
+        <img
+          src="/boutique-lvpsa.png"
+          alt="Collection officielle LVPSA"
+          className="w-full h-auto object-cover"
+        />
+      </div>
+
       <div className="mt-12 space-y-12">
         {["T-shirt", "Camisole", "Hoodie"].map((type) => (
           <div key={type}>
