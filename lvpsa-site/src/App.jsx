@@ -1988,7 +1988,43 @@ function Partenaires() {
     />
   </div>
   
- <div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-8 shadow-2xl">
+ <div className="mt-8 grid gap-6 md:grid-cols-4">
+
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/Applied.png"
+      alt="Applied Industrial Technologies"
+      className="max-h-28 object-contain"
+    />
+  </div>
+
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/Canac.png"
+      alt="Canac"
+      className="max-h-28 object-contain"
+    />
+  </div>
+
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/VSAD.png"
+      alt="Ville de Saint-Augustin-de-Desmaures"
+      className="max-h-40 w-full object-contain"
+    />
+  </div>
+
+  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/Desjardins.png"
+      alt="Desjardins"
+      className="max-h-28 w-full object-contain"
+    />
+  </div>
+
+</div>
+
+<div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-8 shadow-2xl">
   <div className="grid items-center gap-8 lg:grid-cols-[auto_1fr_auto]">
     
     <div className="flex justify-center">
