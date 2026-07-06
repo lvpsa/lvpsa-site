@@ -1988,52 +1988,56 @@ function Partenaires() {
     />
   </div>
   
- <div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-10 text-center shadow-2xl">
-
-  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-3xl font-black text-white">
-    f
-  </div>
-
-  <h2 className="mt-6 text-4xl font-black text-white">
-    Suivez la LVPSA
-  </h2>
-
-  <p className="mt-4 mx-auto max-w-2xl text-lg text-slate-300">
-    Restez informé des horaires, résultats, photos, annonces importantes et événements de la ligue.
-  </p>
-
-  <div className="mt-6 flex flex-wrap justify-center gap-3 text-sm font-bold text-slate-300">
-
-    <span className="rounded-full bg-white/10 px-4 py-2">
-      📅 Horaires
-    </span>
-
-    <span className="rounded-full bg-white/10 px-4 py-2">
-      🏆 Résultats
-    </span>
-
-    <span className="rounded-full bg-white/10 px-4 py-2">
-      📸 Photos
-    </span>
-
-    <span className="rounded-full bg-white/10 px-4 py-2">
-      📣 Annonces
-    </span>
-
-  </div>
-
-  <a
-    href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
-    target="_blank"
-    rel="noreferrer"
-    className="mt-8 inline-flex rounded-full bg-amber-400 px-10 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-  >
-    Visiter notre page Facebook ↗
-  </a>
-
-</div>
-        </div>
+ <div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-8 shadow-2xl">
+  <div className="grid items-center gap-8 lg:grid-cols-[auto_1fr_auto]">
+    
+    <div className="flex justify-center">
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-600 text-4xl font-black text-white">
+        f
       </div>
+    </div>
+
+    <div>
+      <h2 className="text-4xl font-black text-white">
+        Suivez la LVPSA
+      </h2>
+
+      <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
+        Restez informé des horaires, résultats, photos, annonces importantes et événements de la ligue.
+      </p>
+
+      <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold text-slate-300">
+        <span className="rounded-full bg-white/10 px-4 py-2">
+          📅 Horaires
+        </span>
+
+        <span className="rounded-full bg-white/10 px-4 py-2">
+          🏆 Résultats
+        </span>
+
+        <span className="rounded-full bg-white/10 px-4 py-2">
+          📸 Photos
+        </span>
+
+        <span className="rounded-full bg-white/10 px-4 py-2">
+          📣 Annonces
+        </span>
+      </div>
+    </div>
+
+    <div className="flex justify-center lg:justify-end">
+      <a
+        href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex whitespace-nowrap rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+      >
+        Visiter notre page Facebook ↗
+      </a>
+    </div>
+
+  </div>
+</div>
     </section>
   );
 }
