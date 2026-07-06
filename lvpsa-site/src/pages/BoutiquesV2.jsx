@@ -116,13 +116,19 @@ const [commande, setCommande] = useState({
   };
 
   try {
-    await creerCommandeBoutique(commandeComplete);
-    await deduireInventaireBoutique(panier);
-    await envoyerCommandeGoogleSheet(commandeComplete);
-    await envoyerCourrielsCommande(commandeComplete);
+    const resultatCommande = await creerCommandeBoutique(commandeComplete);
 
-    alert("Commande envoyée avec succès!");
+const commandeAvecNumero = {
+  ...commandeComplete,
+  numeroCommande: resultatCommande.numeroCommande,
+  numeroCommandeSimple: resultatCommande.numeroCommandeSimple,
+};
 
+await deduireInventaireBoutique(panier);
+await envoyerCommandeGoogleSheet(commandeAvecNumero);
+await envoyerCourrielsCommande(commandeAvecNumero);
+
+alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
     setPanier([]);
     setCommande({
       nom: "",
