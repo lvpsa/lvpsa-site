@@ -188,62 +188,62 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
         />
       </div>
 
-      <div className="mt-12 space-y-12">
-        {["T-shirt", "Camisole", "Hoodie"].map((type) => (
-          <div key={type}>
-            <h2 className="mb-5 text-3xl font-black text-amber-300">
-              {type === "Hoodie" ? "Hoodies" : `${type}s`}
-            </h2>
+      <div className="mt-12 grid gap-8 xl:grid-cols-3">
+  {["T-shirt", "Camisole", "Hoodie"].map((type) => (
+    <div key={type}>
+      <h2 className="mb-5 text-center text-3xl font-black text-amber-300">
+        {type === "Hoodie" ? "Hoodies" : `${type}s`}
+      </h2>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {produits
-                .filter((produit) => produit.type === type)
-                .map((produit) => {
-                  const couleurDefaut = produit.couleurs?.[0];
-                  const tailleDefaut = produit.grandeurs?.includes("M")
-                    ? "M"
-                    : produit.grandeurs?.[0];
+      <div className="grid gap-6">
+        {produits
+          .filter((produit) => produit.type === type)
+          .map((produit) => {
+            const couleurDefaut = produit.couleurs?.[0];
+            const tailleDefaut = produit.grandeurs?.includes("M")
+              ? "M"
+              : produit.grandeurs?.[0];
 
-                  return (
-                    <button
-                      key={produit.id}
-                      type="button"
-                      onClick={() => ouvrirProduit(produit)}
-                      className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left transition hover:-translate-y-1 hover:border-amber-300"
-                    >
-                      <img
-                        src={couleurDefaut?.imageDevant}
-                        alt={produit.nom}
-                        className="h-56 w-full rounded-2xl bg-white object-contain"
-                      />
+            return (
+              <button
+                key={produit.id}
+                type="button"
+                onClick={() => ouvrirProduit(produit)}
+                className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left transition hover:-translate-y-1 hover:border-amber-300"
+              >
+                <img
+                  src={couleurDefaut?.imageDevant}
+                  alt={produit.nom}
+                  className="h-56 w-full rounded-2xl bg-white object-contain"
+                />
 
-                      <p className="mt-4 text-lg font-black text-white">
-                        {produit.nom}
-                      </p>
+                <p className="mt-4 text-lg font-black text-white">
+                  {produit.nom}
+                </p>
 
-                      <p className="text-sm text-slate-300">
-                        {produit.couleurs?.length || 0} couleur(s) disponible(s)
-                      </p>
+                <p className="text-sm text-slate-300">
+                  {produit.couleurs?.length || 0} couleur(s) disponible(s)
+                </p>
 
-                      <p className="mt-2 text-sm font-bold text-slate-300">
-                        {couleurDefaut &&
-                          statutInventaire(
-                            produit.id,
-                            couleurDefaut.id,
-                            tailleDefaut
-                          )}
-                      </p>
+                <p className="mt-2 text-sm font-bold text-slate-300">
+                  {couleurDefaut &&
+                    statutInventaire(
+                      produit.id,
+                      couleurDefaut.id,
+                      tailleDefaut
+                    )}
+                </p>
 
-                      <p className="mt-2 text-xl font-black text-amber-300">
-                        {produit.prix} $
-                      </p>
-                    </button>
-                  );
-                })}
-            </div>
-          </div>
-        ))}
+                <p className="mt-2 text-xl font-black text-amber-300">
+                  {produit.prix} $
+                </p>
+              </button>
+            );
+          })}
       </div>
+    </div>
+  ))}
+</div>
 
       {produitSelectionne && couleurSelectionnee && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
