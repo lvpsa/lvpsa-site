@@ -4407,7 +4407,7 @@ const datesEquipe = datesLigue.filter((date) => {
 
     await emailjs.send(
       "service_f4h3rii",
-      "template_demande_remplacement",
+      "template_nwl643g",
       {
         to_email: demande.remplacantEmail,
         remplacant_nom: demande.remplacantNom,
