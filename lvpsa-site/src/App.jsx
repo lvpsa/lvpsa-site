@@ -4329,9 +4329,17 @@ setJoueurs(Array.from(joueursFusionnes.values()));
   userData.categorie || equipeActuelle?.categorie || equipeActuelle?.catégorie
 );
 
-const datesEquipe = datesLigue.filter(
-  (date) => date.categorie === categorieEquipeActive
-);
+const aujourdHuiGestionEquipe = new Date();
+aujourdHuiGestionEquipe.setHours(0, 0, 0, 0);
+
+const datesEquipe = datesLigue.filter((date) => {
+  const dateMatch = new Date(`${date.id}T00:00:00`);
+
+  return (
+    date.categorie === categorieEquipeActive &&
+    dateMatch >= aujourdHuiGestionEquipe
+  );
+});
 
   const confirmerRemplacement = async () => {
   if (!dateSelectionnee || !joueurAbsentId || !remplacantId) {
