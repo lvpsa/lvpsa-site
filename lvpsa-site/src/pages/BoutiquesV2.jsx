@@ -145,26 +145,31 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
   
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        LVPSA
-      </p>
+     <p className="font-bold uppercase tracking-wider text-amber-300">
+  Collection officielle
+</p>
 
-      <h1 className="mt-2 text-5xl font-black">Boutique V2</h1>
+<h1 className="mt-2 text-5xl font-black">
+  Boutique LVPSA
+</h1>
 
-      <p className="mt-4 text-xl text-slate-300">
-        Collection officielle Beach Volleyball 2026
-      </p>
+<p className="mt-4 max-w-3xl text-xl leading-8 text-slate-300">
+  Découvrez la collection officielle de la Ligue de volleyball de plage de
+  Saint-Augustin. Des vêtements conçus pour représenter fièrement la LVPSA,
+  sur le terrain comme au quotidien.
+</p>
 
-      <div className="mt-8 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
-        <h2 className="text-2xl font-black text-amber-300">
-          Boutique en test
-        </h2>
+<div className="mt-8 rounded-3xl border border-amber-400/20 bg-white/5 p-6">
+  <h2 className="text-2xl font-black text-amber-300">
+    Quantités limitées
+  </h2>
 
-        <p className="mt-3 text-slate-300">
-          Cette version utilise la nouvelle structure Firebase : produits,
-          couleurs, grandeurs et inventaire dynamique.
-        </p>
-      </div>
+  <p className="mt-3 text-slate-300 leading-relaxed">
+    Plusieurs articles sont disponibles en quantités limitées. Si un modèle ou
+    une grandeur n’est plus en inventaire, il sera automatiquement indiqué comme
+    disponible sur commande.
+  </p>
+</div>
 
       {(chargementProduits || chargementInventaire) && (
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
