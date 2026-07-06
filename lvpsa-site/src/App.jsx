@@ -246,6 +246,95 @@ const fusionnerRemplacementsGlobal = (remplacementsFirestore, usersFirestore) =>
   );
 };
 
+async function traiterReponseDemandeRemplacement(demandeId, action, currentUser) {
+  const demandeRef = doc(db, "demandesRemplacements", demandeId);
+  const demandeSnap = await getDoc(demandeRef);
+
+  if (!demandeSnap.exists()) {
+    throw new Error("Demande introuvable.");
+  }
+
+  const demande = {
+    id: demandeSnap.id,
+    ...demandeSnap.data(),
+  };
+
+  const emailUser = normaliserTexteGlobal(currentUser?.email);
+  const emailDemande = normaliserTexteGlobal(demande.remplacantEmail);
+
+  const estBonRemplacant =
+    demande.remplacantId === currentUser?.uid ||
+    emailUser === emailDemande;
+
+  if (!estBonRemplacant) {
+    throw new Error("Cette demande ne vous est pas destinée.");
+  }
+
+  if (demande.statut !== "en_attente") {
+    return {
+      dejaRepondu: true,
+      statut: demande.statut,
+    };
+  }
+
+  if (action === "accepter") {
+    await updateDoc(demandeRef, {
+      statut: "accepte",
+      reponseAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+
+    await setDoc(
+      doc(db, "historiqueRemplacements", demandeId),
+      {
+        demandeId,
+        date: demande.date,
+        dateLabel: demande.dateLabel || demande.date,
+        categorie: demande.categorie,
+
+        equipeId: demande.equipeId || "",
+        equipeNom: demande.equipeNom || "",
+
+        joueurRemplaceId: demande.joueurRemplaceId || "",
+        joueurRemplaceNom: demande.joueurRemplaceNom || "",
+
+        remplacantId: demande.remplacantId || "",
+        remplacantNom: demande.remplacantNom || "",
+        remplacantEmail: demande.remplacantEmail || "",
+        remplacantTelephone: demande.remplacantTelephone || "",
+
+        capitaineId: demande.capitaineId || "",
+        capitaineNom: demande.capitaineNom || "",
+
+        statut: "confirme",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    return {
+      dejaRepondu: false,
+      statut: "accepte",
+    };
+  }
+
+  if (action === "refuser") {
+    await updateDoc(demandeRef, {
+      statut: "refuse",
+      reponseAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+
+    return {
+      dejaRepondu: false,
+      statut: "refuse",
+    };
+  }
+
+  throw new Error("Action invalide.");
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -3623,6 +3712,269 @@ function Connexion() {
           {message}
         </p>
       )}
+    </section>
+  );
+}
+
+function ReponseDemandeRemplacement() {
+  const { demandeId, action } = useParams();
+
+  const [chargement, setChargement] = useState(true);
+  const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (!currentUser) {
+        setMessage("Vous devez vous connecter pour répondre à cette demande.");
+        setChargement(false);
+        return;
+      }
+
+      try {
+        const resultat = await traiterReponseDemandeRemplacement(
+          demandeId,
+          action,
+          currentUser
+        );
+
+        if (resultat.dejaRepondu) {
+          setMessage(`Cette demande a déjà été traitée. Statut actuel : ${resultat.statut}.`);
+        } else if (resultat.statut === "accepte") {
+          setMessage("Merci ! Le remplacement a été accepté et confirmé.");
+        } else if (resultat.statut === "refuse") {
+          setMessage("Merci ! Le remplacement a été refusé.");
+        }
+      } catch (error) {
+        console.error(error);
+        setMessage(error.message || "Erreur lors du traitement de la demande.");
+      }
+
+      setChargement(false);
+    });
+
+    return () => unsubscribe();
+  }, [demandeId, action]);
+
+  if (chargement) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">Traitement en cours...</h1>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+      <h1 className="text-4xl font-black text-white">
+        Réponse à une demande de remplacement
+      </h1>
+
+      <p className="mt-6 rounded-3xl border border-white/10 bg-white/5 p-6 text-lg text-slate-300">
+        {message}
+      </p>
+
+      {!user && (
+        <Link
+          to="/connexion"
+          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
+        >
+          Se connecter
+        </Link>
+      )}
+
+      <Link
+        to="/mes-demandes"
+        className="mt-6 inline-flex rounded-full border border-white/15 px-8 py-4 font-black text-white hover:border-amber-300 hover:text-amber-300"
+      >
+        Voir mes demandes
+      </Link>
+    </section>
+  );
+}
+
+function MesDemandesRemplacement() {
+  const [user, setUser] = useState(null);
+  const [demandes, setDemandes] = useState([]);
+  const [chargement, setChargement] = useState(true);
+  const [message, setMessage] = useState("");
+
+  const chargerDemandes = async (currentUser) => {
+    const demandesSnap = await getDocs(collection(db, "demandesRemplacements"));
+
+    const emailUser = normaliserTexteGlobal(currentUser.email);
+
+    const liste = demandesSnap.docs
+      .map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+      .filter((demande) => {
+        const emailDemande = normaliserTexteGlobal(demande.remplacantEmail);
+
+        return (
+          demande.remplacantId === currentUser.uid ||
+          emailDemande === emailUser
+        );
+      })
+      .sort((a, b) => {
+        const dateA = a.createdAt?.seconds || 0;
+        const dateB = b.createdAt?.seconds || 0;
+        return dateB - dateA;
+      });
+
+    setDemandes(liste);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (!currentUser) {
+        setChargement(false);
+        return;
+      }
+
+      await chargerDemandes(currentUser);
+      setChargement(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const repondre = async (demandeId, action) => {
+    if (!user) return;
+
+    try {
+      await traiterReponseDemandeRemplacement(demandeId, action, user);
+      await chargerDemandes(user);
+
+      setMessage(
+        action === "accepter"
+          ? "Remplacement accepté."
+          : "Remplacement refusé."
+      );
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message || "Erreur lors de la réponse.");
+    }
+  };
+
+  const couleurStatut = (statut) => {
+    if (statut === "accepte") return "text-emerald-300";
+    if (statut === "refuse") return "text-red-300";
+    return "text-amber-300";
+  };
+
+  if (chargement) {
+    return null;
+  }
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">Connexion requise</h1>
+
+        <p className="mt-4 text-slate-300">
+          Vous devez vous connecter pour voir vos demandes de remplacement.
+        </p>
+
+        <Link
+          to="/connexion"
+          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
+        >
+          Connexion
+        </Link>
+      </section>
+    );
+  }
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        Remplaçants
+      </p>
+
+      <h1 className="mt-2 text-5xl font-black text-white">
+        Mes demandes de remplacement
+      </h1>
+
+      <p className="mt-5 max-w-3xl text-lg text-slate-300">
+        Consultez les demandes reçues et confirmez votre disponibilité.
+      </p>
+
+      {message && (
+        <p className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-amber-300">
+          {message}
+        </p>
+      )}
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
+        {demandes.length > 0 ? (
+          demandes.map((demande) => (
+            <div
+              key={demande.id}
+              className="rounded-3xl border border-white/10 bg-white/5 p-6"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-black text-white">
+                    {demande.equipeNom || "Équipe non précisée"}
+                  </h2>
+
+                  <p className="mt-2 text-slate-300">
+                    Date : {demande.dateLabel || demande.date || "Non précisée"}
+                  </p>
+
+                  <p className="text-slate-300">
+                    Joueur remplacé : {demande.joueurRemplaceNom || "Non précisé"}
+                  </p>
+
+                  <p className="text-slate-300">
+                    Capitaine : {demande.capitaineNom || "Non précisé"}
+                  </p>
+                </div>
+
+                <span className={`rounded-full bg-white/10 px-4 py-2 text-sm font-black uppercase ${couleurStatut(demande.statut)}`}>
+                  {demande.statut === "en_attente"
+                    ? "En attente"
+                    : demande.statut === "accepte"
+                    ? "Accepté"
+                    : demande.statut === "refuse"
+                    ? "Refusé"
+                    : demande.statut || "En attente"}
+                </span>
+              </div>
+
+              {demande.statut === "en_attente" && (
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => repondre(demande.id, "accepter")}
+                    className="rounded-full bg-emerald-400 px-6 py-3 font-black text-slate-950 hover:bg-emerald-300"
+                  >
+                    Accepter
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => repondre(demande.id, "refuser")}
+                    className="rounded-full border border-red-400 px-6 py-3 font-black text-red-300 hover:bg-red-400 hover:text-slate-950"
+                  >
+                    Refuser
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="text-slate-400">
+            Aucune demande de remplacement pour le moment.
+          </p>
+        )}
+      </div>
     </section>
   );
 }
