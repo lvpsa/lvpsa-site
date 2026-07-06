@@ -454,7 +454,14 @@ function Header() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="flex items-center gap-4">
-          <img src="/logo.jpg" alt="LVPSA" className="h-20 w-20 rounded-full object-cover" />
+          <div className="h-20 w-20 overflow-hidden rounded-full bg-transparent">
+            <img
+              src="/logo.jpg"
+              alt="LVPSA"
+              className="h-full w-full scale-125 object-cover"
+            />
+          </div>
+          
           <div>
             <h1 className="text-4xl font-black tracking-tight text-white">LVPSA</h1>
             <p className="text-xl text-slate-300">Volleyball de plage de St-Augustin</p>
