@@ -18,6 +18,8 @@ import {
 import {
   doc,
   getDoc,
+  getDocs,
+  collection,
   setDoc,
   addDoc,
   serverTimestamp,
@@ -53,6 +55,90 @@ const email = "liguevpsa@gmail.com";
 const tournoiLink = "https://forms.gle/csLUt6NmcjNADcBm7";
 const sheetLink = "https://docs.google.com/spreadsheets/d/1-Y5gsmgi-V8TjSQbl2xIPuDx1QxTPL0S/edit?usp=drive_link&ouid=116934157877214569210&rtpof=true&sd=true";
 const meteoLink = "https://www.meteomedia.com/ca/meteo/quebec/saint-augustin-de-desmaures";
+const normaliserTexteGlobal = (valeur) =>
+  String(valeur || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+const normaliserCategorieGlobal = (valeur) => {
+  const texte = normaliserTexteGlobal(valeur).replace(/\s+/g, "-");
+
+  if (texte.includes("recreatif")) return "recreatif";
+  if (texte.includes("competitif")) return "competitif";
+  if (texte.includes("deux")) return "les-deux";
+
+  return texte;
+};
+
+const nomEquipeGlobal = (equipe) =>
+  equipe?.nom ||
+  equipe?.nomEquipe ||
+  equipe?.equipeNom ||
+  equipe?.equipenom ||
+  equipe?.equipe ||
+  "";
+
+const capitaineNomGlobal = (equipe) =>
+  equipe?.capitaineNom ||
+  equipe?.capitainenom ||
+  equipe?.capitaine ||
+  equipe?.nomCapitaine ||
+  "Non assigné";
+
+const memeEquipeGlobal = (membre, equipe) => {
+  if (!membre || !equipe) return false;
+
+  const equipeId = equipe.id || equipe.equipeId || "";
+  const equipeNom = nomEquipeGlobal(equipe);
+
+  const membreEquipeId = membre.equipeId || membre.idEquipe || "";
+  const membreEquipeNom =
+    membre.equipeNom ||
+    membre.nomEquipe ||
+    membre.equipenom ||
+    membre.equipe ||
+    "";
+
+  return (
+    (equipeId && membreEquipeId && equipeId === membreEquipeId) ||
+    (equipeNom &&
+      membreEquipeNom &&
+      normaliserTexteGlobal(equipeNom) === normaliserTexteGlobal(membreEquipeNom))
+  );
+};
+
+async function chargerEquipesLVPSA() {
+  const [teamsSnap, equipesSnap] = await Promise.all([
+    getDocs(collection(db, "Teams")),
+    getDocs(collection(db, "Equipes")),
+  ]);
+
+  const toutes = [
+    ...teamsSnap.docs.map((docItem) => ({
+      id: docItem.id,
+      sourceCollection: "Teams",
+      ...docItem.data(),
+    })),
+    ...equipesSnap.docs.map((docItem) => ({
+      id: docItem.id,
+      sourceCollection: "Equipes",
+      ...docItem.data(),
+    })),
+  ];
+
+  const uniques = new Map();
+
+  toutes.forEach((equipe) => {
+    const cle = equipe.id || normaliserTexteGlobal(nomEquipeGlobal(equipe));
+    if (!uniques.has(cle)) {
+      uniques.set(cle, equipe);
+    }
+  });
+
+  return Array.from(uniques.values());
+}
 
 export default function App() {
   return (
@@ -70,7 +156,7 @@ export default function App() {
           <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/tournoi/horaire" element={<HoraireTournoi />} />
-          <Route path="/boutique" element={<BoutiqueProtegee />} />
+          <Route path="/boutique" element={<BoutiquesV2 />} />
           <Route path="/boutique-v2" element={<BoutiquesV2 />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
@@ -1829,46 +1915,40 @@ function Admin() {
   }, []);
 
   useEffect(() => {
-    const chargerAdmin = async () => {
-      if (!userData?.isAdmin) return;
+  const chargerAdmin = async () => {
+    if (!userData?.isAdmin) return;
 
-      const membresSnap = await getDocs(collection(db, "users"));
-      const equipesSnap = await getDocs(collection(db, "Teams"));
-      const remplacementsSnap = await getDocs(collection(db, "remplacements"));
-      const historiqueSnap = await getDocs(collection(db, "historiqueRemplacements"));
+    const membresSnap = await getDocs(collection(db, "users"));
+    const remplacementsSnap = await getDocs(collection(db, "remplacements"));
+    const historiqueSnap = await getDocs(collection(db, "historiqueRemplacements"));
+    const equipesChargees = await chargerEquipesLVPSA();
 
-      setMembres(
-        membresSnap.docs.map((docItem) => ({
-          id: docItem.id,
-          ...docItem.data(),
-        }))
-      );
+    setMembres(
+      membresSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
 
-      setEquipes(
-        equipesSnap.docs.map((docItem) => ({
-          id: docItem.id,
-          ...docItem.data(),
-        }))
-      );
+    setEquipes(equipesChargees);
 
-      setRemplacements(
-        remplacementsSnap.docs.map((docItem) => ({
-          id: docItem.id,
-          ...docItem.data(),
-        }))
-      );
+    setRemplacements(
+      remplacementsSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
 
-      setHistoriqueRemplacements(
-        historiqueSnap.docs.map((docItem) => ({
-          id: docItem.id,
-          ...docItem.data(),
-        }))
-      );
-    };
+    setHistoriqueRemplacements(
+      historiqueSnap.docs.map((docItem) => ({
+        id: docItem.id,
+        ...docItem.data(),
+      }))
+    );
+  };
 
-    chargerAdmin();
-  }, [userData]);
-
+  chargerAdmin();
+}, [userData]);
   async function sauvegarder() {
     await setDoc(doc(db, "settings", "matchStatus"), statut);
     alert("Statut mis à jour !");
@@ -1917,8 +1997,16 @@ const equipesCompetitives = equipes.filter(
   (equipe) => normaliserCategorie(equipe.categorie) === "competitif"
 );
 
-  const joueursParEquipe = (equipeId) =>
-    membres.filter((membre) => membre.equipeId === equipeId);
+  const joueursParEquipe = (equipe) =>
+  membres.filter((membre) => {
+    if (!memeEquipeGlobal(membre, equipe)) return false;
+
+    return (
+      membre.role !== "remplacant" &&
+      membre.equipeId !== "independant" &&
+      !membre.estRemplacant
+    );
+  });
 
   const totalRemplacantsDisponibles = remplacements.length;
   
@@ -2064,7 +2152,7 @@ const equipesCompetitives = equipes.filter(
                     </h3>
 
                     <p className="mt-2 text-slate-300">
-                      Capitaine : {equipe.capitainenom || equipe.capitainenom || "Non assigné"}
+                      Capitaine : {capitaineNomGlobal(equipe)}
                     </p>
 
                     <div className="mt-4 space-y-2">
@@ -2074,8 +2162,8 @@ const equipesCompetitives = equipes.filter(
       • {joueur}
     </p>
   ))
-) : joueursParEquipe(equipe.id).length > 0 ? (
-  joueursParEquipe(equipe.id).map((joueur) => (
+) : joueursParEquipe(equipe).length > 0 ? (
+  joueursParEquipe(equipe).map((joueur) => (
     <p key={joueur.id} className="text-slate-300">
       • {joueur.nom} — {joueur.email}
     </p>
@@ -3635,10 +3723,11 @@ function Protegee() {
   return <GestionEquipe user={user} userData={userData} />;
 }
 
-function GestionEquipe({ userData }) {
+function GestionEquipe({ user, userData }) {
   const [dateSelectionnee, setDateSelectionnee] = useState("");
   const [remplacants, setRemplacants] = useState([]);
   const [joueurs, setJoueurs] = useState([]);
+  const [equipeActuelle, setEquipeActuelle] = useState(null);
   const [joueurAbsentId, setJoueurAbsentId] = useState("");
   const [remplacantId, setRemplacantId] = useState("");
 
@@ -3659,29 +3748,14 @@ function GestionEquipe({ userData }) {
     { id: "2026-08-18", label: "18 août", categorie: "competitif" },
   ];
 
-  useEffect(() => {
-  const normaliserCategorie = (valeur) => {
-    const texte = String(valeur || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, "-")
-      .trim();
-
-    if (texte.includes("recreatif")) return "recreatif";
-    if (texte.includes("competitif")) return "competitif";
-    if (texte.includes("deux")) return "les-deux";
-
-    return texte;
-  };
-
+useEffect(() => {
   const extraireCategories = (membre) => {
     const valeurs = Array.isArray(membre.categories)
       ? membre.categories
-      : [membre.categorie].filter(Boolean);
+      : [membre.categorie, membre.catégorie, membre.type].filter(Boolean);
 
     const categories = valeurs.flatMap((valeur) => {
-      const categorie = normaliserCategorie(valeur);
+      const categorie = normaliserCategorieGlobal(valeur);
 
       if (categorie === "les-deux") {
         return ["recreatif", "competitif"];
@@ -3693,9 +3767,12 @@ function GestionEquipe({ userData }) {
     return [...new Set(categories)];
   };
 
-  const chargerRemplacants = async () => {
+  const chargerDonneesEquipe = async () => {
+    if (!userData) return;
+
     const usersSnapshot = await getDocs(collection(db, "users"));
     const remplacementsSnapshot = await getDocs(collection(db, "remplacements"));
+    const equipesChargees = await chargerEquipesLVPSA();
 
     const listeUsers = usersSnapshot.docs.map((docItem) => ({
       id: docItem.id,
@@ -3707,33 +3784,98 @@ function GestionEquipe({ userData }) {
       ...docItem.data(),
     }));
 
-    const categorieEquipe = normaliserCategorie(userData.categorie);
+    const equipeTrouvee =
+      equipesChargees.find((equipe) => {
+        const equipeId = equipe.id || equipe.equipeId || "";
+        const equipeNom = nomEquipeGlobal(equipe);
+
+        return (
+          (userData.equipeId && equipeId === userData.equipeId) ||
+          (userData.equipenom &&
+            normaliserTexteGlobal(equipeNom) === normaliserTexteGlobal(userData.equipenom)) ||
+          (userData.equipeNom &&
+            normaliserTexteGlobal(equipeNom) === normaliserTexteGlobal(userData.equipeNom))
+        );
+      }) || null;
+
+    setEquipeActuelle(equipeTrouvee);
+
+    const categorieEquipe = normaliserCategorieGlobal(
+      userData.categorie || equipeTrouvee?.categorie || equipeTrouvee?.catégorie
+    );
+
+    const joueursDepuisEquipe = Array.isArray(equipeTrouvee?.joueurs)
+      ? equipeTrouvee.joueurs
+          .filter(Boolean)
+          .map((joueur, index) => {
+            if (typeof joueur === "string") {
+              return {
+                id: `joueur-equipe-${index}`,
+                nom: joueur,
+                email: "",
+                telephone: "",
+              };
+            }
+
+            return {
+              id: joueur.id || `joueur-equipe-${index}`,
+              nom: joueur.nom || joueur.name || `Joueur ${index + 1}`,
+              email: joueur.email || joueur.courriel || "",
+              telephone: joueur.telephone || joueur.téléphone || "",
+              ...joueur,
+            };
+          })
+      : [];
+
+    const joueursDepuisUsers = listeUsers.filter((membre) => {
+      const appartientEquipe = equipeTrouvee
+        ? memeEquipeGlobal(membre, equipeTrouvee)
+        : membre.equipeId === userData.equipeId;
+
+      if (!appartientEquipe) return false;
+      if (membre.equipeId === "independant") return false;
+      if (membre.estRemplacant) return false;
+      if (membre.role === "remplacant") return false;
+
+      return true;
+    });
+
+    const joueursFusionnes = new Map();
+
+    [...joueursDepuisEquipe, ...joueursDepuisUsers].forEach((joueur) => {
+      const cle =
+        joueur.id ||
+        joueur.email ||
+        joueur.courriel ||
+        normaliserTexteGlobal(joueur.nom);
+
+      if (cle && !joueursFusionnes.has(cle)) {
+        joueursFusionnes.set(cle, joueur);
+      }
+    });
+
+    setJoueurs(Array.from(joueursFusionnes.values()));
 
     setRemplacants(
       listeRemplacants.filter((membre) => {
         const categoriesRemplacant = extraireCategories(membre);
+        const statut = normaliserTexteGlobal(membre.statut || "actif");
+
+        const estDisponible =
+          membre.disponible === true &&
+          statut !== "inactif" &&
+          statut !== "non disponible";
 
         return (
-          membre.disponible === true &&
-          (
-            !categorieEquipe ||
-            categoriesRemplacant.includes(categorieEquipe)
-          )
+          estDisponible &&
+          (!categorieEquipe || categoriesRemplacant.includes(categorieEquipe))
         );
       })
     );
-
-    setJoueurs(
-      listeUsers.filter(
-        (membre) =>
-          membre.equipeId === userData.equipeId &&
-          membre.role === "joueur"
-      )
-    );
   };
 
-  chargerRemplacants();
-}, [userData.categorie, userData.equipeId]);
+  chargerDonneesEquipe();
+}, [userData]);
     if (userData?.role !== "capitaine" && !userData?.isAdmin) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
@@ -3749,9 +3891,13 @@ function GestionEquipe({ userData }) {
   }
   const remplacantsFiltres = remplacants;
 
-  const datesEquipe = datesLigue.filter(
-    (date) => date.categorie === userData.categorie
-  );
+  const categorieEquipeActive = normaliserCategorieGlobal(
+  userData.categorie || equipeActuelle?.categorie || equipeActuelle?.catégorie
+);
+
+const datesEquipe = datesLigue.filter(
+  (date) => date.categorie === categorieEquipeActive
+);
 
   const confirmerRemplacement = async () => {
   if (!dateSelectionnee || !joueurAbsentId || !remplacantId) {
@@ -3762,20 +3908,24 @@ function GestionEquipe({ userData }) {
   const joueurAbsent = joueurs.find((joueur) => joueur.id === joueurAbsentId);
   const remplacant = remplacantsFiltres.find((membre) => membre.id === remplacantId);
 
-  await addDoc(collection(db, "historiqueRemplacements"), {
-    date: dateSelectionnee,
-    categorie: userData.categorie,
-    equipeId: userData.equipeId,
-    equipeNom: userData.equipenom || "",
-    joueurRemplaceId: joueurAbsent?.id || "",
-    joueurRemplaceNom: joueurAbsent?.nom || "",
-    remplacantId: remplacant?.id || "",
-    remplacantNom: remplacant?.nom || "",
-    remplacantEmail: remplacant?.email || remplacant?.courriel || "",
-    remplacantTelephone: remplacant?.telephone || "",
-    capitaineId: userData.id || "",
-    createdAt: serverTimestamp(),
-  });
+await addDoc(collection(db, "historiqueRemplacements"), {
+  date: dateSelectionnee,
+  categorie: categorieEquipeActive,
+  equipeId: userData.equipeId || equipeActuelle?.id || "",
+  equipeNom:
+    userData.equipenom ||
+    userData.equipeNom ||
+    nomEquipeGlobal(equipeActuelle) ||
+    "",
+  joueurRemplaceId: joueurAbsent?.id || "",
+  joueurRemplaceNom: joueurAbsent?.nom || "",
+  remplacantId: remplacant?.id || "",
+  remplacantNom: remplacant?.nom || "",
+  remplacantEmail: remplacant?.email || remplacant?.courriel || "",
+  remplacantTelephone: remplacant?.telephone || "",
+  capitaineId: user?.uid || "",
+  createdAt: serverTimestamp(),
+});
 
   alert("Remplacement confirmé !");
   setJoueurAbsentId("");
@@ -3789,12 +3939,12 @@ function GestionEquipe({ userData }) {
       </p>
 
       <h1 className="mt-2 text-5xl font-black text-white">
-        {userData.equipenom}
+        {userData.equipenom || userData.equipeNom || nomEquipeGlobal(equipeActuelle)}
       </h1>
 
       <p className="mt-4 text-slate-300">
         Catégorie :{" "}
-        {userData.categorie === "recreatif" ? "Récréatif" : "Compétitif"}
+        {categorieEquipeActive === "recreatif" ? "Récréatif" : "Compétitif"}
       </p>
 
       <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
