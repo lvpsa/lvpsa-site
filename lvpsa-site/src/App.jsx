@@ -1954,7 +1954,7 @@ function Partenaires() {
           Merci à nos partenaires qui contribuent au développement de la LVPSA.
         </p>
 
-<div className="mt-8 grid gap-6 md:grid-cols-3">
+<div className="mt-8 grid gap-6 md:grid-cols-4">
 
   <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
     <img
@@ -1979,6 +1979,15 @@ function Partenaires() {
   className="max-h-40 w-full object-contain"
 />
           </div>
+
+    <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
+    <img
+      src="/Desjardins.png"
+      alt="Desjardins"
+      className="max-h-28 w-full object-contain"
+    />
+  </div>
+  
  <div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-10 text-center shadow-2xl">
 
   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-3xl font-black text-white">
