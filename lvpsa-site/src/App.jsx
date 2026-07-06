@@ -4261,19 +4261,34 @@ const listeRemplacants = fusionnerRemplacementsGlobal(
 
     const joueursFusionnes = new Map();
 
-    [...joueursDepuisEquipe, ...joueursDepuisUsers].forEach((joueur) => {
-      const cle =
-        joueur.id ||
-        joueur.email ||
-        joueur.courriel ||
-        normaliserTexteGlobal(joueur.nom);
+[...joueursDepuisEquipe, ...joueursDepuisUsers].forEach((joueur) => {
+  const nomNormalise = normaliserTexteGlobal(joueur.nom);
+  const emailNormalise = normaliserTexteGlobal(joueur.email || joueur.courriel);
 
-      if (cle && !joueursFusionnes.has(cle)) {
-        joueursFusionnes.set(cle, joueur);
-      }
-    });
+  const cle = nomNormalise || emailNormalise || joueur.id;
 
-    setJoueurs(Array.from(joueursFusionnes.values()));
+  if (!cle) return;
+
+  const joueurActuel = joueursFusionnes.get(cle);
+
+  if (!joueurActuel) {
+    joueursFusionnes.set(cle, joueur);
+    return;
+  }
+
+  joueursFusionnes.set(cle, {
+    ...joueurActuel,
+    ...joueur,
+
+    id: joueur.id || joueurActuel.id,
+    nom: joueur.nom || joueurActuel.nom,
+    email: joueur.email || joueur.courriel || joueurActuel.email || joueurActuel.courriel || "",
+    courriel: joueur.courriel || joueur.email || joueurActuel.courriel || joueurActuel.email || "",
+    telephone: joueur.telephone || joueur.téléphone || joueurActuel.telephone || joueurActuel.téléphone || "",
+  });
+});
+
+setJoueurs(Array.from(joueursFusionnes.values()));
 
     setRemplacants(
       listeRemplacants.filter((membre) => {
@@ -4387,11 +4402,11 @@ await addDoc(collection(db, "historiqueRemplacements"), {
           </h3>
 
           <p className="mt-2 text-slate-300">
-            📧 {joueur.email || "Courriel non disponible"}
+            📧 {joueur.email || joueur.courriel || "Courriel non disponible"}
           </p>
 
           <p className="text-slate-300">
-            📞 {joueur.telephone || "Téléphone non disponible"}
+            📞 {joueur.telephone || joueur.téléphone || "Téléphone non disponible"}
           </p>
         </div>
       ))
