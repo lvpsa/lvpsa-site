@@ -1,5 +1,5 @@
 const GOOGLE_SHEET_URL =
-  "COLLE_ICI_TON_URL_DEPLOIEMENT_GOOGLE_SCRIPT";
+  "https://script.google.com/macros/s/AKfycbzTGtjahqUxVwnvx8x3bboSXE7z694gA0Q-3_v8CYpXJ15_hraQgucMqpM0WkMN89ET/exec";
 
 export async function envoyerCommandeGoogleSheet(commande) {
   const articles = commande.articles || [];
