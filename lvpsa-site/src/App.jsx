@@ -4918,10 +4918,6 @@ const datesEquipe = datesLigue.filter((date) => {
                     📧 {membre.email || "Courriel non disponible"}
                   </p>
 
-                  <p className="mt-4 text-slate-300">
-  Voici les joueurs indépendants disponibles dans votre catégorie. Sélectionnez une date seulement lorsque vous voulez confirmer officiellement un remplacement.
-</p>
-
 {(membre.note || membre.commentaire) && (
   <p className="mt-4 text-slate-300">
     Note : {membre.note || membre.commentaire}
