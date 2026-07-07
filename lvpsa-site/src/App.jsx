@@ -1459,8 +1459,8 @@ function Tournoi() {
           <ul className="mt-6 space-y-3 text-slate-300">
             <li>✅ Tournoi sur 1 journée</li>
             <li>✅ Matchs en continu de 8 h à 20 h</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points (maximum de 21 points, pas besoin de 2 points d'écarts)</li>
-            <li>✅ Séries éliminatoires : 2 sets de 25 points (2 points d'écarts, plafond à 29)</li>
+            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
+            <li>✅ Séries éliminatoires : 2 sets de 25 points</li>
           </ul>
         </div>
 
@@ -5449,8 +5449,8 @@ function ReglementsTournoi() {
           <ul className="mt-6 space-y-4 text-slate-300">
             <li>🏐 4 contre 4 avec au moins une fille sur le terrain en tout temps.</li>
             <li>👥 Une équipe peut avoir plus de 4 joueurs, mais seulement 4 joueurs sur le terrain.</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
-            <li>✅ Phase séries : 2 sets de 25 points, un set de 15 points si égalité.</li>
+            <li>✅ Phase préliminaire : 2 sets de 21 points(maximum de 21 points, pas besoin de 2 points d'écarts)</li>
+            <li>✅ Phase séries : 2 sets de 25 points(2 points d'écarts, plafond à 29), un set de 15 points si égalité.</li>
             <li>⚠️ Si une équipe joue à 3, un joueur fantôme perdra un point à sa rotation au service.</li>
             <li>⚠️ Pour qu'un joueur/joueuse soit admissible à la phase ''série'', il/elle doit avoir jouer au moins une match complet en ronde préléminaire.</li>
           </ul>
