@@ -247,6 +247,57 @@ const fusionnerRemplacementsGlobal = (remplacementsFirestore, usersFirestore) =>
   );
 };
 
+async function envoyerNotificationCapitaineRemplacement(demande, statutFinal) {
+  const capitaineEmail =
+    demande.capitaineEmail ||
+    demande.capitaineCourriel ||
+    "";
+
+  if (!capitaineEmail) {
+    console.warn("Aucun courriel capitaine trouvé pour la demande :", demande.id);
+    return;
+  }
+
+  const statutTexte =
+    statutFinal === "accepte"
+      ? "accepté"
+      : statutFinal === "refuse"
+      ? "refusé"
+      : statutFinal;
+
+  await emailjs.send(
+    "service_f4h3rii",
+    "template_nwl643g",
+    {
+      to_email: capitaineEmail,
+      name: "LVPSA",
+      email: "liguevpsa@gmail.com",
+
+      sujet: "Réponse à votre demande de remplacement LVPSA",
+      nom_destinataire: demande.capitaineNom || "Capitaine",
+
+      message_principal:
+        `${demande.remplacantNom || "Le remplaçant"} a ${statutTexte} votre demande de remplacement.`,
+
+      details:
+        `Équipe : ${demande.equipeNom || "Non précisée"}\n` +
+        `Date : ${demande.dateLabel || demande.date || "Non précisée"}\n` +
+        `Joueur remplacé : ${demande.joueurRemplaceNom || "Non précisé"}\n` +
+        `Remplaçant : ${demande.remplacantNom || "Non précisé"}\n` +
+        `Statut : ${statutTexte.toUpperCase()}`,
+
+      message_action:
+        statutFinal === "accepte"
+          ? "Le remplacement est maintenant confirmé."
+          : "Le remplacement a été refusé. Vous pouvez faire une nouvelle demande à un autre remplaçant.",
+
+      lien_accepter: "",
+      lien_refuser: "",
+    },
+    "ZooBSx9i6qVl5HI8T"
+  );
+}
+
 async function traiterReponseDemandeRemplacement(demandeId, action, currentUser) {
   const demandeRef = doc(db, "demandesRemplacements", demandeId);
   const demandeSnap = await getDoc(demandeRef);
@@ -313,7 +364,8 @@ async function traiterReponseDemandeRemplacement(demandeId, action, currentUser)
       },
       { merge: true }
     );
-
+await envoyerNotificationCapitaineRemplacement(demande, "accepte");
+    
     return {
       dejaRepondu: false,
       statut: "accepte",
@@ -327,6 +379,8 @@ async function traiterReponseDemandeRemplacement(demandeId, action, currentUser)
       updatedAt: serverTimestamp(),
     });
 
+    await envoyerNotificationCapitaineRemplacement(demande, "refuse");
+    
     return {
       dejaRepondu: false,
       statut: "refuse",
@@ -4744,6 +4798,7 @@ const datesEquipe = datesLigue.filter((date) => {
 
     capitaineId: user?.uid || "",
     capitaineNom: userData?.nom || "",
+    capitaineEmail: userData?.email || user?.email || "",
 
     statut: "en_attente",
     createdAt: serverTimestamp(),
@@ -4757,20 +4812,33 @@ const datesEquipe = datesLigue.filter((date) => {
     const lienRefuser = `${window.location.origin}/demande-remplacement/${demandeRef.id}/refuser`;
 
     await emailjs.send(
-      "service_f4h3rii",
-      "template_nwl643g",
-      {
-        to_email: demande.remplacantEmail,
-        remplacant_nom: demande.remplacantNom,
-        equipe_nom: demande.equipeNom,
-        date_remplacement: demande.dateLabel,
-        joueur_remplace: demande.joueurRemplaceNom,
-        capitaine_nom: demande.capitaineNom,
-        lien_accepter: lienAccepter,
-        lien_refuser: lienRefuser,
-      },
-      "ZooBSx9i6qVl5HI8T"
-    );
+  "service_f4h3rii",
+  "template_nwl643g",
+  {
+    to_email: demande.remplacantEmail,
+    name: "LVPSA",
+    email: "liguevpsa@gmail.com",
+
+    sujet: "Nouvelle demande de remplacement LVPSA",
+    nom_destinataire: demande.remplacantNom,
+
+    message_principal:
+      "Une équipe aimerait t’utiliser comme remplaçant.",
+
+    details:
+      `Équipe : ${demande.equipeNom}\n` +
+      `Date : ${demande.dateLabel}\n` +
+      `Joueur remplacé : ${demande.joueurRemplaceNom}\n` +
+      `Capitaine : ${demande.capitaineNom}`,
+
+    message_action:
+      "Merci de confirmer ta réponse avec un des deux liens ci-dessous.",
+
+    lien_accepter: lienAccepter,
+    lien_refuser: lienRefuser,
+  },
+  "ZooBSx9i6qVl5HI8T"
+);
 
     alert("Demande envoyée au remplaçant par courriel.");
 
