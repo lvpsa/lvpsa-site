@@ -414,6 +414,7 @@ export default function App() {
           <Route path="/inscription-ligue" element={<InscriptionLigueProtegee />} />
           <Route path="/gestion-equipe" element={<Protegee />} />
           <Route path="/mes-demandes" element={<MesDemandesRemplacement />} />
+          <Route path="/remplacants" element={<MesDemandesRemplacement />} />
           <Route path="/demande-remplacement/:demandeId/:action" element={<ReponseDemandeRemplacement />} />
           <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
           <Route path="/connexion" element={<Connexion />} />
@@ -493,7 +494,7 @@ function Header() {
     : []),
 
   ...((userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin)
-    ? [{ label: "Mes demandes", to: "/mes-demandes" }]
+    ? [{ label: "Remplaçants", to: "/remplacants" }]
     : []),
 
   { label: "Règlements Ligue", to: "/reglements" },
@@ -607,10 +608,10 @@ function Header() {
                 )}
 
                 {(userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin) && (
-  <Link to="/mes-demandes" onClick={() => setMenuOpen(false)}>
-    Mes demandes
-  </Link>
-)}
+                <Link to="/remplacants" onClick={() => setMenuOpen(false)}>
+                  Remplaçants
+                </Link>
+            )}
 
                 <Link to="/reglements" onClick={() => setMenuOpen(false)}>Règlements Ligue</Link>
               </div>
@@ -3962,11 +3963,11 @@ function MesDemandesRemplacement() {
       </p>
 
       <h1 className="mt-2 text-5xl font-black text-white">
-        Mes demandes de remplacement
+        Espace remplaçant
       </h1>
 
       <p className="mt-5 max-w-3xl text-lg text-slate-300">
-        Consultez les demandes reçues et confirmez votre disponibilité.
+        Consultez vos demandes de remplacement reçues et confirmez votre disponibilité.
       </p>
 
       {message && (
