@@ -1459,7 +1459,7 @@ function Tournoi() {
           <ul className="mt-6 space-y-3 text-slate-300">
             <li>✅ Tournoi sur 1 journée</li>
             <li>✅ Matchs en continu de 8 h à 20 h</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
+            <li>✅ Phase préliminaire : 2 sets de 21 points (maximum de 21 points, pas besoin de 2 points d'écarts)</li>
             <li>✅ Séries éliminatoires : 2 sets de 25 points</li>
           </ul>
         </div>
