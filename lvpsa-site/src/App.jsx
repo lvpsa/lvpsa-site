@@ -4564,6 +4564,7 @@ function GestionEquipe({ user, userData }) {
   const [equipeActuelle, setEquipeActuelle] = useState(null);
   const [joueurAbsentId, setJoueurAbsentId] = useState("");
   const [remplacantId, setRemplacantId] = useState("");
+  const [demandesCapitaine, setDemandesCapitaine] = useState([]);
 
   const datesLigue = [
     { id: "2026-06-22", label: "22 juin", categorie: "recreatif" },
@@ -4606,6 +4607,7 @@ useEffect(() => {
 
     const usersSnapshot = await getDocs(collection(db, "users"));
     const remplacementsSnapshot = await getDocs(collection(db, "remplacements"));
+    const demandesSnapshot = await getDocs(collection(db, "demandesRemplacements"));
     const equipesChargees = await chargerEquipesLVPSA();
 
     const listeUsers = usersSnapshot.docs.map((docItem) => ({
@@ -4638,6 +4640,37 @@ const listeRemplacants = fusionnerRemplacementsGlobal(
       }) || null;
 
     setEquipeActuelle(equipeTrouvee);
+
+    const listeDemandesCapitaine = demandesSnapshot.docs
+  .map((docItem) => ({
+    id: docItem.id,
+    ...docItem.data(),
+  }))
+  .filter((demande) => {
+    const memeCapitaine = demande.capitaineId === user?.uid;
+
+    const memeEquipeId =
+      demande.equipeId &&
+      userData.equipeId &&
+      demande.equipeId === userData.equipeId;
+
+    const memeEquipeNom =
+      demande.equipeNom &&
+      (userData.equipeNom || userData.equipenom || nomEquipeGlobal(equipeTrouvee)) &&
+      normaliserTexteGlobal(demande.equipeNom) ===
+        normaliserTexteGlobal(
+          userData.equipeNom || userData.equipenom || nomEquipeGlobal(equipeTrouvee)
+        );
+
+    return memeCapitaine || memeEquipeId || memeEquipeNom;
+  })
+  .sort((a, b) => {
+    const dateA = a.createdAt?.seconds || 0;
+    const dateB = b.createdAt?.seconds || 0;
+    return dateB - dateA;
+  });
+
+setDemandesCapitaine(listeDemandesCapitaine);
 
     const categorieEquipe = normaliserCategorieGlobal(
       userData.categorie || equipeTrouvee?.categorie || equipeTrouvee?.catégorie
@@ -4729,7 +4762,7 @@ setJoueurs(Array.from(joueursFusionnes.values()));
   };
 
   chargerDonneesEquipe();
-}, [userData]);
+}, [userData, user?.uid]);
     if (userData?.role !== "capitaine" && !userData?.isAdmin) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
@@ -4840,6 +4873,14 @@ const datesEquipe = datesLigue.filter((date) => {
   "ZooBSx9i6qVl5HI8T"
 );
 
+    setDemandesCapitaine((prev) => [
+  {
+    id: demandeRef.id,
+    ...demande,
+  },
+  ...prev,
+]);
+    
     alert("Demande envoyée au remplaçant par courriel.");
 
     setDateSelectionnee("");
@@ -4849,6 +4890,18 @@ const datesEquipe = datesLigue.filter((date) => {
     console.error("Erreur lors de la demande de remplacement :", error);
     alert("Erreur lors de l'envoi de la demande. Veuillez réessayer.");
   }
+};
+
+  const libelleStatutDemande = (statut) => {
+  if (statut === "accepte") return "Confirmé";
+  if (statut === "refuse") return "Refusé";
+  return "En attente";
+};
+
+const couleurStatutDemande = (statut) => {
+  if (statut === "accepte") return "bg-emerald-400/15 text-emerald-300";
+  if (statut === "refuse") return "bg-red-400/15 text-red-300";
+  return "bg-amber-400/15 text-amber-300";
 };
   
   return (
@@ -4898,6 +4951,85 @@ const datesEquipe = datesLigue.filter((date) => {
     ) : (
       <p className="text-slate-300">
         Aucun joueur n’est encore associé à cette équipe.
+      </p>
+    )}
+  </div>
+</div>
+
+     <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+  <div className="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 className="text-3xl font-black text-amber-300">
+        Demandes de remplacement envoyées
+      </h2>
+
+      <p className="mt-4 text-slate-300">
+        Suivi des demandes envoyées aux remplaçants.
+      </p>
+    </div>
+
+    <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-black text-slate-300">
+      {demandesCapitaine.length} demande{demandesCapitaine.length > 1 ? "s" : ""}
+    </span>
+  </div>
+
+  <div className="mt-8 grid gap-4 md:grid-cols-2">
+    {demandesCapitaine.length > 0 ? (
+      demandesCapitaine.map((demande) => (
+        <div
+          key={demande.id}
+          className="rounded-2xl border border-white/10 bg-black/20 p-5"
+        >
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h3 className="text-xl font-black text-white">
+                {demande.remplacantNom || "Remplaçant non précisé"}
+              </h3>
+
+              <p className="mt-2 text-slate-300">
+                Date : {demande.dateLabel || demande.date || "Non précisée"}
+              </p>
+
+              <p className="text-slate-300">
+                Joueur remplacé : {demande.joueurRemplaceNom || "Non précisé"}
+              </p>
+
+              <p className="text-slate-300">
+                Équipe : {demande.equipeNom || "Non précisée"}
+              </p>
+            </div>
+
+            <span
+              className={`rounded-full px-4 py-2 text-sm font-black uppercase ${couleurStatutDemande(
+                demande.statut
+              )}`}
+            >
+              {libelleStatutDemande(demande.statut)}
+            </span>
+          </div>
+
+          {demande.statut === "en_attente" && (
+            <p className="mt-4 rounded-xl bg-amber-400/10 p-3 text-sm text-amber-300">
+              En attente de la réponse du remplaçant.
+            </p>
+          )}
+
+          {demande.statut === "accepte" && (
+            <p className="mt-4 rounded-xl bg-emerald-400/10 p-3 text-sm text-emerald-300">
+              Le remplacement est confirmé.
+            </p>
+          )}
+
+          {demande.statut === "refuse" && (
+            <p className="mt-4 rounded-xl bg-red-400/10 p-3 text-sm text-red-300">
+              Le remplaçant a refusé. Vous pouvez envoyer une nouvelle demande.
+            </p>
+          )}
+        </div>
+      ))
+    ) : (
+      <p className="text-slate-400">
+        Aucune demande de remplacement envoyée pour le moment.
       </p>
     )}
   </div>
