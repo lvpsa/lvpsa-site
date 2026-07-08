@@ -3060,7 +3060,6 @@ const membresSansEquipe = membres.filter((membre) => {
       )}
 
 {onglet === "boutique" && <AdminBoutiqueV2 />}
-      )}
     </section>
   );
 }
