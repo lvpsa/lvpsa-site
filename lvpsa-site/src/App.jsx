@@ -297,10 +297,9 @@ async function envoyerNotificationCapitaineRemplacement(demande, statutFinal) {
   ? "Le remplacement est maintenant confirmé."
   : "Le remplacement a été refusé. Vous pouvez faire une nouvelle demande à un autre remplaçant.",
 
-section_actions: "",
-
-lien_accepter: "",
-lien_refuser: "",
+section_actions:
+  `Accepter : ${lienAccepter}\n` +
+  `Refuser : ${lienRefuser}`,
     },
     "ZooBSx9i6qVl5HI8T"
   );
