@@ -248,22 +248,28 @@ const fusionnerRemplacementsGlobal = (remplacementsFirestore, usersFirestore) =>
 };
 
 async function envoyerNotificationCapitaineRemplacement(demande, statutFinal) {
-  const capitaineEmail =
+  let capitaineEmail =
     demande.capitaineEmail ||
     demande.capitaineCourriel ||
     "";
+
+  if (!capitaineEmail && demande.capitaineId) {
+    const capitaineSnap = await getDoc(doc(db, "users", demande.capitaineId));
+
+    if (capitaineSnap.exists()) {
+      const capitaineData = capitaineSnap.data();
+      capitaineEmail = capitaineData.email || capitaineData.courriel || "";
+    }
+  }
 
   if (!capitaineEmail) {
     console.warn("Aucun courriel capitaine trouvé pour la demande :", demande.id);
     return;
   }
 
-  const statutTexte =
-    statutFinal === "accepte"
-      ? "accepté"
-      : statutFinal === "refuse"
-      ? "refusé"
-      : statutFinal;
+  const estAccepte = statutFinal === "accepte";
+  const statutTexte = estAccepte ? "accepté" : "refusé";
+  const statutAffichage = estAccepte ? "CONFIRMÉ" : "REFUSÉ";
 
   await emailjs.send(
     "service_f4h3rii",
@@ -284,12 +290,11 @@ async function envoyerNotificationCapitaineRemplacement(demande, statutFinal) {
         `Date : ${demande.dateLabel || demande.date || "Non précisée"}\n` +
         `Joueur remplacé : ${demande.joueurRemplaceNom || "Non précisé"}\n` +
         `Remplaçant : ${demande.remplacantNom || "Non précisé"}\n` +
-        `Statut : ${statutTexte.toUpperCase()}`,
+        `Statut : ${statutAffichage}`,
 
-      message_action:
-        statutFinal === "accepte"
-          ? "Le remplacement est maintenant confirmé."
-          : "Le remplacement a été refusé. Vous pouvez faire une nouvelle demande à un autre remplaçant.",
+      message_action: estAccepte
+        ? "Le remplacement est maintenant confirmé."
+        : "Le remplacement a été refusé. Vous pouvez faire une nouvelle demande à un autre remplaçant.",
 
       lien_accepter: "",
       lien_refuser: "",
@@ -400,6 +405,7 @@ export default function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Accueil />} />
+          <Route path="/mon-espace" element={<MonEspace />} />
           <Route path="/classements" element={<Classements />} />
           <Route path="/classements/recreatif" element={<ClassementDetail titre="Classement récréatif" />} />
           <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
@@ -534,6 +540,13 @@ function Header() {
 
           {user ? (
             <>
+              <Link
+                to="/mon-espace"
+                className="rounded-full border border-white/15 px-5 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
+              >
+                Mon espace
+              </Link>
+
               <span className="font-semibold text-white">
                 Bonjour {userData?.nom?.split(" ")[0]}
               </span>
@@ -634,6 +647,10 @@ function Header() {
 
             {user ? (
               <>
+                <Link to="/mon-espace" onClick={() => setMenuOpen(false)}>
+                  MON ESPACE
+                </Link>
+
                 <span className="font-semibold text-amber-300">
                   Bonjour {userData?.nom?.split(" ")[0]}
                 </span>
@@ -1858,7 +1875,7 @@ function CreerCompte() {
       await setDoc(doc(db, "users", user.uid), {
         nom,
         email,
-        telephone,
+        telephone: formatTelephone(telephone),
         role: "membre",
         isAdmin: false,
         statut: "actif",
@@ -1871,6 +1888,10 @@ function CreerCompte() {
       });
 
       setMessage("Compte créé avec succès !");
+
+      setTimeout(() => {
+        window.location.href = "/mon-espace";
+      }, 1000);
     } catch (error) {
       setMessage("Erreur : " + error.message);
     }
@@ -3725,7 +3746,7 @@ function Connexion() {
         localStorage.removeItem("lvpsaSessionExpire");
       }
 
-      window.location.href = "/";
+      window.location.href = "/mon-espace";
     } catch (error) {
       setMessage("Courriel ou mot de passe invalide.");
     }
@@ -3851,7 +3872,7 @@ function ReponseDemandeRemplacement() {
       )}
 
       <Link
-        to="/mes-demandes"
+        to="/remplacants"
         className="mt-6 inline-flex rounded-full border border-white/15 px-8 py-4 font-black text-white hover:border-amber-300 hover:text-amber-300"
       >
         Voir mes demandes
@@ -4039,6 +4060,655 @@ function MesDemandesRemplacement() {
             Aucune demande de remplacement pour le moment.
           </p>
         )}
+      </div>
+    </section>
+  );
+}
+
+
+function MonEspace() {
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [chargement, setChargement] = useState(true);
+
+  const [equipeActuelle, setEquipeActuelle] = useState(null);
+  const [demandesRecues, setDemandesRecues] = useState([]);
+  const [demandesEnvoyees, setDemandesEnvoyees] = useState([]);
+  const [commandes, setCommandes] = useState([]);
+
+  const datesLigue = [
+    { id: "2026-07-13", label: "13 juillet", categorie: "recreatif" },
+    { id: "2026-07-14", label: "14 juillet", categorie: "competitif" },
+    { id: "2026-08-03", label: "3 août", categorie: "recreatif" },
+    { id: "2026-08-04", label: "4 août", categorie: "competitif" },
+    { id: "2026-08-10", label: "10 août", categorie: "recreatif" },
+    { id: "2026-08-11", label: "11 août", categorie: "competitif" },
+    { id: "2026-08-17", label: "17 août", categorie: "recreatif" },
+    { id: "2026-08-18", label: "18 août", categorie: "competitif" },
+  ];
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (!currentUser) {
+        setUserData(null);
+        setChargement(false);
+        return;
+      }
+
+      try {
+        const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+
+        if (!userSnap.exists()) {
+          setChargement(false);
+          return;
+        }
+
+        const data = {
+          id: currentUser.uid,
+          ...userSnap.data(),
+        };
+
+        setUserData(data);
+
+        const role = data.role || "membre";
+        const equipeId = String(data.equipeId || data.idEquipe || "").trim();
+        const estDansEquipe =
+          equipeId && normaliserTexteGlobal(equipeId) !== "independant";
+
+        const estCapitaine = role === "capitaine" || data.isAdmin === true;
+        const estRemplacant =
+          role === "remplacant" || data.estRemplacant === true;
+
+        if (estDansEquipe) {
+          try {
+            const equipesChargees = await chargerEquipesLVPSA();
+
+            const equipeTrouvee =
+              equipesChargees.find((equipe) => {
+                const idEquipe = equipe.id || equipe.equipeId || "";
+                const nomEquipe = nomEquipeGlobal(equipe);
+
+                return (
+                  (data.equipeId && idEquipe === data.equipeId) ||
+                  (data.equipeNom &&
+                    normaliserTexteGlobal(nomEquipe) ===
+                      normaliserTexteGlobal(data.equipeNom)) ||
+                  (data.equipenom &&
+                    normaliserTexteGlobal(nomEquipe) ===
+                      normaliserTexteGlobal(data.equipenom))
+                );
+              }) || null;
+
+            setEquipeActuelle(equipeTrouvee);
+          } catch (error) {
+            console.warn("Impossible de charger l'équipe dans Mon espace.", error);
+          }
+        }
+
+        if (estRemplacant || estCapitaine) {
+          try {
+            const demandesSnap = await getDocs(collection(db, "demandesRemplacements"));
+            const emailUser = normaliserTexteGlobal(currentUser.email);
+
+            const toutesDemandes = demandesSnap.docs.map((docItem) => ({
+              id: docItem.id,
+              ...docItem.data(),
+            }));
+
+            if (estRemplacant) {
+              setDemandesRecues(
+                toutesDemandes
+                  .filter((demande) => {
+                    const emailDemande = normaliserTexteGlobal(demande.remplacantEmail);
+
+                    return (
+                      demande.remplacantId === currentUser.uid ||
+                      emailDemande === emailUser
+                    );
+                  })
+                  .sort(
+                    (a, b) =>
+                      (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+                  )
+              );
+            }
+
+            if (estCapitaine) {
+              setDemandesEnvoyees(
+                toutesDemandes
+                  .filter((demande) => demande.capitaineId === currentUser.uid)
+                  .sort(
+                    (a, b) =>
+                      (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+                  )
+              );
+            }
+          } catch (error) {
+            console.warn("Demandes de remplacement non disponibles dans Mon espace.", error);
+          }
+        }
+
+        try {
+          const commandesSnap = await getDocs(collection(db, "commandesBoutique"));
+          const emailUser = normaliserTexteGlobal(currentUser.email);
+
+          setCommandes(
+            commandesSnap.docs
+              .map((docItem) => ({
+                id: docItem.id,
+                ...docItem.data(),
+              }))
+              .filter((commande) => {
+                const emailCommande = normaliserTexteGlobal(
+                  commande.courriel || commande.email
+                );
+
+                return (
+                  commande.userId === currentUser.uid ||
+                  emailCommande === emailUser
+                );
+              })
+              .sort(
+                (a, b) =>
+                  (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+              )
+          );
+        } catch (error) {
+          console.warn("Commandes boutique non disponibles pour cet utilisateur.", error);
+        }
+      } catch (error) {
+        console.error("Erreur Mon espace :", error);
+      }
+
+      setChargement(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (chargement) {
+    return null;
+  }
+
+  if (!user) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
+        <h1 className="text-4xl font-black text-white">
+          Connexion requise
+        </h1>
+
+        <p className="mt-4 text-slate-300">
+          Connectez-vous pour accéder à votre espace LVPSA.
+        </p>
+
+        <Link
+          to="/connexion"
+          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
+        >
+          Connexion
+        </Link>
+      </section>
+    );
+  }
+
+  const role = userData?.role || "membre";
+  const equipeId = String(userData?.equipeId || userData?.idEquipe || "").trim();
+
+  const estAdmin = userData?.isAdmin === true;
+  const estRemplacant = role === "remplacant" || userData?.estRemplacant === true;
+  const estCapitaine = role === "capitaine" || estAdmin;
+  const estDansEquipe =
+    equipeId && normaliserTexteGlobal(equipeId) !== "independant";
+  const estJoueur = !estCapitaine && estDansEquipe && !estRemplacant;
+  const estMembre =
+    !estAdmin && !estCapitaine && !estJoueur && !estRemplacant;
+
+  const roleAffichage = estAdmin
+    ? "Administrateur"
+    : estCapitaine
+    ? "Capitaine"
+    : estJoueur
+    ? "Joueur"
+    : estRemplacant
+    ? "Remplaçant"
+    : "Membre";
+
+  const categorieActive = normaliserCategorieGlobal(
+    userData?.categorie || equipeActuelle?.categorie || equipeActuelle?.catégorie
+  );
+
+  const aujourdHui = new Date();
+  aujourdHui.setHours(0, 0, 0, 0);
+
+  const prochainMatch =
+    datesLigue.find((date) => {
+      const dateMatch = new Date(`${date.id}T00:00:00`);
+
+      return (
+        dateMatch >= aujourdHui &&
+        (!categorieActive || date.categorie === categorieActive)
+      );
+    }) || null;
+
+  const demandesRecuesEnAttente = demandesRecues.filter(
+    (demande) => demande.statut === "en_attente"
+  );
+
+  const demandesEnvoyeesEnAttente = demandesEnvoyees.filter(
+    (demande) => demande.statut === "en_attente"
+  );
+
+  const libelleStatut = (statut) => {
+    if (statut === "accepte") return "Confirmé";
+    if (statut === "refuse") return "Refusé";
+    if (statut === "en_attente") return "En attente";
+    return statut || "En attente";
+  };
+
+  const couleurStatut = (statut) => {
+    if (statut === "accepte") return "bg-emerald-400/15 text-emerald-300";
+    if (statut === "refuse") return "bg-red-400/15 text-red-300";
+    return "bg-amber-400/15 text-amber-300";
+  };
+
+  const prenom = userData?.nom?.split(" ")[0] || "membre";
+
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        LVPSA
+      </p>
+
+      <h1 className="mt-2 text-5xl font-black text-white">
+        Mon espace
+      </h1>
+
+      <p className="mt-5 text-xl text-slate-300">
+        Bonjour {prenom}, voici ce qui te concerne actuellement.
+      </p>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+            Profil
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            {userData?.nom || "Membre LVPSA"}
+          </h2>
+
+          <p className="mt-2 text-slate-300">
+            {userData?.email || user?.email}
+          </p>
+
+          <p className="text-slate-300">
+            {formatTelephone(userData?.telephone) || "Téléphone non précisé"}
+          </p>
+
+          <p className="mt-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-slate-300">
+            {roleAffichage}
+          </p>
+        </div>
+
+        {(estJoueur || estCapitaine) && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+              Équipe
+            </p>
+
+            <h2 className="mt-3 text-2xl font-black text-white">
+              {userData?.equipeNom ||
+                userData?.equipenom ||
+                nomEquipeGlobal(equipeActuelle) ||
+                "Aucune équipe"}
+            </h2>
+
+            <p className="mt-2 text-slate-300">
+              Catégorie :{" "}
+              {categorieActive === "recreatif"
+                ? "Récréatif"
+                : categorieActive === "competitif"
+                ? "Compétitif"
+                : "Non précisée"}
+            </p>
+
+            {prochainMatch ? (
+              <p className="mt-4 rounded-2xl bg-emerald-400/10 p-4 font-bold text-emerald-300">
+                Prochain match : {prochainMatch.label}
+              </p>
+            ) : (
+              <p className="mt-4 rounded-2xl bg-white/10 p-4 text-slate-300">
+                Aucun prochain match affiché.
+              </p>
+            )}
+          </div>
+        )}
+
+        {estRemplacant && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+              Remplaçant
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black text-white">
+              {demandesRecuesEnAttente.length}
+            </h2>
+
+            <p className="mt-2 text-slate-300">
+              demande{demandesRecuesEnAttente.length > 1 ? "s" : ""} en attente
+            </p>
+
+            <Link
+              to="/remplacants"
+              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+            >
+              Voir mes demandes
+            </Link>
+          </div>
+        )}
+
+        {estCapitaine && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+              Capitaine
+            </p>
+
+            <h2 className="mt-3 text-4xl font-black text-white">
+              {demandesEnvoyeesEnAttente.length}
+            </h2>
+
+            <p className="mt-2 text-slate-300">
+              demande{demandesEnvoyeesEnAttente.length > 1 ? "s" : ""} envoyée{demandesEnvoyeesEnAttente.length > 1 ? "s" : ""} en attente
+            </p>
+
+            <Link
+              to="/gestion-equipe"
+              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+            >
+              Gestion d'équipe
+            </Link>
+          </div>
+        )}
+
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+            Boutique
+          </p>
+
+          <h2 className="mt-3 text-4xl font-black text-white">
+            {commandes.length}
+          </h2>
+
+          <p className="mt-2 text-slate-300">
+            commande{commandes.length > 1 ? "s" : ""} associée{commandes.length > 1 ? "s" : ""} à ton compte
+          </p>
+
+          <Link
+            to="/boutique"
+            className="mt-5 inline-flex rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
+          >
+            Boutique
+          </Link>
+        </div>
+
+        {estAdmin && (
+          <div className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
+            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+              Admin
+            </p>
+
+            <h2 className="mt-3 text-2xl font-black text-white">
+              Administration LVPSA
+            </h2>
+
+            <p className="mt-2 text-slate-300">
+              Accès complet à la gestion du site.
+            </p>
+
+            <Link
+              to="/admin"
+              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+            >
+              Administration
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-12 grid gap-8 lg:grid-cols-2">
+        {estRemplacant && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-black text-amber-300">
+                  Mes demandes reçues
+                </h2>
+
+                <p className="mt-3 text-slate-300">
+                  Demandes envoyées par les capitaines.
+                </p>
+              </div>
+
+              <Link
+                to="/remplacants"
+                className="rounded-full border border-white/15 px-5 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
+              >
+                Voir tout
+              </Link>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              {demandesRecues.slice(0, 3).length > 0 ? (
+                demandesRecues.slice(0, 3).map((demande) => (
+                  <div
+                    key={demande.id}
+                    className="rounded-2xl border border-white/10 bg-black/20 p-5"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <h3 className="text-xl font-black text-white">
+                          {demande.equipeNom || "Équipe non précisée"}
+                        </h3>
+
+                        <p className="mt-2 text-slate-300">
+                          Date : {demande.dateLabel || demande.date || "Non précisée"}
+                        </p>
+
+                        <p className="text-slate-300">
+                          Joueur remplacé : {demande.joueurRemplaceNom || "Non précisé"}
+                        </p>
+                      </div>
+
+                      <span
+                        className={`rounded-full px-4 py-2 text-sm font-black uppercase ${couleurStatut(
+                          demande.statut
+                        )}`}
+                      >
+                        {libelleStatut(demande.statut)}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-400">
+                  Aucune demande reçue pour le moment.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {estCapitaine && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-black text-amber-300">
+                  Demandes envoyées
+                </h2>
+
+                <p className="mt-3 text-slate-300">
+                  Suivi rapide de tes demandes de remplacement.
+                </p>
+              </div>
+
+              <Link
+                to="/gestion-equipe"
+                className="rounded-full border border-white/15 px-5 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
+              >
+                Gestion d'équipe
+              </Link>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              {demandesEnvoyees.slice(0, 3).length > 0 ? (
+                demandesEnvoyees.slice(0, 3).map((demande) => (
+                  <div
+                    key={demande.id}
+                    className="rounded-2xl border border-white/10 bg-black/20 p-5"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <h3 className="text-xl font-black text-white">
+                          {demande.remplacantNom || "Remplaçant non précisé"}
+                        </h3>
+
+                        <p className="mt-2 text-slate-300">
+                          Date : {demande.dateLabel || demande.date || "Non précisée"}
+                        </p>
+
+                        <p className="text-slate-300">
+                          Joueur remplacé : {demande.joueurRemplaceNom || "Non précisé"}
+                        </p>
+                      </div>
+
+                      <span
+                        className={`rounded-full px-4 py-2 text-sm font-black uppercase ${couleurStatut(
+                          demande.statut
+                        )}`}
+                      >
+                        {libelleStatut(demande.statut)}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-400">
+                  Aucune demande envoyée pour le moment.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {estJoueur && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+            <h2 className="text-3xl font-black text-amber-300">
+              Mon équipe
+            </h2>
+
+            <p className="mt-3 text-slate-300">
+              Tu es associé à une équipe. Les demandes de remplacement sont gérées par ton capitaine.
+            </p>
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5">
+              <h3 className="text-2xl font-black text-white">
+                {userData?.equipeNom ||
+                  userData?.equipenom ||
+                  nomEquipeGlobal(equipeActuelle) ||
+                  "Équipe non précisée"}
+              </h3>
+
+              <p className="mt-2 text-slate-300">
+                Catégorie :{" "}
+                {categorieActive === "recreatif"
+                  ? "Récréatif"
+                  : categorieActive === "competitif"
+                  ? "Compétitif"
+                  : "Non précisée"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {estMembre && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+            <h2 className="text-3xl font-black text-amber-300">
+              Bienvenue à la LVPSA
+            </h2>
+
+            <p className="mt-3 text-slate-300">
+              Ton compte est actif. Tu peux consulter la boutique, le calendrier et les classements.
+            </p>
+
+            <Link
+              to="/inscription-ligue"
+              className="mt-6 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+            >
+              Devenir remplaçant
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+        <h2 className="text-3xl font-black text-amber-300">
+          Accès rapides
+        </h2>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Link
+            to="/calendrier"
+            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
+          >
+            📅 Calendrier
+          </Link>
+
+          <Link
+            to="/classements"
+            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
+          >
+            🏆 Classements
+          </Link>
+
+          <Link
+            to="/boutique"
+            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
+          >
+            🛒 Boutique
+          </Link>
+
+          {estAdmin ? (
+            <Link
+              to="/admin"
+              className="rounded-2xl border border-amber-400 bg-amber-400 p-5 font-black text-slate-950 hover:bg-amber-300"
+            >
+              ⚙️ Administration
+            </Link>
+          ) : estCapitaine ? (
+            <Link
+              to="/gestion-equipe"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              👥 Gestion d'équipe
+            </Link>
+          ) : estRemplacant ? (
+            <Link
+              to="/remplacants"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              🔁 Remplaçants
+            </Link>
+          ) : (
+            <Link
+              to="/inscription-ligue"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              🙋 Inscriptions
+            </Link>
+          )}
+        </div>
       </div>
     </section>
   );
@@ -5729,4 +6399,5 @@ function ReglementsTournoi() {
     </section>
   );
 }
+
 
