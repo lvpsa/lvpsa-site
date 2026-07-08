@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import emailjs from "@emailjs/browser";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import {
@@ -97,7 +98,82 @@ export default function AdminBoutiqueV2() {
     ).length;
   }, [inventaire]);
 
+  const envoyerNotificationStatutCommande = async (commande, nouveauStatut) => {
+  const courrielClient = commande.courriel || commande.email || "";
+
+  if (!courrielClient) {
+    console.warn("Aucun courriel client pour la commande :", commande.id);
+    return;
+  }
+
+  const numeroCommande =
+    commande.numeroCommande ||
+    commande.numeroCommandeSimple ||
+    commande.id;
+
+  const statutAffichage = STATUTS[nouveauStatut] || nouveauStatut;
+
+  const messageAction =
+    nouveauStatut === "en_attente"
+      ? "Votre commande a bien été reçue. Nous communiquerons avec vous lorsque la préparation avancera."
+      : nouveauStatut === "en_preparation"
+      ? "Votre commande est maintenant en préparation."
+      : nouveauStatut === "prete"
+      ? "Votre commande est prête. Nous communiquerons avec vous pour la remise."
+      : nouveauStatut === "remise"
+      ? "Votre commande a été remise. Merci d’avoir encouragé la boutique LVPSA!"
+      : nouveauStatut === "annulee"
+      ? "Votre commande a été annulée. Si vous avez des questions, vous pouvez répondre à ce courriel."
+      : "Le statut de votre commande a été mis à jour.";
+
+  const detailsArticles = (commande.articles || [])
+    .map((article) => {
+      const nom = article.nom || article.modele || article.categorie || "Article";
+      const couleur = article.couleurNom || article.couleur || "";
+      const taille = article.taille || "";
+      const quantite = article.quantite || 1;
+
+      return `• ${nom}${couleur ? ` — ${couleur}` : ""}${taille ? ` — ${taille}` : ""} — Qté ${quantite}`;
+    })
+    .join("\n");
+
+  await emailjs.send(
+    "service_f4h3rii",
+    "template_nwl643g",
+    {
+      to_email: courrielClient,
+      name: "LVPSA",
+      email: "liguevpsa@gmail.com",
+
+      sujet: `Mise à jour de votre commande ${numeroCommande}`,
+      nom_destinataire: commande.nom || "membre LVPSA",
+
+      message_principal:
+        `Le statut de votre commande LVPSA a été mis à jour : ${statutAffichage}.`,
+
+      details:
+        `Commande : ${numeroCommande}\n` +
+        `Nouveau statut : ${statutAffichage}\n` +
+        `Total : ${commande.total || 0} $\n\n` +
+        `Articles :\n${detailsArticles || "Aucun article détaillé"}`,
+
+      message_action: messageAction,
+
+      lien_accepter: "",
+      lien_refuser: "",
+    },
+    "ZooBSx9i6qVl5HI8T"
+  );
+};
+  
   const changerStatut = async (commande, statut) => {
+  if (!commande?.id) return;
+
+  if (commande.statut === statut) {
+    return;
+  }
+
+  try {
     if (statut === "annulee" && !commande.inventaireRemis) {
       const confirmer = window.confirm(
         "Annuler cette commande et remettre les articles en inventaire?"
@@ -106,18 +182,42 @@ export default function AdminBoutiqueV2() {
       if (!confirmer) return;
 
       await annulerCommandeBoutique(commande.id, commande.articles || []);
+
+      try {
+        await envoyerNotificationStatutCommande(commande, statut);
+      } catch (emailError) {
+        console.error("Erreur notification client :", emailError);
+        alert(
+          "La commande a été annulée, mais le courriel de notification n’a pas pu être envoyé."
+        );
+      }
+
       await charger();
       setCommandeActive(null);
       return;
     }
 
     await modifierStatutCommandeBoutique(commande.id, statut);
+
+    try {
+      await envoyerNotificationStatutCommande(commande, statut);
+    } catch (emailError) {
+      console.error("Erreur notification client :", emailError);
+      alert(
+        "Le statut a été modifié, mais le courriel de notification n’a pas pu être envoyé."
+      );
+    }
+
     await charger();
 
     setCommandeActive((prev) =>
       prev?.id === commande.id ? { ...prev, statut } : prev
     );
-  };
+  } catch (error) {
+    console.error("Erreur changement statut commande :", error);
+    alert("Erreur lors de la modification du statut de la commande.");
+  }
+};
 
   const supprimerCommandeDefinitivement = async (commande) => {
     if (commande.statut !== "annulee") {
