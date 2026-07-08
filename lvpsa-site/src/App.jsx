@@ -516,22 +516,24 @@ function Header() {
   return (
    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl">
   <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-6 py-3">
-    <Link to="/" className="flex min-w-0 items-center gap-5">
-      <img
-        src="/logo.jpg"
-        alt="LVPSA"
-        className="h-24 w-24 shrink-0 object-contain"
-      />
+    <<Link to="/" className="flex min-w-0 items-center gap-5">
+  <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full bg-slate-950">
+    <img
+      src="/logo.jpg"
+      alt="LVPSA"
+      className="h-full w-full scale-110 object-cover"
+    />
+  </div>
 
-      <div className="min-w-0">
-        <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">
-          LVPSA
-        </h1>
-        <p className="hidden text-base text-slate-300 lg:block">
-          Volleyball de plage de St-Augustin
-        </p>
-      </div>
-    </Link>
+  <div className="min-w-0">
+    <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl">
+      LVPSA
+    </h1>
+    <p className="hidden text-base text-slate-300 lg:block">
+      Volleyball de plage de St-Augustin
+    </p>
+  </div>
+</Link>
 
         <nav className="hidden flex-1 items-center justify-end gap-2 text-sm font-bold text-white lg:flex">
           <Link
