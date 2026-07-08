@@ -23,6 +23,7 @@ import {
   setDoc,
   addDoc,
   updateDoc,
+  deleteDoc,
   serverTimestamp,
   writeBatch,
   increment,
@@ -443,23 +444,23 @@ function Header() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-  const verifierExpiration = () => {
-    const expiration = localStorage.getItem("lvpsaSessionExpire");
+    const verifierExpiration = () => {
+      const expiration = localStorage.getItem("lvpsaSessionExpire");
 
-    if (expiration && Date.now() > Number(expiration)) {
-      localStorage.removeItem("lvpsaSessionExpire");
-      signOut(auth);
-      window.location.href = "/connexion";
-    }
-  };
+      if (expiration && Date.now() > Number(expiration)) {
+        localStorage.removeItem("lvpsaSessionExpire");
+        signOut(auth);
+        window.location.href = "/connexion";
+      }
+    };
 
-  verifierExpiration();
+    verifierExpiration();
 
-  const interval = setInterval(verifierExpiration, 60 * 1000);
+    const interval = setInterval(verifierExpiration, 60 * 1000);
 
-  return () => clearInterval(interval);
-}, []);
-  
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -491,20 +492,20 @@ function Header() {
   };
 
   const ligueItems = [
-  { label: "Calendrier", to: "/calendrier" },
-  { label: "Classements", to: "/classements" },
-  { label: "Inscriptions", to: "/inscription-ligue" },
+    { label: "Calendrier", to: "/calendrier" },
+    { label: "Classements", to: "/classements" },
+    { label: "Inscriptions", to: "/inscription-ligue" },
 
-  ...((userData?.role === "capitaine" || userData?.isAdmin)
-    ? [{ label: "Gestion d'équipe", to: "/gestion-equipe" }]
-    : []),
+    ...((userData?.role === "capitaine" || userData?.isAdmin)
+      ? [{ label: "Gestion d'équipe", to: "/gestion-equipe" }]
+      : []),
 
-  ...((userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin)
-    ? [{ label: "Remplaçants", to: "/remplacants" }]
-    : []),
+    ...((userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin)
+      ? [{ label: "Remplaçants", to: "/remplacants" }]
+      : []),
 
-  { label: "Règlements Ligue", to: "/reglements" },
-];
+    { label: "Règlements Ligue", to: "/reglements" },
+  ];
 
   const tournoiItems = [
     { label: "Informations", to: "/tournoi" },
@@ -513,93 +514,88 @@ function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link to="/" className="flex items-center gap-4">
-          <div className="h-20 w-20 overflow-hidden rounded-full bg-transparent">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-6 py-3">
+        <Link to="/" className="flex min-w-0 items-center gap-4">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-slate-950">
             <img
               src="/logo.jpg"
               alt="LVPSA"
-              className="h-full w-full scale-125 object-cover"
+              className="h-full w-full rounded-full object-contain"
             />
           </div>
-          
-          <div>
-            <h1 className="text-4xl font-black tracking-tight text-white">LVPSA</h1>
-            <p className="text-xl text-slate-300">Volleyball de plage de St-Augustin</p>
+
+          <div className="min-w-0">
+            <h1 className="text-3xl font-black tracking-tight text-white md:text-4xl">
+              LVPSA
+            </h1>
+            <p className="hidden text-sm text-slate-300 lg:block">
+              Volleyball de plage de St-Augustin
+            </p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-white md:flex">
-          <Link to="/" className="hover:text-amber-300">Accueil</Link>
+        <nav className="hidden flex-1 items-center justify-end gap-2 text-sm font-bold text-white lg:flex">
+          <Link
+            to="/"
+            className="rounded-full px-4 py-3 hover:bg-white/10 hover:text-amber-300"
+          >
+            Accueil
+          </Link>
 
-          <Dropdown title="LIGUE" items={ligueItems} />
-          <Dropdown title="TOURNOI" items={tournoiItems} />
+          <Dropdown title="Ligue" items={ligueItems} />
+          <Dropdown title="Tournoi" items={tournoiItems} />
 
-          <Link to="/boutique" className="hover:text-amber-300">Boutique</Link>
+          <Link
+            to="/boutique"
+            className="rounded-full px-4 py-3 hover:bg-white/10 hover:text-amber-300"
+          >
+            Boutique
+          </Link>
+
+          <Link
+            to="/partenaires"
+            className="rounded-full px-4 py-3 hover:bg-white/10 hover:text-amber-300"
+          >
+            Partenaires
+          </Link>
 
           {user ? (
-            <>
-              <Link
-                to="/mon-espace"
-                className="rounded-full border border-white/15 px-5 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
-              >
-                Mon espace
-              </Link>
-
-              <span className="font-semibold text-white">
-                Bonjour {userData?.nom?.split(" ")[0]}
-              </span>
-
-              {userData?.isAdmin && (
-                <Link
-                  to="/admin"
-                  className="rounded-full border border-amber-400 px-6 py-3 text-amber-300 hover:bg-amber-400 hover:text-slate-950 transition"
-                >
-                  Administration
-                </Link>
-              )}
-
-              <button
-                onClick={modifierMotDePasse}
-                className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-amber-300 hover:text-amber-300"
-              >
-                Mot de passe
-              </button>
-
-              <button
-                onClick={deconnexion}
-                className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-300 hover:border-red-400 hover:text-red-400"
-              >
-                Déconnexion
-              </button>
-            </>
+            <AccountDropdown
+              userData={userData}
+              modifierMotDePasse={modifierMotDePasse}
+              deconnexion={deconnexion}
+            />
           ) : (
-            <>
-              <Link to="/connexion" className="rounded-full border border-white/15 px-6 py-3 hover:border-amber-300 hover:text-amber-300">
+            <div className="ml-2 flex items-center gap-2">
+              <Link
+                to="/connexion"
+                className="rounded-full border border-white/15 px-5 py-3 hover:border-amber-300 hover:text-amber-300"
+              >
                 Connexion
               </Link>
 
-              <Link to="/creer-compte" className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300">
+              <Link
+                to="/creer-compte"
+                className="rounded-full bg-amber-400 px-5 py-3 font-black text-slate-950 hover:bg-amber-300"
+              >
                 Créer un compte
               </Link>
-            </>
+            </div>
           )}
-
-          <Link to="/partenaires" className="hover:text-amber-300">Partenaires</Link>
         </nav>
 
         <button
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="rounded-2xl border border-white/10 px-4 py-3 text-white md:hidden"
+          className="rounded-2xl border border-white/10 px-4 py-3 text-white lg:hidden"
         >
           ☰
         </button>
       </div>
 
       {menuOpen && (
-        <div className="border-t border-white/10 bg-slate-950 px-6 py-4 md:hidden">
+        <div className="border-t border-white/10 bg-slate-950 px-6 py-4 lg:hidden">
           <div className="flex flex-col gap-4 text-white">
             <Link to="/" onClick={() => setMenuOpen(false)}>ACCUEIL</Link>
 
@@ -621,10 +617,10 @@ function Header() {
                 )}
 
                 {(userData?.role === "remplacant" || userData?.estRemplacant || userData?.isAdmin) && (
-                <Link to="/remplacants" onClick={() => setMenuOpen(false)}>
-                  Remplaçants
-                </Link>
-            )}
+                  <Link to="/remplacants" onClick={() => setMenuOpen(false)}>
+                    Remplaçants
+                  </Link>
+                )}
 
                 <Link to="/reglements" onClick={() => setMenuOpen(false)}>Règlements Ligue</Link>
               </div>
@@ -644,16 +640,19 @@ function Header() {
             )}
 
             <Link to="/boutique" onClick={() => setMenuOpen(false)}>BOUTIQUE</Link>
+            <Link to="/partenaires" onClick={() => setMenuOpen(false)}>PARTENAIRES</Link>
 
             {user ? (
               <>
+                <div className="h-px bg-white/10" />
+
+                <span className="font-semibold text-amber-300">
+                  Bonjour {userData?.nom?.split(" ")[0] || "membre"}
+                </span>
+
                 <Link to="/mon-espace" onClick={() => setMenuOpen(false)}>
                   MON ESPACE
                 </Link>
-
-                <span className="font-semibold text-amber-300">
-                  Bonjour {userData?.nom?.split(" ")[0]}
-                </span>
 
                 {userData?.isAdmin && (
                   <Link to="/admin" onClick={() => setMenuOpen(false)}>ADMINISTRATION</Link>
@@ -676,19 +675,18 @@ function Header() {
                     setMenuOpen(false);
                     deconnexion();
                   }}
-                  className="text-left text-sm font-semibold text-amber-300"
+                  className="text-left text-sm font-semibold text-red-300"
                 >
                   DÉCONNEXION
                 </button>
               </>
             ) : (
               <>
+                <div className="h-px bg-white/10" />
                 <Link to="/connexion" onClick={() => setMenuOpen(false)}>CONNEXION</Link>
                 <Link to="/creer-compte" onClick={() => setMenuOpen(false)}>CRÉER UN COMPTE</Link>
               </>
             )}
-
-            <Link to="/partenaires" onClick={() => setMenuOpen(false)}>PARTENAIRES</Link>
           </div>
         </div>
       )}
@@ -696,25 +694,69 @@ function Header() {
   );
 }
 
+function AccountDropdown({ userData, modifierMotDePasse, deconnexion }) {
+  return (
+    <div className="group relative ml-2">
+      <button className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300">
+        Bonjour {userData?.nom?.split(" ")[0] || "membre"} ▾
+      </button>
+
+      <div className="absolute right-0 top-full hidden pt-3 group-hover:block">
+        <div className="w-64 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
+          <Link
+            to="/mon-espace"
+            className="block px-5 py-3 hover:bg-slate-800 hover:text-amber-300"
+          >
+            Mon espace
+          </Link>
+
+          {userData?.isAdmin && (
+            <Link
+              to="/admin"
+              className="block px-5 py-3 hover:bg-slate-800 hover:text-amber-300"
+            >
+              Administration
+            </Link>
+          )}
+
+          <button
+            type="button"
+            onClick={modifierMotDePasse}
+            className="block w-full px-5 py-3 text-left hover:bg-slate-800 hover:text-amber-300"
+          >
+            Mot de passe
+          </button>
+
+          <button
+            type="button"
+            onClick={deconnexion}
+            className="block w-full px-5 py-3 text-left text-red-300 hover:bg-slate-800"
+          >
+            Déconnexion
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Dropdown({ title, items }) {
   return (
     <div className="relative group">
-      <button className="hover:text-amber-300 transition">
+      <button className="rounded-full px-4 py-3 hover:bg-white/10 hover:text-amber-300">
         {title} ▾
       </button>
 
-      <div className="absolute left-0 top-full pt-3 hidden group-hover:block">
-        <div className="w-64 rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
-          {items.map((item, index) =>
+      <div className="absolute left-0 top-full hidden pt-3 group-hover:block">
+        <div className="w-64 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
+          {items.map((item) =>
             item.href ? (
               <a
                 key={item.label}
                 href={item.href}
                 target="_blank"
                 rel="noreferrer"
-                className={`block px-5 py-3 hover:bg-slate-800 ${
-                  index === 0 ? "rounded-t-2xl" : ""
-                } ${index === items.length - 1 ? "rounded-b-2xl" : ""}`}
+                className="block px-5 py-3 hover:bg-slate-800 hover:text-amber-300"
               >
                 {item.label}
               </a>
@@ -722,9 +764,7 @@ function Dropdown({ title, items }) {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`block px-5 py-3 hover:bg-slate-800 ${
-                  index === 0 ? "rounded-t-2xl" : ""
-                } ${index === items.length - 1 ? "rounded-b-2xl" : ""}`}
+                className="block px-5 py-3 hover:bg-slate-800 hover:text-amber-300"
               >
                 {item.label}
               </Link>
@@ -3019,8 +3059,157 @@ const membresSansEquipe = membres.filter((membre) => {
         </div>
       )}
 
-      {onglet === "boutique" && <AdminBoutiqueV2 />}
+      {onglet === "boutique" && (
+        <div className="mt-10 space-y-8">
+          <AdminSuppressionCommandesAnnulees />
+          <AdminBoutiqueV2 />
+        </div>
+      )}
     </section>
+  );
+}
+
+
+function AdminSuppressionCommandesAnnulees() {
+  const [commandesAnnulees, setCommandesAnnulees] = useState([]);
+  const [chargement, setChargement] = useState(true);
+
+  const chargerCommandesAnnulees = async () => {
+    setChargement(true);
+
+    try {
+      const snap = await getDocs(collection(db, "commandesBoutique"));
+
+      const liste = snap.docs
+        .map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data(),
+        }))
+        .filter((commande) => {
+          const statut = normaliserTexteGlobal(
+            commande.statut ||
+              commande.status ||
+              commande.etat ||
+              ""
+          );
+
+          return (
+            statut.includes("annule") ||
+            statut.includes("annulee") ||
+            statut.includes("annulée") ||
+            statut.includes("cancel")
+          );
+        })
+        .sort((a, b) => {
+          const dateA = a.createdAt?.seconds || 0;
+          const dateB = b.createdAt?.seconds || 0;
+          return dateB - dateA;
+        });
+
+      setCommandesAnnulees(liste);
+    } catch (error) {
+      console.error("Erreur chargement commandes annulées :", error);
+    }
+
+    setChargement(false);
+  };
+
+  useEffect(() => {
+    chargerCommandesAnnulees();
+  }, []);
+
+  const supprimerCommande = async (commande) => {
+    const confirmation = window.confirm(
+      `Supprimer définitivement la commande ${commande.numeroCommande || commande.numeroCommandeSimple || commande.id}?\n\nCette action est permanente.`
+    );
+
+    if (!confirmation) return;
+
+    try {
+      await deleteDoc(doc(db, "commandesBoutique", commande.id));
+      setCommandesAnnulees((prev) =>
+        prev.filter((item) => item.id !== commande.id)
+      );
+
+      alert("Commande supprimée définitivement.");
+    } catch (error) {
+      console.error("Erreur suppression commande :", error);
+      alert("Erreur lors de la suppression de la commande.");
+    }
+  };
+
+  const totalCommande = (commande) =>
+    Number(commande.total || commande.totalCommande || commande.montantTotal || 0) || 0;
+
+  return (
+    <div className="rounded-3xl border border-red-400/20 bg-red-400/10 p-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-black text-red-300">
+            Commandes annulées
+          </h2>
+
+          <p className="mt-3 text-slate-300">
+            Supprimez définitivement seulement les commandes déjà annulées.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={chargerCommandesAnnulees}
+          className="rounded-full border border-white/15 px-5 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
+        >
+          Rafraîchir
+        </button>
+      </div>
+
+      {chargement ? (
+        <p className="mt-6 text-slate-300">Chargement...</p>
+      ) : commandesAnnulees.length > 0 ? (
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {commandesAnnulees.map((commande) => (
+            <div
+              key={commande.id}
+              className="rounded-2xl border border-white/10 bg-black/20 p-5"
+            >
+              <h3 className="text-xl font-black text-white">
+                {commande.numeroCommande ||
+                  commande.numeroCommandeSimple ||
+                  commande.id}
+              </h3>
+
+              <p className="mt-2 text-slate-300">
+                Client : {commande.nom || "Non précisé"}
+              </p>
+
+              <p className="text-slate-300">
+                Courriel : {commande.courriel || commande.email || "Non précisé"}
+              </p>
+
+              <p className="text-slate-300">
+                Total : {totalCommande(commande)} $
+              </p>
+
+              <p className="mt-2 font-bold text-red-300">
+                Statut : {commande.statut || commande.status || commande.etat || "Annulée"}
+              </p>
+
+              <button
+                type="button"
+                onClick={() => supprimerCommande(commande)}
+                className="mt-5 rounded-full bg-red-400 px-5 py-3 font-black text-slate-950 hover:bg-red-300"
+              >
+                Supprimer définitivement
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-6 text-slate-400">
+          Aucune commande annulée à supprimer.
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -4076,15 +4265,102 @@ function MonEspace() {
   const [demandesEnvoyees, setDemandesEnvoyees] = useState([]);
   const [commandes, setCommandes] = useState([]);
 
-  const datesLigue = [
-    { id: "2026-07-13", label: "13 juillet", categorie: "recreatif" },
-    { id: "2026-07-14", label: "14 juillet", categorie: "competitif" },
-    { id: "2026-08-03", label: "3 août", categorie: "recreatif" },
-    { id: "2026-08-04", label: "4 août", categorie: "competitif" },
-    { id: "2026-08-10", label: "10 août", categorie: "recreatif" },
-    { id: "2026-08-11", label: "11 août", categorie: "competitif" },
-    { id: "2026-08-17", label: "17 août", categorie: "recreatif" },
-    { id: "2026-08-18", label: "18 août", categorie: "competitif" },
+  const [editionProfil, setEditionProfil] = useState(false);
+  const [profilForm, setProfilForm] = useState({
+    nom: "",
+    telephone: "",
+  });
+  const [messageProfil, setMessageProfil] = useState("");
+
+  const horairesLigue = [
+    {
+      id: "2026-07-13",
+      label: "13 juillet",
+      categorie: "recreatif",
+      matchs: [
+        "18h30 à 19h15 — Les Smash vs Les Artishow",
+        "19h15 à 20h00 — Les Bronzés vs Les Artishow",
+        "20h00 à 20h45 — Les As vs Les Smash",
+        "20h45 à 21h30 — Les As vs Les Bronzés",
+      ],
+    },
+    {
+      id: "2026-07-14",
+      label: "14 juillet",
+      categorie: "competitif",
+      matchs: [
+        "18h30 à 19h15 — Les pieds dans le sable vs Choix du Président",
+        "19h15 à 20h00 — Fireballs vs Choix du Président",
+        "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable",
+        "20h45 à 21h30 — Crabe en Bikini vs Fireballs",
+      ],
+    },
+    {
+      id: "2026-08-03",
+      label: "3 août",
+      categorie: "recreatif",
+      matchs: [
+        "18h30 à 19h15 — Les As vs Les Artishow",
+        "19h15 à 20h00 — Les As vs Les Bronzés",
+        "20h00 à 20h45 — Les Smash vs Les Artishow",
+        "20h45 à 21h30 — Les Bronzés vs Les Smash",
+      ],
+    },
+    {
+      id: "2026-08-04",
+      label: "4 août",
+      categorie: "competitif",
+      matchs: [
+        "18h30 à 19h15 — Crabe en Bikini vs Choix du Président",
+        "19h15 à 20h00 — Crabe en Bikini vs Fireballs",
+        "20h00 à 20h45 — Les pieds dans le sable vs Choix du Président",
+        "20h45 à 21h30 — Fireballs vs Les pieds dans le sable",
+      ],
+    },
+    {
+      id: "2026-08-10",
+      label: "10 août",
+      categorie: "recreatif",
+      matchs: [
+        "18h30 à 19h15 — Les Bronzés vs Les Artishow",
+        "19h15 à 20h00 — Les As vs Les Artishow",
+        "20h00 à 20h45 — Les Bronzés vs Les Smash",
+        "20h45 à 21h30 — Les As vs Les Smash",
+      ],
+    },
+    {
+      id: "2026-08-11",
+      label: "11 août",
+      categorie: "competitif",
+      matchs: [
+        "18h30 à 19h15 — Fireballs vs Choix du Président",
+        "19h15 à 20h00 — Crabe en Bikini vs Choix du Président",
+        "20h00 à 20h45 — Fireballs vs Les pieds dans le sable",
+        "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable",
+      ],
+    },
+    {
+      id: "2026-08-17",
+      label: "17 août",
+      categorie: "recreatif",
+      matchs: [
+        "18h30 à 19h15 — Les As vs Les Smash",
+        "19h15 à 20h00 — Les Smash vs Les Artishow",
+        "20h00 à 20h45 — Les As vs Les Bronzés",
+        "20h45 à 21h30 — Les Bronzés vs Les Artishow",
+      ],
+    },
+    {
+      id: "2026-08-18",
+      label: "18 août",
+      categorie: "competitif",
+      matchs: [
+        "18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable",
+        "19h15 à 20h00 — Les pieds dans le sable vs Choix du Président",
+        "20h00 à 20h45 — Crabe en Bikini vs Fireballs",
+        "20h45 à 21h30 — Fireballs vs Choix du Président",
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -4111,6 +4387,11 @@ function MonEspace() {
         };
 
         setUserData(data);
+
+        setProfilForm({
+          nom: data.nom || "",
+          telephone: formatTelephone(data.telephone) || "",
+        });
 
         const role = data.role || "membre";
         const equipeId = String(data.equipeId || data.idEquipe || "").trim();
@@ -4283,7 +4564,7 @@ function MonEspace() {
   aujourdHui.setHours(0, 0, 0, 0);
 
   const prochainMatch =
-    datesLigue.find((date) => {
+    horairesLigue.find((date) => {
       const dateMatch = new Date(`${date.id}T00:00:00`);
 
       return (
@@ -4313,6 +4594,68 @@ function MonEspace() {
     return "bg-amber-400/15 text-amber-300";
   };
 
+  const statutCommande = (commande) => {
+    const statut =
+      commande.statut ||
+      commande.status ||
+      commande.etat ||
+      "Reçue";
+
+    return String(statut);
+  };
+
+  const totalCommandeBoutique = (commande) => {
+    const total =
+      commande.total ||
+      commande.totalCommande ||
+      commande.montantTotal ||
+      0;
+
+    return Number(total) || 0;
+  };
+
+  const articlesCommande = (commande) => {
+    if (Array.isArray(commande.articles)) return commande.articles;
+    if (Array.isArray(commande.items)) return commande.items;
+    return [];
+  };
+
+  const numeroCommande = (commande) =>
+    commande.numeroCommande ||
+    commande.numeroCommandeSimple ||
+    commande.noCommande ||
+    commande.id;
+
+  const sauvegarderProfil = async () => {
+    if (!user) return;
+
+    if (!profilForm.nom.trim()) {
+      setMessageProfil("Le nom ne peut pas être vide.");
+      return;
+    }
+
+    try {
+      const updates = {
+        nom: profilForm.nom.trim(),
+        telephone: formatTelephone(profilForm.telephone),
+        updatedAt: serverTimestamp(),
+      };
+
+      await updateDoc(doc(db, "users", user.uid), updates);
+
+      setUserData((prev) => ({
+        ...prev,
+        ...updates,
+      }));
+
+      setEditionProfil(false);
+      setMessageProfil("Profil mis à jour.");
+    } catch (error) {
+      console.error("Erreur mise à jour profil :", error);
+      setMessageProfil("Erreur lors de la mise à jour du profil.");
+    }
+  };
+
   const prenom = userData?.nom?.split(" ")[0] || "membre";
 
   return (
@@ -4331,29 +4674,92 @@ function MonEspace() {
 
       <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-            Profil
-          </p>
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
+              Profil
+            </p>
 
-          <h2 className="mt-3 text-2xl font-black text-white">
-            {userData?.nom || "Membre LVPSA"}
-          </h2>
+            <button
+              type="button"
+              onClick={() => {
+                setEditionProfil(!editionProfil);
+                setMessageProfil("");
+                setProfilForm({
+                  nom: userData?.nom || "",
+                  telephone: formatTelephone(userData?.telephone) || "",
+                });
+              }}
+              className="rounded-full border border-white/15 px-4 py-2 text-sm font-black text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              {editionProfil ? "Annuler" : "Modifier"}
+            </button>
+          </div>
 
-          <p className="mt-2 text-slate-300">
-            {userData?.email || user?.email}
-          </p>
+          {!editionProfil ? (
+            <>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                {userData?.nom || "Membre LVPSA"}
+              </h2>
 
-          <p className="text-slate-300">
-            {formatTelephone(userData?.telephone) || "Téléphone non précisé"}
-          </p>
+              <p className="mt-2 text-slate-300">
+                {userData?.email || user?.email}
+              </p>
 
-          <p className="mt-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-slate-300">
-            {roleAffichage}
-          </p>
+              <p className="text-slate-300">
+                {formatTelephone(userData?.telephone) || "Téléphone non précisé"}
+              </p>
+
+              <p className="mt-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-slate-300">
+                {roleAffichage}
+              </p>
+            </>
+          ) : (
+            <div className="mt-5 space-y-4">
+              <input
+                value={profilForm.nom}
+                onChange={(e) =>
+                  setProfilForm({ ...profilForm, nom: e.target.value })
+                }
+                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white"
+                placeholder="Nom complet"
+              />
+
+              <input
+                value={profilForm.telephone}
+                onChange={(e) =>
+                  setProfilForm({
+                    ...profilForm,
+                    telephone: formatTelephone(e.target.value),
+                  })
+                }
+                maxLength={13}
+                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white"
+                placeholder="Téléphone"
+              />
+
+              <p className="text-xs text-slate-400">
+                Le courriel de connexion doit être modifié par l'administration au besoin.
+              </p>
+
+              <button
+                type="button"
+                onClick={sauvegarderProfil}
+                className="w-full rounded-full bg-amber-400 px-5 py-3 font-black text-slate-950 hover:bg-amber-300"
+              >
+                Sauvegarder
+              </button>
+            </div>
+          )}
+
+          {messageProfil && (
+            <p className="mt-4 rounded-xl bg-white/10 p-3 text-sm text-amber-300">
+              {messageProfil}
+            </p>
+          )}
         </div>
 
         {(estJoueur || estCapitaine) && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 xl:col-span-2">
             <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
               Équipe
             </p>
@@ -4375,9 +4781,19 @@ function MonEspace() {
             </p>
 
             {prochainMatch ? (
-              <p className="mt-4 rounded-2xl bg-emerald-400/10 p-4 font-bold text-emerald-300">
-                Prochain match : {prochainMatch.label}
-              </p>
+              <div className="mt-4 rounded-2xl bg-emerald-400/10 p-4">
+                <p className="font-black text-emerald-300">
+                  Prochain match : {prochainMatch.label}
+                </p>
+
+                <div className="mt-3 space-y-2 text-sm text-slate-200">
+                  {prochainMatch.matchs.map((match, index) => (
+                    <p key={index} className="rounded-xl bg-black/20 p-3">
+                      {match}
+                    </p>
+                  ))}
+                </div>
+              </div>
             ) : (
               <p className="mt-4 rounded-2xl bg-white/10 p-4 text-slate-300">
                 Aucun prochain match affiché.
@@ -4445,12 +4861,12 @@ function MonEspace() {
             commande{commandes.length > 1 ? "s" : ""} associée{commandes.length > 1 ? "s" : ""} à ton compte
           </p>
 
-          <Link
-            to="/boutique"
+          <a
+            href="#mes-commandes"
             className="mt-5 inline-flex rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
           >
-            Boutique
-          </Link>
+            Voir mes commandes
+          </a>
         </div>
 
         {estAdmin && (
@@ -4602,35 +5018,35 @@ function MonEspace() {
           </div>
         )}
 
-        {estJoueur && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-            <h2 className="text-3xl font-black text-amber-300">
-              Mon équipe
-            </h2>
+        <div className="rounded-3xl border border-amber-400/20 bg-gradient-to-br from-amber-400/10 to-slate-900 p-8">
+          <p className="font-bold uppercase tracking-wider text-amber-300">
+            Événement à venir
+          </p>
 
-            <p className="mt-3 text-slate-300">
-              Tu es associé à une équipe. Les demandes de remplacement sont gérées par ton capitaine.
-            </p>
+          <h2 className="mt-2 text-3xl font-black text-white">
+            Tournoi LVPSA 2026
+          </h2>
 
-            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5">
-              <h3 className="text-2xl font-black text-white">
-                {userData?.equipeNom ||
-                  userData?.equipenom ||
-                  nomEquipeGlobal(equipeActuelle) ||
-                  "Équipe non précisée"}
-              </h3>
+          <p className="mt-4 text-slate-300">
+            Le tournoi est complet, mais l'horaire, les règlements et les informations importantes restent disponibles en tout temps.
+          </p>
 
-              <p className="mt-2 text-slate-300">
-                Catégorie :{" "}
-                {categorieActive === "recreatif"
-                  ? "Récréatif"
-                  : categorieActive === "competitif"
-                  ? "Compétitif"
-                  : "Non précisée"}
-              </p>
-            </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              to="/tournoi"
+              className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+            >
+              Informations
+            </Link>
+
+            <Link
+              to="/tournoi/horaire"
+              className="rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
+            >
+              Horaire
+            </Link>
           </div>
-        )}
+        </div>
 
         {estMembre && (
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
@@ -4650,6 +5066,104 @@ function MonEspace() {
             </Link>
           </div>
         )}
+      </div>
+
+      <div id="mes-commandes" className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-bold uppercase tracking-wider text-amber-300">
+              Boutique
+            </p>
+
+            <h2 className="mt-2 text-3xl font-black text-white">
+              Mes commandes
+            </h2>
+          </div>
+
+          <Link
+            to="/boutique"
+            className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+          >
+            Nouvelle commande
+          </Link>
+        </div>
+
+        <div className="mt-8 space-y-5">
+          {commandes.length > 0 ? (
+            commandes.map((commande) => {
+              const articles = articlesCommande(commande);
+
+              return (
+                <div
+                  key={commande.id}
+                  className="rounded-2xl border border-white/10 bg-black/20 p-5"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-xl font-black text-white">
+                        Commande {numeroCommande(commande)}
+                      </h3>
+
+                      <p className="mt-2 text-slate-300">
+                        Statut :{" "}
+                        <span className="font-bold text-amber-300">
+                          {statutCommande(commande)}
+                        </span>
+                      </p>
+                    </div>
+
+                    <p className="rounded-full bg-white/10 px-4 py-2 font-black text-white">
+                      Total : {totalCommandeBoutique(commande)} $
+                    </p>
+                  </div>
+
+                  {articles.length > 0 ? (
+                    <div className="mt-5 grid gap-3 md:grid-cols-2">
+                      {articles.map((article, index) => (
+                        <div
+                          key={`${commande.id}-${index}`}
+                          className="rounded-xl bg-white/5 p-4 text-slate-300"
+                        >
+                          <p className="font-black text-white">
+                            {article.nom ||
+                              article.categorie ||
+                              article.modele ||
+                              article.type ||
+                              "Article"}
+                          </p>
+
+                          <p className="mt-1 text-sm">
+                            Couleur : {article.couleurNom || article.couleur || "Non précisée"}
+                          </p>
+
+                          <p className="text-sm">
+                            Grandeur : {article.taille || article.grandeur || "Non précisée"}
+                          </p>
+
+                          <p className="text-sm">
+                            Quantité : {article.quantite || article.qty || 1}
+                          </p>
+
+                          <p className="text-sm">
+                            Prix : {Number(article.prix || 0)} $
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-5 rounded-xl bg-white/5 p-4 text-slate-300">
+                      {commande.commande || commande.resume || "Détails de commande non disponibles."}
+                    </p>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-slate-400">
+              Aucune commande associée à ton compte pour le moment.
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
@@ -5728,7 +6242,7 @@ const couleurStatutDemande = (statut) => {
         {dateSelectionnee && (
   <div className="mt-8 rounded-3xl border border-white/10 bg-black/20 p-6">
     <h3 className="text-2xl font-black text-white">
-      Confirmer un remplacement
+      Envoyer une demande de remplacement
     </h3>
 
     <select
@@ -5764,7 +6278,7 @@ const couleurStatutDemande = (statut) => {
       onClick={confirmerRemplacement}
       className="mt-6 rounded-full bg-amber-400 px-7 py-3 font-black text-slate-950 hover:bg-amber-300"
     >
-      Confirmer le remplacement
+      Envoyer demande
     </button>
   </div>
 )}
@@ -6399,5 +6913,6 @@ function ReglementsTournoi() {
     </section>
   );
 }
+
 
 
