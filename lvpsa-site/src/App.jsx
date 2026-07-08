@@ -516,7 +516,7 @@ function Header() {
   return (
    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl">
   <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-6 py-3">
-    <<Link to="/" className="flex min-w-0 items-center gap-5">
+    <Link to="/" className="flex min-w-0 items-center gap-5">
   <div className="h-28 w-28 shrink-0 overflow-hidden rounded-full bg-slate-950">
     <img
       src="/logo.jpg"
