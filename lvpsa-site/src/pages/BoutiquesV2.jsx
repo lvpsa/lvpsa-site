@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { chargerProduitsBoutique } from "../services/firebaseBoutique";
 import { useInventaire } from "../hooks/useInventaire";
 import PanierV2 from "../components/boutique/PanierV2";
@@ -27,13 +30,54 @@ export default function BoutiquesV2() {
   const [quantite, setQuantite] = useState(1);
   const [panier, setPanier] = useState([]);
   const [formulaireOuvert, setFormulaireOuvert] = useState(false);
+  const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
 
-const [commande, setCommande] = useState({
-  nom: "",
-  courriel: "",
-  telephone: "",
-  notes: "",
-});
+  const [commande, setCommande] = useState({
+    nom: "",
+    courriel: "",
+    telephone: "",
+    notes: "",
+  });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (!currentUser) {
+        setUserData(null);
+        return;
+      }
+
+      try {
+        const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+        const data = userSnap.exists() ? userSnap.data() : {};
+
+        setUserData(data);
+
+        setCommande((prev) => ({
+          ...prev,
+          nom: prev.nom || data.nom || "",
+          courriel:
+            prev.courriel ||
+            data.email ||
+            data.courriel ||
+            currentUser.email ||
+            "",
+          telephone: prev.telephone || formatTelephone(data.telephone || ""),
+        }));
+      } catch (error) {
+        console.error("Erreur chargement profil boutique :", error);
+
+        setCommande((prev) => ({
+          ...prev,
+          courriel: prev.courriel || currentUser.email || "",
+        }));
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const chargerProduits = async () => {
@@ -108,6 +152,7 @@ const [commande, setCommande] = useState({
   }
 
 const commandeComplete = {
+  userId: user?.uid || "",
   nom: commande.nom,
   courriel: commande.courriel,
   telephone: formatTelephone(commande.telephone),
@@ -133,9 +178,14 @@ await envoyerCourrielsCommande(commandeAvecNumero);
 alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
     setPanier([]);
     setCommande({
-      nom: "",
-      courriel: "",
-      telephone: "",
+      nom: userData?.nom || commande.nom || "",
+      courriel:
+        userData?.email ||
+        userData?.courriel ||
+        user?.email ||
+        commande.courriel ||
+        "",
+      telephone: formatTelephone(userData?.telephone || commande.telephone || ""),
       notes: "",
     });
     setFormulaireOuvert(false);
