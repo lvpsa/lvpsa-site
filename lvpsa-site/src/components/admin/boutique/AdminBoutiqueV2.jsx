@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../../firebase";
 import {
   chargerCommandesBoutique,
   modifierStatutCommandeBoutique,
@@ -115,6 +117,43 @@ export default function AdminBoutiqueV2() {
     setCommandeActive((prev) =>
       prev?.id === commande.id ? { ...prev, statut } : prev
     );
+  };
+
+  const supprimerCommandeDefinitivement = async (commande) => {
+    if (commande.statut !== "annulee") {
+      alert("Seules les commandes annulées peuvent être supprimées définitivement.");
+      return;
+    }
+
+    const numero =
+      commande.numeroCommande ||
+      commande.numeroCommandeSimple ||
+      commande.id;
+
+    const confirmer = window.confirm(
+      `Supprimer définitivement la commande ${numero}?
+
+Cette action est irréversible.`
+    );
+
+    if (!confirmer) return;
+
+    try {
+      await deleteDoc(doc(db, "commandesBoutique", commande.id));
+
+      setCommandes((prev) =>
+        prev.filter((item) => item.id !== commande.id)
+      );
+
+      setCommandeActive((prev) =>
+        prev?.id === commande.id ? null : prev
+      );
+
+      alert("Commande supprimée définitivement.");
+    } catch (error) {
+      console.error("Erreur suppression commande :", error);
+      alert("Erreur lors de la suppression de la commande.");
+    }
   };
 
   const ajusterStock = async (produitId, couleurId, taille, variation) => {
@@ -277,6 +316,16 @@ export default function AdminBoutiqueV2() {
                       <option value="remise">Remise</option>
                       <option value="annulee">Annulée</option>
                     </select>
+
+                    {filtreCommandes === "annulees" && (
+                      <button
+                        type="button"
+                        onClick={() => supprimerCommandeDefinitivement(commande)}
+                        className="rounded-full border border-red-400 px-5 py-2 font-black text-red-300 hover:bg-red-400 hover:text-slate-950"
+                      >
+                        Supprimer définitivement
+                      </button>
+                    )}
                   </div>
                 </div>
               ))
@@ -458,6 +507,16 @@ export default function AdminBoutiqueV2() {
                 <option value="remise">Remise</option>
                 <option value="annulee">Annulée</option>
               </select>
+
+              {commandeActive.statut === "annulee" && (
+                <button
+                  type="button"
+                  onClick={() => supprimerCommandeDefinitivement(commandeActive)}
+                  className="mt-4 w-full rounded-2xl border border-red-400 px-5 py-3 font-black text-red-300 hover:bg-red-400 hover:text-slate-950"
+                >
+                  Supprimer définitivement cette commande
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -476,3 +535,4 @@ function StatCard({ titre, valeur }) {
     </div>
   );
 }
+
