@@ -16,6 +16,87 @@ import { envoyerCourrielsCommande } from "../services/emailService";
 import { getCharteGrandeur } from "../data/chartesGrandeurs";
 import { formatTelephone } from "../utils/telephone";
 
+const normaliserSlugImage = (valeur) =>
+  String(valeur || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/t[\s-]?shirt/g, "tshirt")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const cheminsImagesProduit = (produit, couleur, vue = "devant") => {
+  const typeImage = vue === "dos" ? "dos" : "devant";
+  const extension = typeImage === "dos" ? "png" : "jpg";
+
+  const chemins = [];
+
+  const ajouter = (chemin) => {
+    if (chemin && !chemins.includes(chemin)) {
+      chemins.push(chemin);
+    }
+  };
+
+  const produitId = normaliserSlugImage(produit?.id);
+  const nomProduit = normaliserSlugImage(produit?.nom);
+  const categorieProduit = normaliserSlugImage(produit?.categorie);
+
+  const couleurId = normaliserSlugImage(couleur?.id);
+  const couleurNom = normaliserSlugImage(couleur?.nom);
+
+  const couleurs = [...new Set([couleurId, couleurNom].filter(Boolean))];
+  const bases = [...new Set([produitId, nomProduit, categorieProduit].filter(Boolean))];
+
+  couleurs.forEach((couleurSlug) => {
+    bases.forEach((base) => {
+      // Cas où le id contient déjà la couleur : tshirt-homme-or
+      if (base.includes(`-${couleurSlug}`) || base.endsWith(couleurSlug)) {
+        ajouter(`/${base}-${typeImage}.${extension}`);
+      }
+
+      // Cas normal : tshirt-homme + or
+      ajouter(`/${base}-${couleurSlug}-${typeImage}.${extension}`);
+    });
+  });
+
+  // Fallbacks si le chemin est déjà dans Firebase
+  if (typeImage === "devant") {
+    ajouter(couleur?.imageDevant);
+    ajouter(produit?.imageDevant);
+  } else {
+    ajouter(couleur?.imageDos);
+    ajouter(produit?.imageDos);
+  }
+
+  return chemins;
+};
+
+function ImageBoutique({ produit, couleur, vue = "devant", alt, className }) {
+  const sources = useMemo(
+    () => cheminsImagesProduit(produit, couleur, vue),
+    [produit, couleur, vue]
+  );
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [sources.join("|")]);
+
+  return (
+    <img
+      src={sources[index] || ""}
+      alt={alt}
+      className={className}
+      onError={() => {
+        setIndex((current) =>
+          current + 1 < sources.length ? current + 1 : current
+        );
+      }}
+    />
+  );
+}
+
 export default function BoutiquesV2() {
   const { chargementInventaire, statutInventaire, quantiteInventaire } =
     useInventaire();
@@ -171,7 +252,9 @@ export default function BoutiquesV2() {
         prix: produitSelectionne.prix,
         taille,
         quantite: Math.max(1, Number(quantite) || 1),
-        image: imageProduit(produitSelectionne, couleurSelectionnee, "devant"),
+        image:
+  cheminsImagesProduit(produitSelectionne, couleurSelectionnee, "devant")[0] ||
+  "",
       },
     ]);
 
@@ -300,8 +383,10 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
                 onClick={() => ouvrirProduit(produit)}
                 className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left transition hover:-translate-y-1 hover:border-amber-300"
               >
-                <img
-                  src={imageProduit(produit, couleurDefaut, "devant")}
+               <ImageBoutique
+                  produit={produit}
+                  couleur={couleurDefaut}
+                  vue="devant"
                   alt={produit.nom}
                   className="h-56 w-full rounded-2xl bg-white object-contain"
                 />
@@ -364,8 +449,10 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
 
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <div>
-                <img
-                  src={imageProduit(produitSelectionne, couleurSelectionnee, vueProduit)}
+                <ImageBoutique
+                  produit={produitSelectionne}
+                  couleur={couleurSelectionnee}
+                  vue={vueProduit}
                   alt={produitSelectionne.nom}
                   className="h-96 w-full rounded-2xl bg-white object-contain"
                 />
