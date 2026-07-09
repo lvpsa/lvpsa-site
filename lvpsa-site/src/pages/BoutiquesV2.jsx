@@ -98,6 +98,28 @@ export default function BoutiquesV2() {
     (couleur) => couleur.id === couleurId
   );
 
+  const imageProduit = (produit, couleur, vue = "devant") => {
+  if (!produit) return "";
+
+  const typeImage = vue === "dos" ? "dos" : "devant";
+
+  const imageDepuisCouleur =
+    typeImage === "dos" ? couleur?.imageDos : couleur?.imageDevant;
+
+  const imageDepuisProduit =
+    typeImage === "dos" ? produit.imageDos : produit.imageDevant;
+
+  if (imageDepuisCouleur) return imageDepuisCouleur;
+  if (imageDepuisProduit) return imageDepuisProduit;
+
+  if (produit.id && couleur?.id) {
+    const extension = typeImage === "dos" ? "png" : "jpg";
+    return `/${produit.id}-${couleur.id}-${typeImage}.${extension}`;
+  }
+
+  return "";
+};
+
   const total = useMemo(() => {
     return panier.reduce(
       (somme, item) => somme + Number(item.prix) * Number(item.quantite),
@@ -133,7 +155,7 @@ export default function BoutiquesV2() {
         prix: produitSelectionne.prix,
         taille,
         quantite: Math.max(1, Number(quantite) || 1),
-        image: couleurSelectionnee.imageDevant,
+        image: imageProduit(produitSelectionne, couleurSelectionnee, "devant"),
       },
     ]);
 
@@ -263,7 +285,7 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
                 className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left transition hover:-translate-y-1 hover:border-amber-300"
               >
                 <img
-                  src={couleurDefaut?.imageDevant}
+                  src={imageProduit(produit, couleurDefaut, "devant")}
                   alt={produit.nom}
                   className="h-56 w-full rounded-2xl bg-white object-contain"
                 />
@@ -327,11 +349,7 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <div>
                 <img
-                  src={
-                    vueProduit === "devant"
-                      ? couleurSelectionnee.imageDevant
-                      : couleurSelectionnee.imageDos
-                  }
+                  src={imageProduit(produitSelectionne, couleurSelectionnee, vueProduit)}
                   alt={produitSelectionne.nom}
                   className="h-96 w-full rounded-2xl bg-white object-contain"
                 />
