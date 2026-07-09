@@ -68,6 +68,33 @@ const cheminsImagesProduit = (produit, couleur, vue = "devant") => {
     ajouter(produit?.imageDos);
   }
 
+  // Corrections spécifiques pour les camisoles
+if (typeImage === "devant") {
+  bases.forEach((base) => {
+    couleurs.forEach((couleurSlug) => {
+      if (base.includes("camisole-homme") && couleurSlug.includes("marine")) {
+        ajouter("/camisole-homme-marine-devant.jpg");
+        ajouter("/camisole-homme-bleu-devant.jpg");
+      }
+
+      if (base.includes("camisole-homme") && couleurSlug.includes("bleu")) {
+        ajouter("/camisole-homme-bleu-devant.jpg");
+        ajouter("/camisole-homme-marine-devant.jpg");
+      }
+
+      if (base.includes("camisole-femme") && couleurSlug.includes("bleu")) {
+        ajouter("/camisole-femme-bleu-devant.jpg");
+        ajouter("/camisole-femme-marine-devant.jpg");
+      }
+
+      if (base.includes("camisole-femme") && couleurSlug.includes("marine")) {
+        ajouter("/camisole-femme-marine-devant.jpg");
+        ajouter("/camisole-femme-bleu-devant.jpg");
+      }
+    });
+  });
+}
+  
   return chemins;
 };
 
