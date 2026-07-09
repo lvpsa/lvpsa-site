@@ -102,6 +102,7 @@ export default function BoutiquesV2() {
   if (!produit) return "";
 
   const typeImage = vue === "dos" ? "dos" : "devant";
+  const extension = typeImage === "dos" ? "png" : "jpg";
 
   const imageDepuisCouleur =
     typeImage === "dos" ? couleur?.imageDos : couleur?.imageDevant;
@@ -112,14 +113,29 @@ export default function BoutiquesV2() {
   if (imageDepuisCouleur) return imageDepuisCouleur;
   if (imageDepuisProduit) return imageDepuisProduit;
 
-  if (produit.id && couleur?.id) {
-    const extension = typeImage === "dos" ? "png" : "jpg";
-    return `/${produit.id}-${couleur.id}-${typeImage}.${extension}`;
+  const produitId = String(produit.id || "").trim();
+  const couleurId = String(couleur?.id || "").trim();
+
+  if (!produitId) return "";
+
+  // Cas 1 : le produit.id contient déjà la couleur
+  // Exemple : tshirt-homme-or
+  if (
+    couleurId &&
+    produitId.toLowerCase().includes(couleurId.toLowerCase())
+  ) {
+    return `/${produitId}-${typeImage}.${extension}`;
   }
 
-  return "";
-};
+  // Cas 2 : produit.id sans couleur + couleur.id
+  // Exemple : tshirt-homme + or
+  if (couleurId) {
+    return `/${produitId}-${couleurId}-${typeImage}.${extension}`;
+  }
 
+  // Cas 3 : seulement produit.id
+  return `/${produitId}-${typeImage}.${extension}`;
+};
   const total = useMemo(() => {
     return panier.reduce(
       (somme, item) => somme + Number(item.prix) * Number(item.quantite),
