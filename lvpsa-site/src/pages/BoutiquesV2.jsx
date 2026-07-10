@@ -125,8 +125,7 @@ function ImageBoutique({ produit, couleur, vue = "devant", alt, className }) {
 }
 
 export default function BoutiquesV2() {
-  const { chargementInventaire, statutInventaire, quantiteInventaire } =
-    useInventaire();
+const { chargementInventaire, quantiteInventaire } = useInventaire();
 
   const [produits, setProduits] = useState([]);
   const [chargementProduits, setChargementProduits] = useState(true);
@@ -206,6 +205,14 @@ export default function BoutiquesV2() {
     (couleur) => couleur.id === couleurId
   );
 
+  const statutClientInventaire = (produitId, couleurId, taille) => {
+  const quantiteDisponible = Number(
+    quantiteInventaire(produitId, couleurId, taille) || 0
+  );
+
+  return quantiteDisponible > 0 ? "Disponible" : "Sur commande";
+};
+  
   const imageProduit = (produit, couleur, vue = "devant") => {
   if (!produit) return "";
 
@@ -426,14 +433,19 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
                   {produit.couleurs?.length || 0} couleur(s) disponible(s)
                 </p>
 
-                <p className="mt-2 text-sm font-bold text-slate-300">
-                  {couleurDefaut &&
-                    statutInventaire(
-                      produit.id,
-                      couleurDefaut.id,
-                      tailleDefaut
-                    )}
-                </p>
+                <p
+  className={`mt-2 text-sm font-bold ${
+    couleurDefaut &&
+    statutClientInventaire(produit.id, couleurDefaut.id, tailleDefaut) ===
+      "Disponible"
+      ? "text-emerald-300"
+      : "text-amber-300"
+  }`}
+>
+  {couleurDefaut
+    ? statutClientInventaire(produit.id, couleurDefaut.id, tailleDefaut)
+    : "Sur commande"}
+</p>
 
                 <p className="mt-2 text-xl font-black text-amber-300">
                   {produit.prix} $
@@ -562,22 +574,23 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
                     Statut pour {couleurSelectionnee.nom} / {taille}
                   </p>
 
-                  <p className="mt-1 text-lg font-black text-amber-300">
-                    {statutInventaire(
-                      produitSelectionne.id,
-                      couleurSelectionnee.id,
-                      taille
-                    )}
-                  </p>
-
-                  <p className="mt-1 text-sm text-slate-400">
-                    Quantité actuelle :{" "}
-                    {quantiteInventaire(
-                      produitSelectionne.id,
-                      couleurSelectionnee.id,
-                      taille
-                    )}
-                  </p>
+<p
+  className={`mt-1 text-lg font-black ${
+    statutClientInventaire(
+      produitSelectionne.id,
+      couleurSelectionnee.id,
+      taille
+    ) === "Disponible"
+      ? "text-emerald-300"
+      : "text-amber-300"
+  }`}
+>
+  {statutClientInventaire(
+    produitSelectionne.id,
+    couleurSelectionnee.id,
+    taille
+  )}
+</p>
                 </div>
 
                 {charteProduit && (
