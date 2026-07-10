@@ -1,14 +1,46 @@
 import { useEffect, useState } from "react";
-import {
-  collection,
-  doc,
-  getDocs,
-  increment,
-  serverTimestamp,
-  setDoc,
-  writeBatch,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+
+const COLLECTION_INVENTAIRE_PUBLIC = "inventairePublicBoutique";
+const COLLECTION_INVENTAIRE_PRIVE = "inventaireBoutiqueV2";
+
+const cleInventaire = (produitId, couleurId, taille) => {
+  return `${produitId}_${couleurId}_${taille}`;
+};
+
+const statutPublicDepuisQuantite = (quantite) => {
+  return Number(quantite || 0) > 0 ? "disponible" : "sur_commande";
+};
+
+const libelleStatutClient = (item) => {
+  if (!item) return "Sur commande";
+
+  if (item.disponible === true || item.statut === "disponible") {
+    return "Disponible";
+  }
+
+  return "Sur commande";
+};
+
+const convertirInventairePriveEnPublic = (snap) => {
+  const data = {};
+
+  snap.docs.forEach((docItem) => {
+    const item = docItem.data();
+    const quantite = Number(item.quantite || 0);
+
+    data[docItem.id] = {
+      produitId: item.produitId || "",
+      couleurId: item.couleurId || "",
+      taille: item.taille || "",
+      disponible: quantite > 0,
+      statut: statutPublicDepuisQuantite(quantite),
+    };
+  });
+
+  return data;
+};
 
 export function useInventaire() {
   const [inventaire, setInventaire] = useState({});
@@ -18,16 +50,28 @@ export function useInventaire() {
     try {
       setChargementInventaire(true);
 
-      const snap = await getDocs(collection(db, "inventaireBoutiqueV2"));
-      const data = {};
+      const publicSnap = await getDocs(collection(db, COLLECTION_INVENTAIRE_PUBLIC));
 
-      snap.docs.forEach((docItem) => {
-        data[docItem.id] = docItem.data();
-      });
+      if (!publicSnap.empty) {
+        const data = {};
 
-      setInventaire(data);
+        publicSnap.docs.forEach((docItem) => {
+          data[docItem.id] = docItem.data();
+        });
+
+        setInventaire(data);
+        return;
+      }
+
+      // Transition temporaire : permet au site de continuer à fonctionner
+      // tant que inventairePublicBoutique n'est pas encore généré.
+      // Après la publication des règles sécurisées, cette collection privée
+      // ne devra plus être lisible par les clients.
+      const priveSnap = await getDocs(collection(db, COLLECTION_INVENTAIRE_PRIVE));
+      setInventaire(convertirInventairePriveEnPublic(priveSnap));
     } catch (error) {
-      console.error("Erreur lors du chargement de l'inventaire :", error);
+      console.error("Erreur lors du chargement de l'inventaire public :", error);
+      setInventaire({});
     } finally {
       setChargementInventaire(false);
     }
@@ -37,79 +81,33 @@ export function useInventaire() {
     chargerInventaire();
   }, []);
 
-  const cleInventaire = (produitId, couleurId, taille) => {
-    return `${produitId}_${couleurId}_${taille}`;
+  const itemInventaire = (produitId, couleurId, taille) => {
+    const cle = cleInventaire(produitId, couleurId, taille);
+    return inventaire[cle] || null;
   };
 
-  const quantiteInventaire = (produitId, couleurId, taille) => {
-    const cle = cleInventaire(produitId, couleurId, taille);
-    return Number(inventaire[cle]?.quantite || 0);
+  const estDisponible = (produitId, couleurId, taille) => {
+    const item = itemInventaire(produitId, couleurId, taille);
+    return item?.disponible === true || item?.statut === "disponible";
   };
 
   const statutInventaire = (produitId, couleurId, taille) => {
-    const quantite = quantiteInventaire(produitId, couleurId, taille);
-
-    if (quantite >= 4) return "🟢 en inventaire";
-    if (quantite >= 1) return "🟡 dernières quantités";
-    return "🔶 sur commande";
+    return libelleStatutClient(itemInventaire(produitId, couleurId, taille));
   };
 
-  const deduireInventaire = async (articles) => {
-    const batch = writeBatch(db);
-
-    articles.forEach((article) => {
-      const ref = doc(
-        db,
-        "inventaireBoutiqueV2",
-        cleInventaire(article.produitId, article.couleurId, article.taille)
-      );
-
-      batch.set(
-        ref,
-        {
-          produitId: article.produitId,
-          couleurId: article.couleurId,
-          taille: article.taille,
-          quantite: increment(-Number(article.quantite)),
-          updatedAt: serverTimestamp(),
-        },
-        { merge: true }
-      );
-    });
-
-    await batch.commit();
-    await chargerInventaire();
-  };
-
-  const ajusterInventaire = async (produitId, couleurId, taille, variation) => {
-    const ref = doc(
-      db,
-      "inventaireBoutiqueV2",
-      cleInventaire(produitId, couleurId, taille)
-    );
-
-    await setDoc(
-      ref,
-      {
-        produitId,
-        couleurId,
-        taille,
-        quantite: increment(Number(variation)),
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
-
-    await chargerInventaire();
+  // Compatibilité avec l'ancien code.
+  // Ne retourne plus la vraie quantité afin de ne pas exposer l'inventaire client.
+  const quantiteInventaire = (produitId, couleurId, taille) => {
+    return estDisponible(produitId, couleurId, taille) ? 1 : 0;
   };
 
   return {
     inventaire,
     chargementInventaire,
     chargerInventaire,
+    estDisponible,
     quantiteInventaire,
     statutInventaire,
-    deduireInventaire,
-    ajusterInventaire,
   };
 }
+
