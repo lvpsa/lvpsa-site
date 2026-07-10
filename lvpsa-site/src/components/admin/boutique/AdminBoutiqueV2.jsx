@@ -10,6 +10,8 @@ import {
   chargerProduitsBoutique,
   annulerCommandeBoutique,
   supprimerCommandeBoutique,
+  synchroniserProduitsBoutiqueSansInventaire,
+  recalculerInventairePublicBoutique,
 } from "../../../services/firebaseBoutique";
 
 const STATUTS = {
@@ -113,6 +115,27 @@ export default function AdminBoutiqueV2() {
     nom: adminActuel?.displayName || adminActuel?.email || "Admin LVPSA",
     email: adminActuel?.email || null,
   });
+
+  const synchroniserBoutique = async () => {
+    const confirmer = window.confirm(
+      "Synchroniser les produits boutique et recalculer l'inventaire public?\n\nCette action ne réinitialise pas les quantités privées."
+    );
+
+    if (!confirmer) return;
+
+    try {
+      setChargement(true);
+      await synchroniserProduitsBoutiqueSansInventaire();
+      await recalculerInventairePublicBoutique();
+      await charger();
+      alert("Boutique synchronisée avec succès.");
+    } catch (error) {
+      console.error("Erreur synchronisation boutique :", error);
+      alert("Erreur lors de la synchronisation de la boutique.");
+    } finally {
+      setChargement(false);
+    }
+  };
 
   const envoyerNotificationStatutCommande = async (commande, nouveauStatut) => {
   const courrielClient = commande.courriel || commande.email || "";
@@ -299,13 +322,23 @@ Cette action est irréversible.`
           </h2>
         </div>
 
-        <button
-          type="button"
-          onClick={charger}
-          className="rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
-        >
-          Rafraîchir
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={synchroniserBoutique}
+            className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
+          >
+            Synchroniser boutique
+          </button>
+
+          <button
+            type="button"
+            onClick={charger}
+            className="rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
+          >
+            Rafraîchir
+          </button>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-5">
