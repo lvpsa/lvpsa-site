@@ -37,6 +37,57 @@ const cheminsImagesProduit = (produit, couleur, vue = "devant") => {
     }
   };
 
+  const cleFixe = `${normaliserSlugImage(produit?.id)}_${normaliserSlugImage(couleur?.id)}_${typeImage}`;
+
+  const imagesFixes = {
+    "tshirt-homme_sable_devant": ["/tshirt-homme-sable-devant.jpg"],
+    "tshirt-homme_sable_dos": ["/tshirt-homme-sable-dos.png"],
+    "tshirt-homme_or_devant": ["/tshirt-homme-or-devant.jpg"],
+    "tshirt-homme_or_dos": ["/tshirt-homme-or-dos.png"],
+
+    "tshirt-femme_blanc_devant": ["/tshirt-femme-blanc-devant.jpg"],
+    "tshirt-femme_blanc_dos": ["/tshirt-femme-blanc-dos.png"],
+    "tshirt-femme_rose_devant": ["/tshirt-femme-rose-devant.jpg"],
+    "tshirt-femme_rose_dos": ["/tshirt-femme-rose-dos.png"],
+
+    "camisole-homme_blanc_devant": ["/camisole-homme-blanc-devant.jpg"],
+    "camisole-homme_blanc_dos": ["/camisole-homme-blanc-dos.png"],
+    "camisole-homme_marine_devant": [
+      "/camisole-homme-marine-devant.jpg",
+      "/camisole-homme-marin-devant.jpg",
+      "/camisole-homme-bleu-devant.jpg"
+    ],
+    "camisole-homme_marine_dos": [
+      "/camisole-homme-marine-dos.png",
+      "/camisole-homme-marin-dos.png",
+      "/camisole-homme-bleu-dos.png"
+    ],
+
+    "camisole-femme_bleu_devant": [
+      "/camisole-femme-bleu-devant.jpg",
+      "/camisole-femme-bleue-devant.jpg"
+    ],
+    "camisole-femme_bleu_dos": [
+      "/camisole-femme-bleu-dos.png",
+      "/camisole-femme-bleue-dos.png"
+    ],
+    "camisole-femme_rose_devant": ["/camisole-femme-rose-devant.jpg"],
+    "camisole-femme_rose_dos": ["/camisole-femme-rose-dos.png"],
+
+    "hoodie-unisex_marine_devant": [
+      "/hoodie-unisex-marine-devant.jpg",
+      "/hoodie-unisex-marin-devant.jpg"
+    ],
+    "hoodie-unisex_marine_dos": [
+      "/hoodie-unisex-marine-dos.png",
+      "/hoodie-unisex-marin-dos.png"
+    ],
+    "hoodie-unisex_or_devant": ["/hoodie-unisex-or-devant.jpg"],
+    "hoodie-unisex_or_dos": ["/hoodie-unisex-or-dos.png"],
+  };
+
+  (imagesFixes[cleFixe] || []).forEach(ajouter);
+
   const produitId = normaliserSlugImage(produit?.id);
   const nomProduit = normaliserSlugImage(produit?.nom);
   const categorieProduit = normaliserSlugImage(produit?.categorie);
@@ -125,7 +176,7 @@ function ImageBoutique({ produit, couleur, vue = "devant", alt, className }) {
 }
 
 export default function BoutiquesV2() {
-const { chargementInventaire, quantiteInventaire } = useInventaire();
+  const { chargementInventaire, statutInventaire } = useInventaire();
 
   const [produits, setProduits] = useState([]);
   const [chargementProduits, setChargementProduits] = useState(true);
@@ -206,12 +257,8 @@ const { chargementInventaire, quantiteInventaire } = useInventaire();
   );
 
   const statutClientInventaire = (produitId, couleurId, taille) => {
-  const quantiteDisponible = Number(
-    quantiteInventaire(produitId, couleurId, taille) || 0
-  );
-
-  return quantiteDisponible > 0 ? "Disponible" : "Sur commande";
-};
+    return statutInventaire(produitId, couleurId, taille);
+  };
   
   const imageProduit = (produit, couleur, vue = "devant") => {
   if (!produit) return "";
@@ -322,13 +369,28 @@ const commandeComplete = {
 
 const commandeAvecNumero = {
   ...commandeComplete,
+  id: resultatCommande.id,
   numeroCommande: resultatCommande.numeroCommande,
   numeroCommandeSimple: resultatCommande.numeroCommandeSimple,
 };
 
 await deduireInventaireBoutique(panier);
-await envoyerCommandeGoogleSheet(commandeAvecNumero);
-await envoyerCourrielsCommande(commandeAvecNumero);
+
+const suivis = await Promise.allSettled([
+  envoyerCommandeGoogleSheet(commandeAvecNumero),
+  envoyerCourrielsCommande(commandeAvecNumero),
+]);
+
+suivis.forEach((resultat, index) => {
+  if (resultat.status === "rejected") {
+    console.error(
+      index === 0
+        ? "Erreur envoi Google Sheet :"
+        : "Erreur envoi courriels commande :",
+      resultat.reason
+    );
+  }
+});
 
 alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
     setPanier([]);
