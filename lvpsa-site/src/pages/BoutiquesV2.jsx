@@ -353,6 +353,11 @@ export default function BoutiquesV2() {
     return;
   }
 
+    if (!user) {
+  alert("Vous devez être connecté à votre compte LVPSA pour envoyer une commande.");
+  return;
+}
+    
 const commandeComplete = {
   userId: user?.uid || "",
   nom: commande.nom,
