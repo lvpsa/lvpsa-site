@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import emailjs from "@emailjs/browser";
-import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../firebase";
 import {
   chargerCommandesBoutique,
   modifierStatutCommandeBoutique,
@@ -9,6 +9,7 @@ import {
   ajusterInventaireBoutiqueV2,
   chargerProduitsBoutique,
   annulerCommandeBoutique,
+  supprimerCommandeBoutique,
 } from "../../../services/firebaseBoutique";
 
 const STATUTS = {
@@ -26,6 +27,7 @@ export default function AdminBoutiqueV2() {
   const [inventaire, setInventaire] = useState({});
   const [produits, setProduits] = useState([]);
   const [commandeActive, setCommandeActive] = useState(null);
+  const [adminActuel, setAdminActuel] = useState(null);
   const [chargement, setChargement] = useState(true);
 
   const charger = async () => {
@@ -45,6 +47,14 @@ export default function AdminBoutiqueV2() {
 
   useEffect(() => {
     charger();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setAdminActuel(currentUser);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const commandesActives = commandes.filter(
@@ -97,6 +107,12 @@ export default function AdminBoutiqueV2() {
       (item) => Number(item.quantite || 0) <= 0
     ).length;
   }, [inventaire]);
+
+  const metaAdmin = () => ({
+    userId: adminActuel?.uid || null,
+    nom: adminActuel?.displayName || adminActuel?.email || "Admin LVPSA",
+    email: adminActuel?.email || null,
+  });
 
   const envoyerNotificationStatutCommande = async (commande, nouveauStatut) => {
   const courrielClient = commande.courriel || commande.email || "";
@@ -159,6 +175,7 @@ export default function AdminBoutiqueV2() {
 
       message_action: messageAction,
 
+      section_actions: "",
       lien_accepter: "",
       lien_refuser: "",
     },
@@ -181,7 +198,7 @@ export default function AdminBoutiqueV2() {
 
       if (!confirmer) return;
 
-      await annulerCommandeBoutique(commande.id, commande.articles || []);
+      await annulerCommandeBoutique(commande.id, commande.articles || [], metaAdmin());
 
       try {
         await envoyerNotificationStatutCommande(commande, statut);
@@ -197,7 +214,7 @@ export default function AdminBoutiqueV2() {
       return;
     }
 
-    await modifierStatutCommandeBoutique(commande.id, statut);
+    await modifierStatutCommandeBoutique(commande.id, statut, metaAdmin());
 
     try {
       await envoyerNotificationStatutCommande(commande, statut);
@@ -239,7 +256,7 @@ Cette action est irréversible.`
     if (!confirmer) return;
 
     try {
-      await deleteDoc(doc(db, "commandesBoutique", commande.id));
+      await supprimerCommandeBoutique(commande.id, metaAdmin());
 
       setCommandes((prev) =>
         prev.filter((item) => item.id !== commande.id)
@@ -635,4 +652,3 @@ function StatCard({ titre, valeur }) {
     </div>
   );
 }
-
