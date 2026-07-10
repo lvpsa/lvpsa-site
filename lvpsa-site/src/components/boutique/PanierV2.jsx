@@ -12,7 +12,7 @@ export default function PanierV2({
         i === index
           ? {
               ...item,
-              quantite: Math.max(1, Number(item.quantite) + variation),
+              quantite: Math.max(1, Number(item.quantite || 1) + variation),
             }
           : item
       )
@@ -30,9 +30,11 @@ export default function PanierV2({
   };
 
   const nombreArticles = panier.reduce(
-    (total, item) => total + Number(item.quantite),
+    (somme, item) => somme + Number(item.quantite || 0),
     0
   );
+
+  const totalAffiche = Number(total || 0);
 
   return (
     <div className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-6">
@@ -67,9 +69,9 @@ export default function PanierV2({
               key={`${article.produitId}-${article.couleurId}-${article.taille}-${index}`}
               className="rounded-2xl border border-white/10 bg-black/20 p-4"
             >
-              <div className="flex gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row">
                 <img
-                  src={article.image}
+                  src={article.image || "/boutique-lvpsa.png"}
                   alt={article.nom}
                   className="h-24 w-24 rounded-xl bg-white object-contain"
                 />
@@ -112,7 +114,7 @@ export default function PanierV2({
                   </div>
 
                   <p className="mt-3 text-right font-black text-white">
-                    {Number(article.prix) * Number(article.quantite)} $
+                    {Number(article.prix || 0) * Number(article.quantite || 0)} $
                   </p>
                 </div>
               </div>
@@ -125,7 +127,7 @@ export default function PanierV2({
         <div className="mt-8 rounded-3xl bg-amber-400 p-5 text-slate-950">
           <div className="flex items-center justify-between gap-4">
             <p className="text-xl font-black">Total</p>
-            <p className="text-3xl font-black">{total} $</p>
+            <p className="text-3xl font-black">{totalAffiche} $</p>
           </div>
 
           <button
@@ -140,3 +142,4 @@ export default function PanierV2({
     </div>
   );
 }
+
