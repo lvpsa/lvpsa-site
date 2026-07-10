@@ -75,14 +75,14 @@ const cheminsImagesProduit = (produit, couleur, vue = "devant") => {
     "camisole-femme_rose_dos": ["/camisole-femme-rose-dos.png"],
 
     "hoodie-unisex_marine_devant": [
-      "/hoodie-unisex-marine-devant.jpg",
-      "/hoodie-unisex-marin-devant.jpg"
+      "/hoodie-unisex-marine-devant.png",
+      "/hoodie-unisex-marin-devant.png"
     ],
     "hoodie-unisex_marine_dos": [
       "/hoodie-unisex-marine-dos.png",
       "/hoodie-unisex-marin-dos.png"
     ],
-    "hoodie-unisex_or_devant": ["/hoodie-unisex-or-devant.jpg"],
+    "hoodie-unisex_or_devant": ["/hoodie-unisex-or-devant.png"],
     "hoodie-unisex_or_dos": ["/hoodie-unisex-or-dos.png"],
   };
 
