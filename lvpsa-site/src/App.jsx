@@ -297,12 +297,13 @@ async function envoyerNotificationCapitaineRemplacement(demande, statutFinal) {
   ? "Le remplacement est maintenant confirmé."
   : "Le remplacement a été refusé. Vous pouvez faire une nouvelle demande à un autre remplaçant.",
 
-section_actions:
-  `Accepter : ${lienAccepter}\n` +
-  `Refuser : ${lienRefuser}`,
-    },
-    "ZooBSx9i6qVl5HI8T"
-  );
+section_actions: "",
+
+lien_accepter: "",
+lien_refuser: "",
+},
+"ZooBSx9i6qVl5HI8T"
+);
 }
 
 async function traiterReponseDemandeRemplacement(demandeId, action, currentUser) {
@@ -5902,10 +5903,14 @@ const datesEquipe = datesLigue.filter((date) => {
       `Capitaine : ${demande.capitaineNom}`,
 
     message_action:
-      "Merci de confirmer ta réponse avec un des deux liens ci-dessous.",
+  "Merci de confirmer ta réponse avec un des deux liens ci-dessous.",
 
-    lien_accepter: lienAccepter,
-    lien_refuser: lienRefuser,
+section_actions:
+  `✅ ACCEPTER LA DEMANDE\n${lienAccepter}\n\n` +
+  `❌ REFUSER LA DEMANDE\n${lienRefuser}`,
+
+lien_accepter: lienAccepter,
+lien_refuser: lienRefuser,
   },
   "ZooBSx9i6qVl5HI8T"
 );
