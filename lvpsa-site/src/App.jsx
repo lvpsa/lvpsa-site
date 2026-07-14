@@ -1188,8 +1188,9 @@ return (
             </h2>
 
             <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-300">
-              Merci pour votre enthousiasme et votre confiance. On se voit bientôt
-              sur le sable pour une journée de volleyball, d’ambiance et de plaisir.
+              Merci pour votre enthousiasme et votre confiance!
+              🏐 On vous attend sur le sable pour une journée de volleyball, de plaisir et de bonne humeur.
+              Même si vous ne jouez pas, venez encourager les équipes, manger avec nous et profiter de l'ambiance! 🌞🍔
             </p>
 
             <Link
