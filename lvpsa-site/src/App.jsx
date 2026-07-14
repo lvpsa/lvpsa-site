@@ -2009,18 +2009,55 @@ function CreerCompte() {
     </section>
   );
 }
+
 function Partenaires() {
+  const partenaires = [
+    {
+      nom: "Soccer Sport Fitness",
+      image: "/soccer-sport-fitness.png",
+      lien: "https://www.soccersportfitness.ca/collections/equipement-de-volleyball",
+      imageClass: "max-h-28 w-full object-contain",
+    },
+    {
+      nom: "Applied Industrial Technologies",
+      image: "/Applied.png",
+      lien: "https://www.appliedcanada.ca",
+      imageClass: "max-h-28 w-full object-contain",
+    },
+    {
+      nom: "Canac",
+      image: "/Canac.png",
+      lien: "https://www.canac.ca",
+      imageClass: "max-h-28 w-full object-contain",
+    },
+    {
+      nom: "Ville de Saint-Augustin-de-Desmaures",
+      image: "/VSAD.png",
+      lien: "https://www.vsad.ca",
+      imageClass: "max-h-40 w-full object-contain",
+    },
+    {
+      nom: "Desjardins",
+      image: "/Desjardins.png",
+      lien: "https://www.desjardins.com",
+      imageClass: "max-h-28 w-full object-contain",
+    },
+  ];
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
-     <p className="font-bold uppercase tracking-wider text-amber-300">
-  LVPSA
-</p>
+      <p className="font-bold uppercase tracking-wider text-amber-300">
+        LVPSA
+      </p>
 
-<h1 className="mt-2 text-5xl font-black">
-  Partenaires & Coordonnées
-</h1>
+      <h1 className="mt-2 text-5xl font-black text-white">
+        Partenaires & coordonnées
+      </h1>
+
       <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        Pour toute question concernant la ligue, les horaires, les remplacements, les inscriptions ou les partenariats, communiquez avec l’équipe LVPSA.
+        Pour toute question concernant la ligue, les horaires, les
+        remplacements, les inscriptions ou les partenariats, communiquez avec
+        l’équipe LVPSA.
       </p>
 
       <div className="mt-12 grid gap-8 lg:grid-cols-2">
@@ -2032,6 +2069,7 @@ function Partenaires() {
           <div className="mt-6 space-y-5 text-slate-300">
             <p>
               <span className="font-bold text-white">Courriel : </span>
+
               <a
                 href="mailto:liguevpsa@gmail.com"
                 className="text-amber-300 hover:underline"
@@ -2057,10 +2095,12 @@ function Partenaires() {
             Partenariats
           </h2>
 
-          <p className="mt-4 text-slate-300">
-           Vous souhaitez devenir commanditaire et contribuer à promouvoir l’activité physique,
-            les saines habitudes de vie et le volleyball de plage auprès des gens de notre région?
-            Nous sommes toujours ouverts aux partenariats qui permettent de faire grandir notre communauté sportive.
+          <p className="mt-4 leading-7 text-slate-300">
+            Vous souhaitez devenir commanditaire et contribuer à promouvoir
+            l’activité physique, les saines habitudes de vie et le volleyball
+            de plage auprès des gens de notre région? Nous sommes toujours
+            ouverts aux partenariats qui permettent de faire grandir notre
+            communauté sportive.
           </p>
 
           <a
@@ -2073,99 +2113,86 @@ function Partenaires() {
       </div>
 
       <div className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h2 className="text-3xl font-black">
-          Nos commanditaires
+        <h2 className="text-3xl font-black text-white">
+          Partenaires officiels de la LVPSA
         </h2>
 
-        <p className="mt-3 text-slate-300">
-          Merci à nos partenaires qui contribuent au développement de la LVPSA.
+        <p className="mt-3 max-w-3xl text-slate-300">
+          Merci à nos partenaires qui contribuent au développement du
+          volleyball de plage dans notre région. Cliquez sur un logo pour
+          découvrir leurs services.
         </p>
 
-<div className="mt-8 grid gap-6 md:grid-cols-4">
-  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
-    <img
-      src="/Applied.png"
-      alt="Applied Industrial Technologies"
-      className="max-h-28 object-contain"
-    />
-  </div>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {partenaires.map((partenaire) => (
+            <a
+              key={partenaire.nom}
+              href={partenaire.lien}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Visiter le site de ${partenaire.nom}`}
+              className="group flex min-h-44 items-center justify-center rounded-3xl border border-white/10 bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:border-amber-300 hover:shadow-2xl"
+            >
+              <img
+                src={partenaire.image}
+                alt={partenaire.nom}
+                className={`${partenaire.imageClass} transition duration-300 group-hover:scale-105`}
+              />
+            </a>
+          ))}
+        </div>
 
-  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
-    <img
-      src="/Canac.png"
-      alt="Canac"
-      className="max-h-28 object-contain"
-    />
-  </div>
+        <div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-8 shadow-2xl">
+          <div className="grid items-center gap-8 lg:grid-cols-[auto_1fr_auto]">
+            <div className="flex justify-center">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-600 text-4xl font-black text-white">
+                f
+              </div>
+            </div>
 
-  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
-    <img
-      src="/VSAD.png"
-      alt="Ville de Saint-Augustin-de-Desmaures"
-      className="max-h-40 w-full object-contain"
-    />
-  </div>
+            <div>
+              <h2 className="text-4xl font-black text-white">
+                Suivez la LVPSA
+              </h2>
 
-  <div className="rounded-3xl border border-white/10 bg-white p-8 flex items-center justify-center">
-    <img
-      src="/Desjardins.png"
-      alt="Desjardins"
-      className="max-h-28 w-full object-contain"
-    />
-  </div>
-</div>
+              <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
+                Restez informé des horaires, résultats, photos, annonces
+                importantes et événements de la ligue.
+              </p>
 
-<div className="mt-16 rounded-3xl border border-blue-400/20 bg-gradient-to-br from-blue-600/20 via-slate-900 to-slate-950 p-8 shadow-2xl">
-  <div className="grid items-center gap-8 lg:grid-cols-[auto_1fr_auto]">
-    <div className="flex justify-center">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-600 text-4xl font-black text-white">
-        f
+              <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold text-slate-300">
+                <span className="rounded-full bg-white/10 px-4 py-2">
+                  📅 Horaires
+                </span>
+
+                <span className="rounded-full bg-white/10 px-4 py-2">
+                  🏆 Résultats
+                </span>
+
+                <span className="rounded-full bg-white/10 px-4 py-2">
+                  📸 Photos
+                </span>
+
+                <span className="rounded-full bg-white/10 px-4 py-2">
+                  📣 Annonces
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-center lg:justify-end">
+              <a
+                href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex whitespace-nowrap rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+              >
+                Visiter notre page Facebook ↗
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div>
-      <h2 className="text-4xl font-black text-white">
-        Suivez la LVPSA
-      </h2>
-
-      <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
-        Restez informé des horaires, résultats, photos, annonces importantes et événements de la ligue.
-      </p>
-
-      <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold text-slate-300">
-        <span className="rounded-full bg-white/10 px-4 py-2">
-          📅 Horaires
-        </span>
-
-        <span className="rounded-full bg-white/10 px-4 py-2">
-          🏆 Résultats
-        </span>
-
-        <span className="rounded-full bg-white/10 px-4 py-2">
-          📸 Photos
-        </span>
-
-        <span className="rounded-full bg-white/10 px-4 py-2">
-          📣 Annonces
-        </span>
-      </div>
-    </div>
-
-    <div className="flex justify-center lg:justify-end">
-      <a
-        href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex whitespace-nowrap rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
-      >
-        Visiter notre page Facebook ↗
-      </a>
-    </div>
-  </div>
-</div>
-
-</div>
-</section>
+    </section>
   );
 }
 
