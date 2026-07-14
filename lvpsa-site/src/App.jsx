@@ -652,14 +652,17 @@ function Header() {
                   Bonjour {userData?.nom?.split(" ")[0] || "membre"}
                 </span>
 
-                <Link to="/mon-espace" onClick={() => setMenuOpen(false)}>
-                  MON ESPACE
-                </Link>
-
-                {userData?.isAdmin && (
-                  <Link to="/admin" onClick={() => setMenuOpen(false)}>ADMINISTRATION</Link>
+                {!userData?.isAdmin && (
+                  <Link to="/mon-espace" onClick={() => setMenuOpen(false)}>
+                    MON ESPACE
+                  </Link>
                 )}
-
+                
+                {userData?.isAdmin && (
+                  <Link to="/admin" onClick={() => setMenuOpen(false)}>
+                    ADMINISTRATION
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={() => {
@@ -705,13 +708,15 @@ function AccountDropdown({ userData, modifierMotDePasse, deconnexion }) {
 
       <div className="absolute right-0 top-full hidden pt-3 group-hover:block">
         <div className="w-64 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
-          <Link
-            to="/mon-espace"
-            className="block px-5 py-3 hover:bg-slate-800 hover:text-amber-300"
-          >
-            Mon espace
-          </Link>
-
+          {!userData?.isAdmin && (
+            <Link
+              to="/mon-espace"
+              className="block px-5 py-3 hover:bg-slate-800 hover:text-amber-300"
+            >
+              Mon espace
+            </Link>
+          )}
+          
           {userData?.isAdmin && (
             <Link
               to="/admin"
