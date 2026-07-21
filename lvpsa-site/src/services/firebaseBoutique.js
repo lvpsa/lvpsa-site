@@ -452,43 +452,50 @@ export async function chargerCommandesBoutique() {
     });
 }
 
-export async function modifierStatutCommandeBoutique(commandeId, statut, meta = {}) {
+export async function modifierStatutCommandeBoutique(
+  commandeId,
+  statut,
+  meta = {}
+) {
   if (!STATUTS_COMMANDES_VALIDES.includes(statut)) {
     throw new Error(`Statut de commande invalide : ${statut}`);
   }
 
   const commandeRef = doc(db, COLLECTION_COMMANDES, commandeId);
+  const commandeSnap = await getDoc(commandeRef);
 
-  await runTransaction(db, async (transaction) => {
-    const commandeSnap = await transaction.get(commandeRef);
+  if (!commandeSnap.exists()) {
+    throw new Error("Commande introuvable.");
+  }
 
-    if (!commandeSnap.exists()) {
-      throw new Error("Commande introuvable.");
-    }
+  const commande = commandeSnap.data();
+  const ancienStatut = commande.statut || null;
 
-    const commande = commandeSnap.data();
-    const ancienStatut = commande.statut || null;
+  const historiqueRef = doc(
+    collection(db, COLLECTION_HISTORIQUE_COMMANDES)
+  );
 
-    transaction.update(commandeRef, {
-      statut,
-      updatedAt: serverTimestamp(),
-    });
+  const batch = writeBatch(db);
 
-    const historiqueRef = doc(collection(db, COLLECTION_HISTORIQUE_COMMANDES));
-
-    transaction.set(historiqueRef, {
-      commandeId,
-      numeroCommande: commande.numeroCommande || null,
-      ancienStatut,
-      nouveauStatut: statut,
-      type: "changement_statut",
-      parUserId: meta.userId || null,
-      parNom: meta.nom || null,
-      parEmail: meta.email || null,
-      note: meta.note || "",
-      createdAt: serverTimestamp(),
-    });
+  batch.update(commandeRef, {
+    statut,
+    updatedAt: serverTimestamp(),
   });
+
+  batch.set(historiqueRef, {
+    commandeId,
+    numeroCommande: commande.numeroCommande || "",
+    ancienStatut,
+    nouveauStatut: statut,
+    type: "changement_statut",
+    parUserId: meta.userId || "",
+    parNom: meta.nom || "",
+    parEmail: meta.email || "",
+    note: meta.note || "",
+    createdAt: serverTimestamp(),
+  });
+
+  await batch.commit();
 }
 
 export async function ajusterInventaireBoutiqueV2(
