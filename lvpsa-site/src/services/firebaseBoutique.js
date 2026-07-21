@@ -4,8 +4,11 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  addDoc,
+  updateDoc,
   serverTimestamp,
   writeBatch,
+  increment,
   runTransaction,
 } from "firebase/firestore";
 import { db } from "../firebase";
