@@ -581,84 +581,130 @@ export async function deduireInventaireBoutique(articles = []) {
   });
 }
 
-export async function annulerCommandeBoutique(commandeId, articles = [], meta = {}) {
+export async function annulerCommandeBoutique(
+  commandeId,
+  articles = [],
+  meta = {}
+) {
   const commandeRef = doc(db, COLLECTION_COMMANDES, commandeId);
+  const commandeSnap = await getDoc(commandeRef);
 
-  await runTransaction(db, async (transaction) => {
-    const commandeSnap = await transaction.get(commandeRef);
+  if (!commandeSnap.exists()) {
+    throw new Error("Commande introuvable.");
+  }
 
-    if (!commandeSnap.exists()) {
-      throw new Error("Commande introuvable.");
-    }
+  const commande = commandeSnap.data();
 
-    const commande = commandeSnap.data();
-    const ancienStatut = commande.statut || null;
-    const articlesARemettre = articles.length > 0 ? articles : commande.articles || [];
-    const inventaireDejaRemis = commande.inventaireRemis === true;
+  if (commande.inventaireRemis === true) {
+    return;
+  }
 
-    if (!inventaireDejaRemis) {
-      for (const article of articlesARemettre) {
-        const produitId = nettoyerTexte(article.produitId);
-        const couleurId = nettoyerTexte(article.couleurId);
-        const taille = nettoyerTexte(article.taille).toUpperCase();
-        const quantiteARemettre = Math.max(1, Number(article.quantite || 1));
+  const ancienStatut = commande.statut || null;
 
-        const inventaireRef = refInventaire(produitId, couleurId, taille);
-        const publicRef = refInventairePublic(produitId, couleurId, taille);
-        const snap = await transaction.get(inventaireRef);
-        const quantiteActuelle = snap.exists() ? Number(snap.data().quantite || 0) : 0;
-        const nouvelleQuantite = quantiteActuelle + quantiteARemettre;
+  const articlesARemettre =
+    articles.length > 0 ? articles : commande.articles || [];
 
-        transaction.set(
-          inventaireRef,
-          {
-            produitId,
-            couleurId,
-            taille,
-            quantite: nouvelleQuantite,
-            updatedAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
+  const articlesValides = articlesARemettre
+    .map((article) => ({
+      produitId: nettoyerTexte(article.produitId),
+      couleurId: nettoyerTexte(article.couleurId),
+      taille: nettoyerTexte(article.taille).toUpperCase(),
+      quantite: Math.max(1, Number(article.quantite || 1)),
+    }))
+    .filter(
+      (article) =>
+        article.produitId &&
+        article.couleurId &&
+        article.taille
+    );
 
-        transaction.set(
-          publicRef,
-          {
-            produitId,
-            couleurId,
-            taille,
-            disponible: nouvelleQuantite > 0,
-            statut: statutPublicDepuisQuantite(nouvelleQuantite),
-            updatedAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
-      }
-    }
+  const inventaires = await Promise.all(
+    articlesValides.map(async (article) => {
+      const inventaireRef = refInventaire(
+        article.produitId,
+        article.couleurId,
+        article.taille
+      );
 
-    transaction.update(commandeRef, {
-      statut: "annulee",
-      inventaireRemis: true,
-      updatedAt: serverTimestamp(),
-    });
+      const publicRef = refInventairePublic(
+        article.produitId,
+        article.couleurId,
+        article.taille
+      );
 
-    const historiqueRef = doc(collection(db, COLLECTION_HISTORIQUE_COMMANDES));
+      const inventaireSnap = await getDoc(inventaireRef);
 
-    transaction.set(historiqueRef, {
-      commandeId,
-      numeroCommande: commande.numeroCommande || null,
-      ancienStatut,
-      nouveauStatut: "annulee",
-      type: "annulation_commande",
-      inventaireRemis: !inventaireDejaRemis,
-      parUserId: meta.userId || null,
-      parNom: meta.nom || null,
-      parEmail: meta.email || null,
-      createdAt: serverTimestamp(),
-    });
+      const quantiteActuelle = inventaireSnap.exists()
+        ? Number(inventaireSnap.data().quantite || 0)
+        : 0;
+
+      return {
+        ...article,
+        inventaireRef,
+        publicRef,
+        nouvelleQuantite:
+          quantiteActuelle + article.quantite,
+      };
+    })
+  );
+
+  const historiqueRef = doc(
+    collection(db, COLLECTION_HISTORIQUE_COMMANDES)
+  );
+
+  const batch = writeBatch(db);
+
+  inventaires.forEach((item) => {
+    batch.set(
+      item.inventaireRef,
+      {
+        produitId: item.produitId,
+        couleurId: item.couleurId,
+        taille: item.taille,
+        quantite: item.nouvelleQuantite,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    batch.set(
+      item.publicRef,
+      {
+        produitId: item.produitId,
+        couleurId: item.couleurId,
+        taille: item.taille,
+        disponible: item.nouvelleQuantite > 0,
+        statut: statutPublicDepuisQuantite(
+          item.nouvelleQuantite
+        ),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
   });
-}
 
+  batch.update(commandeRef, {
+    statut: "annulee",
+    inventaireRemis: true,
+    updatedAt: serverTimestamp(),
+  });
+
+  batch.set(historiqueRef, {
+    commandeId,
+    numeroCommande: commande.numeroCommande || "",
+    ancienStatut,
+    nouveauStatut: "annulee",
+    type: "annulation",
+    inventaireRemis: true,
+    parUserId: meta.userId || "",
+    parNom: meta.nom || "",
+    parEmail: meta.email || "",
+    note: meta.note || "",
+    createdAt: serverTimestamp(),
+  });
+
+  await batch.commit();
+}
 export async function supprimerCommandeBoutique(commandeId, meta = {}) {
   const commandeRef = doc(db, COLLECTION_COMMANDES, commandeId);
   const commandeSnap = await getDoc(commandeRef);
