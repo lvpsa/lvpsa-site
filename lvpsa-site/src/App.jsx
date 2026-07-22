@@ -51,6 +51,8 @@ import {
   CloudSun,
   Lock,
   LogIn,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import "./index.css";
 import emailjs from "@emailjs/browser";
@@ -1744,6 +1746,7 @@ function Membres() {
 
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
+  const [afficherMotDePasse, setAfficherMotDePasse] = useState(false);
   const [message, setMessage] = useState("");
 
   const connexion = async () => {
@@ -3963,24 +3966,48 @@ function Connexion() {
             </div>
 
             <div>
-              <label
-                htmlFor="connexion-mot-de-passe"
-                className="mb-2 block text-sm font-bold text-slate-300"
-              >
-                Mot de passe
-              </label>
+  <label
+    htmlFor="connexion-mot-de-passe"
+    className="mb-2 block text-sm font-bold text-slate-300"
+  >
+    Mot de passe
+  </label>
 
-              <input
-                id="connexion-mot-de-passe"
-                value={motDePasse}
-                onChange={(e) => setMotDePasse(e.target.value)}
-                type="password"
-                autoComplete="current-password"
-                placeholder="Votre mot de passe"
-                required
-                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white outline-none transition placeholder:text-slate-500 focus:border-amber-300"
-              />
-            </div>
+  <div className="relative">
+    <input
+      id="connexion-mot-de-passe"
+      value={motDePasse}
+      onChange={(e) => setMotDePasse(e.target.value)}
+      type={afficherMotDePasse ? "text" : "password"}
+      autoComplete="current-password"
+      placeholder="Votre mot de passe"
+      required
+      className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 pr-14 text-white outline-none transition placeholder:text-slate-500 focus:border-amber-300"
+    />
+
+    <button
+      type="button"
+      onClick={() => setAfficherMotDePasse(!afficherMotDePasse)}
+      aria-label={
+        afficherMotDePasse
+          ? "Masquer le mot de passe"
+          : "Afficher le mot de passe"
+      }
+      title={
+        afficherMotDePasse
+          ? "Masquer le mot de passe"
+          : "Afficher le mot de passe"
+      }
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-amber-300"
+    >
+      {afficherMotDePasse ? (
+        <EyeOff size={22} />
+      ) : (
+        <Eye size={22} />
+      )}
+    </button>
+  </div>
+</div>
 
             <div className="flex flex-wrap items-center justify-between gap-4">
               <label className="flex items-center gap-3 text-sm text-slate-300">
