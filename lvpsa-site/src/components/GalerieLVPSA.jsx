@@ -1,39 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Camera, Images } from "lucide-react";
 import { Link } from "react-router-dom";
+import { photosGalerie2026 } from "../data/photosGalerie2026";
 
-const photos = [
-  {
-    src: "/galerie/galerie-01.jpg",
-    alt: "Match de volleyball de plage LVPSA",
-    format: "lg:col-span-2 lg:row-span-2",
-  },
-  {
-    src: "/galerie/galerie-02.jpg",
-    alt: "Joueurs de la LVPSA",
-    format: "",
-  },
-  {
-    src: "/galerie/galerie-03.jpg",
-    alt: "Action pendant un tournoi LVPSA",
-    format: "",
-  },
-  {
-    src: "/galerie/galerie-04.jpg",
-    alt: "Ambiance de la communauté LVPSA",
-    format: "lg:col-span-2",
-  },
-  {
-    src: "/galerie/galerie-05.jpg",
-    alt: "Équipe de volleyball de plage",
-    format: "",
-  },
-  {
-    src: "/galerie/galerie-06.jpg",
-    alt: "Terrain de volleyball LVPSA",
-    format: "",
-  },
-];
+const photos = photosGalerie2026;
 
 function PhotoGalerie({ photo, index }) {
   return (
@@ -123,7 +93,7 @@ export default function GalerieLVPSA() {
         </motion.div>
 
         <div className="grid auto-rows-[240px] gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {photos.map((photo, index) => (
+          {photos.slice(0, 6).map((photo, index) => (
             <PhotoGalerie
               key={photo.src}
               photo={photo}
