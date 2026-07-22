@@ -442,12 +442,12 @@ export default function AccueilV2() {
           </motion.div>
         </section>
 
-        {/* Boutique et galerie */}
-        <section className="mx-auto grid max-w-7xl gap-5 px-5 py-10 lg:grid-cols-2 lg:px-8">
+        {/* Boutique*/}
+        <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
           <motion.a
             {...animations}
             href="/boutique"
-            className="group relative min-h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-400 p-7 text-slate-950 sm:p-9"
+            className="group relative block min-h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-400 p-7 text-slate-950 sm:p-9"
           >
             <div
               aria-hidden="true"
@@ -483,46 +483,9 @@ export default function AccueilV2() {
             </div>
           </motion.a>
 
-          <motion.a
-            {...animations}
-            transition={{ duration: 0.45, delay: 0.08 }}
-            href="/partenaires"
-            className="group relative min-h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-blue-700 via-cyan-700 to-slate-900 p-7 sm:p-9"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute bottom-[-55px] right-[-35px] rotate-6 opacity-20"
-            >
-              <Images className="h-64 w-64" strokeWidth={1.3} />
-            </div>
-
-            <div className="relative z-10 flex h-full flex-col">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-950">
-                <Images className="h-6 w-6" />
-              </div>
-
-              <p className="mt-10 text-sm font-black uppercase tracking-[0.18em] text-cyan-200">
-                Galerie LVPSA
-              </p>
-
-              <h2 className="mt-3 max-w-md text-3xl font-black leading-tight sm:text-4xl">
-                Revivez l’énergie de la communauté.
-              </h2>
-
-              <p className="mt-4 max-w-md text-slate-200">
-                Matchs, tournois, champions, bénévoles et moments mémorables.
-              </p>
-
-              <div className="mt-auto pt-10">
-                <span className="inline-flex items-center gap-2 font-black">
-                  Voir les photos
-                  <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
-                </span>
-              </div>
-            </div>
-          </motion.a>
         </section>
 
+        {/* Galerie immersive */}
         <GalerieLVPSA />
 
         {/* Partenaires */}
