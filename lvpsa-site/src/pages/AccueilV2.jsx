@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import HeroLVPSA from "../components/HeroLVPSA";
 import GalerieLVPSA from "../components/GalerieLVPSA";
+import StatsLVPSA from "../components/StatsLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -157,6 +158,9 @@ export default function AccueilV2() {
       <main className="relative z-10">
 
         <HeroLVPSA />
+
+          {/* Statistiques */}
+        <StatsLVPSA />
 
         {/* Actions rapides */}
         <section className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
