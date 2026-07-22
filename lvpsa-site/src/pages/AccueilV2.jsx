@@ -51,13 +51,13 @@ const actionsRapides = [
     titre: "Calendrier",
     texte: "Consulter les matchs",
     icone: CalendarDays,
-    lien: "/ligue/calendrier",
+    lien: "/calendrier",
   },
   {
     titre: "Classements",
     texte: "Voir les résultats",
     icone: Trophy,
-    lien: "/ligue/classements",
+    lien: "/classements",
   },
   {
     titre: "Mon équipe",
@@ -209,7 +209,7 @@ export default function AccueilV2() {
                 </a>
 
                 <a
-                  href="/ligue/calendrier"
+                  href="/calendrier"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 font-bold text-white transition hover:bg-white/10"
                 >
                   Voir le calendrier
@@ -300,7 +300,7 @@ export default function AccueilV2() {
                   </div>
 
                   <a
-                    href="/ligue/calendrier"
+                    href="/calendrier"
                     className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-yellow-300 px-5 py-3 font-bold text-slate-950 transition hover:bg-yellow-200"
                   >
                     Voir l’horaire
@@ -544,7 +544,7 @@ export default function AccueilV2() {
           <motion.a
             {...animations}
             transition={{ duration: 0.45, delay: 0.08 }}
-            href="/galerie"
+            href="/partenaires"
             className="group relative min-h-[360px] overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-blue-700 via-cyan-700 to-slate-900 p-7 sm:p-9"
           >
             <div
@@ -626,7 +626,7 @@ export default function AccueilV2() {
           </a>
 
           <a
-            href="/ligue/calendrier"
+            href="/calendrier"
             className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400"
           >
             <CalendarDays className="h-5 w-5" />
