@@ -18,6 +18,7 @@ import {
   Volleyball,
 } from "lucide-react";
 import HeroLVPSA from "../components/HeroLVPSA";
+import GalerieLVPSA from "../components/GalerieLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -521,6 +522,8 @@ export default function AccueilV2() {
             </div>
           </motion.a>
         </section>
+
+        <GalerieLVPSA />
 
         {/* Partenaires */}
         <section className="mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pb-24">
