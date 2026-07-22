@@ -15,7 +15,7 @@ import {
   Trophy,
   UserRound,
   UsersRound,
-  volleyball,
+  Volleyball,
 } from "lucide-react";
 
 const animations = {
@@ -279,8 +279,12 @@ export default function AccueilV2() {
                   <h2 className="mt-2 text-2xl font-black">Vos matchs LVPSA</h2>
                 </div>
 
-                <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-yellow-300/10 text-yellow-300 sm:flex">
-                  <Volleyball className="h-6 w-6" />
+                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full">
+                  <img
+                    src="/logo.jpg"
+                    alt="Logo LVPSA"
+                    className="h-full w-full object-cover"
+                  />
                 </div>
               </div>
             </div>
