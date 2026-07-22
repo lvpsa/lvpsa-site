@@ -3804,13 +3804,21 @@ function Connexion() {
   const seConnecter = async (e) => {
     e.preventDefault();
 
+    setMessage("");
+
     try {
       await setPersistence(
         auth,
-        seSouvenir ? browserLocalPersistence : browserSessionPersistence
+        seSouvenir
+          ? browserLocalPersistence
+          : browserSessionPersistence
       );
 
-      await signInWithEmailAndPassword(auth, email, motDePasse);
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        motDePasse
+      );
 
       if (!seSouvenir) {
         localStorage.setItem(
@@ -3822,16 +3830,58 @@ function Connexion() {
       }
 
       window.location.href = "/mon-espace";
+
     } catch (error) {
       setMessage("Courriel ou mot de passe invalide.");
     }
   };
 
+  const motDePasseOublie = async () => {
+
+    const courriel = window.prompt(
+      "Entrez votre adresse courriel :"
+    );
+
+    if (!courriel) return;
+
+    try {
+
+      await sendPasswordResetEmail(auth, courriel.trim());
+
+      alert(
+        "Un courriel de réinitialisation vient d'être envoyé. Vérifiez également vos courriels indésirables."
+      );
+
+    } catch (error) {
+
+      switch (error.code) {
+
+        case "auth/user-not-found":
+          alert("Aucun compte n'est associé à cette adresse courriel.");
+          break;
+
+        case "auth/invalid-email":
+          alert("Adresse courriel invalide.");
+          break;
+
+        default:
+          alert("Impossible d'envoyer le courriel. Veuillez réessayer.");
+      }
+    }
+  };
+
   return (
     <section className="mx-auto max-w-xl px-6 py-20">
-      <h1 className="text-5xl font-black text-white">Connexion</h1>
 
-      <form onSubmit={seConnecter} className="mt-10 space-y-5">
+      <h1 className="text-5xl font-black text-white">
+        Connexion
+      </h1>
+
+      <form
+        onSubmit={seConnecter}
+        className="mt-10 space-y-5"
+      >
+
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -3866,6 +3916,15 @@ function Connexion() {
         >
           Se connecter
         </button>
+
+        <button
+          type="button"
+          onClick={motDePasseOublie}
+          className="w-full text-center text-sm font-semibold text-amber-300 hover:underline"
+        >
+          Mot de passe oublié ?
+        </button>
+
       </form>
 
       {message && (
@@ -3873,6 +3932,7 @@ function Connexion() {
           {message}
         </p>
       )}
+
     </section>
   );
 }
