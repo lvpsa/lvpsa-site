@@ -10,6 +10,7 @@ import {
 import ScrollToTop from "./ScrollToTop";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import InstallerPWA from "./components/InstallerPWA";
+import Galerie from "./pages/Galerie";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
@@ -431,6 +432,7 @@ function ContenuApplication() {
 
         <Routes>
           <Route path="/" element={<AccueilV2 />} />
+          <Route path="/galerie" element={<Galerie />} />
           <Route path="/mon-espace" element={<MonEspace />} />
           <Route path="/classements" element={<Classements />} />
 
