@@ -10,10 +10,12 @@ export default defineConfig({
       registerType: "autoUpdate",
 
       includeAssets: [
-        "favicon.ico",
         "apple-touch-icon.png",
+        "favicon-32x32.png",
+        "favicon-16x16.png",
         "icon-192x192.png",
         "icon-512x512.png",
+        "icon-maskable-512x512.png",
       ],
 
       manifest: {
@@ -36,17 +38,19 @@ export default defineConfig({
             src: "/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
+            purpose: "any",
           },
           {
             src: "/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any",
           },
           {
-            src: "/icon-512x512.png",
+            src: "/icon-maskable-512x512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any maskable",
+            purpose: "maskable",
           },
         ],
       },
