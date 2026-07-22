@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import InstallerPWA from "./components/InstallerPWA";
@@ -35,6 +42,8 @@ import { produitsBoutique } from "./data/produits";
 import { useInventaire } from "./hooks/useInventaire";
 
 import BoutiquesV2 from "./pages/BoutiquesV2";
+
+import AccueilV2 from "./pages/AccueilV2";
 
 import { initialiserBoutiqueFirebase } from "./services/firebaseBoutique";
 
@@ -404,18 +413,48 @@ await envoyerNotificationCapitaineRemplacement(demande, "accepte");
 export default function App() {
   return (
     <BrowserRouter>
+      <ContenuApplication />
+    </BrowserRouter>
+  );
+}
 
+function ContenuApplication() {
+  const location = useLocation();
+  const estAccueilV2 = location.pathname === "/";
+
+  return (
+    <>
       <ScrollToTop />
-      
+
       <div className="min-h-screen bg-slate-950 text-white">
-        <Header />
+        {!estAccueilV2 && <Header />}
+
         <Routes>
-          <Route path="/" element={<Accueil />} />
+          <Route path="/" element={<AccueilV2 />} />
           <Route path="/mon-espace" element={<MonEspace />} />
           <Route path="/classements" element={<Classements />} />
-          <Route path="/classements/recreatif" element={<ClassementDetail titre="Classement récréatif" />} />
-          <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
-          <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
+
+          <Route
+            path="/classements/recreatif"
+            element={
+              <ClassementDetail titre="Classement récréatif" />
+            }
+          />
+
+          <Route
+            path="/classements/competitif"
+            element={
+              <ClassementDetail titre="Classement compétitif" />
+            }
+          />
+
+          <Route
+            path="/classements/facebook"
+            element={
+              <ClassementDetail titre="Classement Facebook" />
+            }
+          />
+
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/tournoi/horaire" element={<HoraireTournoi />} />
           <Route path="/boutique" element={<BoutiquesV2 />} />
@@ -423,25 +462,47 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           <Route path="/ligue" element={<Ligue />} />
-          <Route path="/inscription-ligue" element={<InscriptionLigueProtegee />} />
+
+          <Route
+            path="/inscription-ligue"
+            element={<InscriptionLigueProtegee />}
+          />
+
           <Route path="/gestion-equipe" element={<Protegee />} />
-          <Route path="/mes-demandes" element={<MesDemandesRemplacement />} />
-          <Route path="/remplacants" element={<MesDemandesRemplacement />} />
-          <Route path="/demande-remplacement/:demandeId/:action" element={<ReponseDemandeRemplacement />} />
-          <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
+          <Route
+            path="/mes-demandes"
+            element={<MesDemandesRemplacement />}
+          />
+
+          <Route
+            path="/remplacants"
+            element={<MesDemandesRemplacement />}
+          />
+
+          <Route
+            path="/demande-remplacement/:demandeId/:action"
+            element={<ReponseDemandeRemplacement />}
+          />
+
+          <Route
+            path="/tournoi/reglements"
+            element={<ReglementsTournoi />}
+          />
+
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/partenaires" element={<Partenaires />} />
           <Route path="/calendrier" element={<Calendrier />} />
           <Route path="/creer-compte" element={<CreerCompte />} />
         </Routes>
-        <Footer />
+
+        {!estAccueilV2 && <Footer />}
+
         <InstallerPWA />
       </div>
-    </BrowserRouter>
+    </>
   );
 }
-
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [ligueOpen, setLigueOpen] = useState(false);
