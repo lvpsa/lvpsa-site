@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import InstallerPWA from "./components/InstallerPWA";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
@@ -435,6 +436,7 @@ export default function App() {
           <Route path="/creer-compte" element={<CreerCompte />} />
         </Routes>
         <Footer />
+        <InstallerPWA />
       </div>
     </BrowserRouter>
   );
