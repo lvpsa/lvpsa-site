@@ -15,7 +15,7 @@ import {
   Trophy,
   UserRound,
   UsersRound,
-  Volleyball,
+  volleyball,
 } from "lucide-react";
 
 const animations = {
@@ -89,9 +89,13 @@ export default function AccueilV2() {
       <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
           <a href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 shadow-lg shadow-cyan-500/20">
-              <Volleyball className="h-6 w-6" />
-            </div>
+<div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-slate-950">
+  <img
+    src="/logo.jpg"
+    alt="Logo LVPSA"
+    className="h-full w-full scale-110 object-cover"
+  />
+</div>
 
             <div>
               <p className="text-lg font-black leading-none tracking-tight">
