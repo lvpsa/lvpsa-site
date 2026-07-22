@@ -89,23 +89,24 @@ export default function AccueilV2() {
       <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
           <a href="/" className="flex items-center gap-3">
-<div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-slate-950">
-  <img
-    src="/logo.jpg"
-    alt="Logo LVPSA"
-    className="h-full w-full scale-110 object-cover"
-  />
-</div>
+  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-slate-950">
+    <img
+      src="/logo.jpg"
+      alt="Logo LVPSA"
+      className="h-full w-full scale-110 object-cover"
+    />
+  </div>
 
-            <div>
-              <p className="text-lg font-black leading-none tracking-tight">
-                LVPSA
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                Volleyball de plage
-              </p>
-            </div>
-          </a>
+  <div>
+    <p className="text-lg font-black leading-none tracking-tight">
+      LVPSA
+    </p>
+
+    <p className="mt-1 text-xs text-slate-400">
+      Volleyball de plage
+    </p>
+  </div>
+</a>
 
           <nav className="hidden items-center gap-7 lg:flex">
             <a
