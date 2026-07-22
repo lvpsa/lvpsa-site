@@ -540,44 +540,129 @@ export async function ajusterInventaireBoutiqueV2(
 }
 
 export async function deduireInventaireBoutique(articles = []) {
+  if (!Array.isArray(articles) || articles.length === 0) {
+    throw new Error("Aucun article à déduire de l'inventaire.");
+  }
+
   await runTransaction(db, async (transaction) => {
+    const inventairesLus = [];
+
+    /*
+     * ÉTAPE 1
+     * Firestore exige que toutes les lectures soient effectuées
+     * avant la première écriture dans une transaction.
+     */
     for (const article of articles) {
       const produitId = nettoyerTexte(article.produitId);
       const couleurId = nettoyerTexte(article.couleurId);
       const taille = nettoyerTexte(article.taille).toUpperCase();
-      const quantiteDemandee = Math.max(1, Number(article.quantite || 1));
+      const quantiteDemandee = Math.max(
+        1,
+        Number(article.quantite || 1)
+      );
 
-      const inventaireRef = refInventaire(produitId, couleurId, taille);
-      const publicRef = refInventairePublic(produitId, couleurId, taille);
-      const snap = await transaction.get(inventaireRef);
-      const quantiteActuelle = snap.exists() ? Number(snap.data().quantite || 0) : 0;
-      const nouvelleQuantite = quantiteActuelle - quantiteDemandee;
+      if (!produitId || !couleurId || !taille) {
+        throw new Error(
+          "Un article de la commande contient des informations d'inventaire incomplètes."
+        );
+      }
 
-      transaction.set(
+      const inventaireRef = refInventaire(
+        produitId,
+        couleurId,
+        taille
+      );
+
+      const publicRef = refInventairePublic(
+        produitId,
+        couleurId,
+        taille
+      );
+
+      const inventaireSnap = await transaction.get(inventaireRef);
+
+      const quantiteActuelle = inventaireSnap.exists()
+        ? Number(inventaireSnap.data().quantite || 0)
+        : 0;
+
+      inventairesLus.push({
+        produitId,
+        couleurId,
+        taille,
+        quantiteDemandee,
+        quantiteActuelle,
         inventaireRef,
+        publicRef,
+      });
+    }
+
+    /*
+     * ÉTAPE 2
+     * Regrouper les articles identiques.
+     * Cela évite une mauvaise déduction lorsqu'un même produit,
+     * une même couleur et une même taille apparaissent plusieurs fois.
+     */
+    const inventairesRegroupes = new Map();
+
+    inventairesLus.forEach((item) => {
+      const cle = `${item.produitId}_${item.couleurId}_${item.taille}`;
+      const existant = inventairesRegroupes.get(cle);
+
+      if (existant) {
+        existant.quantiteDemandee += item.quantiteDemandee;
+      } else {
+        inventairesRegroupes.set(cle, { ...item });
+      }
+    });
+
+    /*
+     * ÉTAPE 3
+     * Faire toutes les validations avant les écritures.
+     */
+    inventairesRegroupes.forEach((item) => {
+      const nouvelleQuantite =
+        item.quantiteActuelle - item.quantiteDemandee;
+
+      /*
+       * On permet une quantité négative parce que ton système
+       * utilise le statut "sur_commande" lorsque l'inventaire est épuisé.
+       */
+      item.nouvelleQuantite = nouvelleQuantite;
+    });
+
+    /*
+     * ÉTAPE 4
+     * Toutes les écritures sont maintenant effectuées
+     * après toutes les lectures.
+     */
+    inventairesRegroupes.forEach((item) => {
+      transaction.set(
+        item.inventaireRef,
         {
-          produitId,
-          couleurId,
-          taille,
-          quantite: nouvelleQuantite,
+          produitId: item.produitId,
+          couleurId: item.couleurId,
+          taille: item.taille,
+          quantite: item.nouvelleQuantite,
           updatedAt: serverTimestamp(),
         },
         { merge: true }
       );
 
       transaction.set(
-        publicRef,
+        item.publicRef,
         {
-          produitId,
-          couleurId,
-          taille,
-          disponible: nouvelleQuantite > 0,
-          statut: statutPublicDepuisQuantite(nouvelleQuantite),
+          produitId: item.produitId,
+          couleurId: item.couleurId,
+          taille: item.taille,
+          disponible: item.nouvelleQuantite > 0,
+          statut: statutPublicDepuisQuantite(
+            item.nouvelleQuantite
+          ),
           updatedAt: serverTimestamp(),
         },
         { merge: true }
       );
-    }
+    });
   });
 }
 
