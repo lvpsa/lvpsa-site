@@ -3801,9 +3801,15 @@ function Connexion() {
   const [message, setMessage] = useState("");
   const [seSouvenir, setSeSouvenir] = useState(false);
 
+  const [popupMotDePasse, setPopupMotDePasse] = useState(false);
+  const [courrielReinitialisation, setCourrielReinitialisation] = useState("");
+  const [messageReinitialisation, setMessageReinitialisation] = useState("");
+  const [typeMessageReinitialisation, setTypeMessageReinitialisation] =
+    useState("");
+  const [envoiEnCours, setEnvoiEnCours] = useState(false);
+
   const seConnecter = async (e) => {
     e.preventDefault();
-
     setMessage("");
 
     try {
@@ -3816,7 +3822,7 @@ function Connexion() {
 
       await signInWithEmailAndPassword(
         auth,
-        email,
+        email.trim(),
         motDePasse
       );
 
@@ -3830,110 +3836,321 @@ function Connexion() {
       }
 
       window.location.href = "/mon-espace";
-
     } catch (error) {
+      console.error("Erreur de connexion :", error);
       setMessage("Courriel ou mot de passe invalide.");
     }
   };
 
-  const motDePasseOublie = async () => {
+  const ouvrirPopupMotDePasse = () => {
+    setCourrielReinitialisation(email.trim());
+    setMessageReinitialisation("");
+    setTypeMessageReinitialisation("");
+    setPopupMotDePasse(true);
+  };
 
-    const courriel = window.prompt(
-      "Entrez votre adresse courriel :"
-    );
+  const fermerPopupMotDePasse = () => {
+    if (envoiEnCours) return;
 
-    if (!courriel) return;
+    setPopupMotDePasse(false);
+    setMessageReinitialisation("");
+    setTypeMessageReinitialisation("");
+  };
+
+  const envoyerLienReinitialisation = async (e) => {
+    e.preventDefault();
+
+    const courriel = courrielReinitialisation.trim();
+
+    setMessageReinitialisation("");
+    setTypeMessageReinitialisation("");
+
+    if (!courriel) {
+      setTypeMessageReinitialisation("erreur");
+      setMessageReinitialisation(
+        "Veuillez entrer votre adresse courriel."
+      );
+      return;
+    }
+
+    const courrielValide = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!courrielValide.test(courriel)) {
+      setTypeMessageReinitialisation("erreur");
+      setMessageReinitialisation(
+        "Veuillez entrer une adresse courriel valide."
+      );
+      return;
+    }
+
+    setEnvoiEnCours(true);
 
     try {
+      await sendPasswordResetEmail(auth, courriel);
 
-      await sendPasswordResetEmail(auth, courriel.trim());
-
-      alert(
-        "Un courriel de réinitialisation vient d'être envoyé. Vérifiez également vos courriels indésirables."
+      setTypeMessageReinitialisation("succes");
+      setMessageReinitialisation(
+        "Le courriel a été envoyé. Vérifiez votre boîte de réception ainsi que vos courriels indésirables."
+      );
+    } catch (error) {
+      console.error(
+        "Erreur de réinitialisation du mot de passe :",
+        error
       );
 
-    } catch (error) {
-
-      switch (error.code) {
-
-        case "auth/user-not-found":
-          alert("Aucun compte n'est associé à cette adresse courriel.");
-          break;
-
-        case "auth/invalid-email":
-          alert("Adresse courriel invalide.");
-          break;
-
-        default:
-          alert("Impossible d'envoyer le courriel. Veuillez réessayer.");
+      if (error.code === "auth/invalid-email") {
+        setMessageReinitialisation(
+          "L'adresse courriel entrée n'est pas valide."
+        );
+      } else if (error.code === "auth/too-many-requests") {
+        setMessageReinitialisation(
+          "Trop de tentatives ont été effectuées. Veuillez patienter quelques minutes avant de réessayer."
+        );
+      } else if (error.code === "auth/network-request-failed") {
+        setMessageReinitialisation(
+          "Problème de connexion. Vérifiez votre Internet et réessayez."
+        );
+      } else {
+        setMessageReinitialisation(
+          "Impossible d'envoyer le courriel pour le moment. Veuillez réessayer."
+        );
       }
+
+      setTypeMessageReinitialisation("erreur");
+    } finally {
+      setEnvoiEnCours(false);
     }
   };
 
   return (
-    <section className="mx-auto max-w-xl px-6 py-20">
+    <>
+      <section className="mx-auto max-w-xl px-6 py-20">
+        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-400 text-slate-950">
+            <Lock size={30} />
+          </div>
 
-      <h1 className="text-5xl font-black text-white">
-        Connexion
-      </h1>
+          <h1 className="mt-6 text-5xl font-black text-white">
+            Connexion
+          </h1>
 
-      <form
-        onSubmit={seConnecter}
-        className="mt-10 space-y-5"
-      >
+          <p className="mt-4 text-slate-300">
+            Connectez-vous à votre compte LVPSA.
+          </p>
 
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="Adresse courriel"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
-        />
+          <form
+            onSubmit={seConnecter}
+            className="mt-8 space-y-5"
+          >
+            <div>
+              <label
+                htmlFor="connexion-email"
+                className="mb-2 block text-sm font-bold text-slate-300"
+              >
+                Adresse courriel
+              </label>
 
-        <input
-          value={motDePasse}
-          onChange={(e) => setMotDePasse(e.target.value)}
-          type="password"
-          placeholder="Mot de passe"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-white"
-        />
+              <input
+                id="connexion-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                autoComplete="email"
+                placeholder="exemple@courriel.com"
+                required
+                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white outline-none transition placeholder:text-slate-500 focus:border-amber-300"
+              />
+            </div>
 
-        <label className="flex items-center gap-3 text-sm text-slate-300">
-          <input
-            type="checkbox"
-            checked={seSouvenir}
-            onChange={(e) => setSeSouvenir(e.target.checked)}
-            className="h-4 w-4"
-          />
-          Se souvenir de moi
-        </label>
+            <div>
+              <label
+                htmlFor="connexion-mot-de-passe"
+                className="mb-2 block text-sm font-bold text-slate-300"
+              >
+                Mot de passe
+              </label>
 
-        <button
-          type="submit"
-          className="w-full rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+              <input
+                id="connexion-mot-de-passe"
+                value={motDePasse}
+                onChange={(e) => setMotDePasse(e.target.value)}
+                type="password"
+                autoComplete="current-password"
+                placeholder="Votre mot de passe"
+                required
+                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white outline-none transition placeholder:text-slate-500 focus:border-amber-300"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <label className="flex items-center gap-3 text-sm text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={seSouvenir}
+                  onChange={(e) =>
+                    setSeSouvenir(e.target.checked)
+                  }
+                  className="h-4 w-4 accent-amber-400"
+                />
+
+                Se souvenir de moi
+              </label>
+
+              <button
+                type="button"
+                onClick={ouvrirPopupMotDePasse}
+                className="text-sm font-bold text-amber-300 hover:underline"
+              >
+                Mot de passe oublié?
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 transition hover:bg-amber-300"
+            >
+              <LogIn size={20} />
+              Se connecter
+            </button>
+          </form>
+
+          {message && (
+            <p className="mt-6 rounded-2xl border border-red-400/20 bg-red-400/10 p-4 text-center text-red-300">
+              {message}
+            </p>
+          )}
+
+          <div className="mt-8 border-t border-white/10 pt-6 text-center">
+            <p className="text-sm text-slate-400">
+              Vous n'avez pas encore de compte?
+            </p>
+
+            <Link
+              to="/creer-compte"
+              className="mt-3 inline-flex font-black text-amber-300 hover:underline"
+            >
+              Créer un compte LVPSA
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {popupMotDePasse && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-5 backdrop-blur-sm"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) {
+              fermerPopupMotDePasse();
+            }
+          }}
         >
-          Se connecter
-        </button>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titre-mot-de-passe-oublie"
+            className="w-full max-w-lg rounded-[2rem] border border-white/10 bg-slate-950 p-7 shadow-2xl"
+          >
+            <div className="flex items-start justify-between gap-5">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400 text-slate-950">
+                <Mail size={26} />
+              </div>
 
-        <button
-          type="button"
-          onClick={motDePasseOublie}
-          className="w-full text-center text-sm font-semibold text-amber-300 hover:underline"
-        >
-          Mot de passe oublié ?
-        </button>
+              <button
+                type="button"
+                onClick={fermerPopupMotDePasse}
+                disabled={envoiEnCours}
+                aria-label="Fermer"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-xl text-white hover:border-amber-300 hover:text-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                ×
+              </button>
+            </div>
 
-      </form>
+            <h2
+              id="titre-mot-de-passe-oublie"
+              className="mt-6 text-3xl font-black text-white"
+            >
+              Mot de passe oublié?
+            </h2>
 
-      {message && (
-        <p className="mt-6 rounded-2xl bg-white/10 p-4 text-center text-white">
-          {message}
-        </p>
+            <p className="mt-3 leading-7 text-slate-300">
+              Entrez l'adresse courriel associée à votre compte
+              LVPSA. Vous recevrez un lien sécurisé pour choisir un
+              nouveau mot de passe.
+            </p>
+
+            <form
+              onSubmit={envoyerLienReinitialisation}
+              className="mt-7"
+            >
+              <label
+                htmlFor="courriel-reinitialisation"
+                className="mb-2 block text-sm font-bold text-slate-300"
+              >
+                Adresse courriel
+              </label>
+
+              <input
+                id="courriel-reinitialisation"
+                type="email"
+                autoComplete="email"
+                autoFocus
+                value={courrielReinitialisation}
+                onChange={(e) => {
+                  setCourrielReinitialisation(e.target.value);
+                  setMessageReinitialisation("");
+                  setTypeMessageReinitialisation("");
+                }}
+                placeholder="exemple@courriel.com"
+                disabled={envoiEnCours}
+                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white outline-none placeholder:text-slate-500 focus:border-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+              />
+
+              {messageReinitialisation && (
+                <div
+                  className={`mt-5 rounded-2xl border p-4 text-sm leading-6 ${
+                    typeMessageReinitialisation === "succes"
+                      ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
+                      : "border-red-400/30 bg-red-400/10 text-red-300"
+                  }`}
+                >
+                  {messageReinitialisation}
+                </div>
+              )}
+
+              <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={fermerPopupMotDePasse}
+                  disabled={envoiEnCours}
+                  className="rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {typeMessageReinitialisation === "succes"
+                    ? "Fermer"
+                    : "Annuler"}
+                </button>
+
+                {typeMessageReinitialisation !== "succes" && (
+                  <button
+                    type="submit"
+                    disabled={envoiEnCours}
+                    className="flex min-w-44 items-center justify-center gap-3 rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {envoiEnCours && (
+                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-950/30 border-t-slate-950" />
+                    )}
+
+                    {envoiEnCours
+                      ? "Envoi en cours..."
+                      : "Envoyer le lien"}
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
       )}
-
-    </section>
+    </>
   );
 }
 
