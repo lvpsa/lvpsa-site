@@ -343,6 +343,14 @@ export default function BoutiquesV2() {
   };
 
   const envoyerCommande = async () => {
+    if (!user) {
+    alert(
+      "Vous devez être connecté à votre compte LVPSA pour envoyer une commande."
+    );
+    window.location.href = "/connexion";
+    return;
+  }
+
   if (panier.length === 0) {
     alert("Votre panier est vide.");
     return;
@@ -412,9 +420,14 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
     });
     setFormulaireOuvert(false);
   } catch (error) {
-    console.error(error);
-    alert("Erreur lors de l’envoi de la commande.");
-  }
+  console.error("ERREUR COMMANDE COMPLÈTE :", error);
+
+  alert(
+    `Erreur lors de l’envoi de la commande.\n\nCode : ${
+      error?.code || "inconnu"
+    }\nMessage : ${error?.message || "Aucun détail disponible"}`
+  );
+}
 };
 
   const charteProduit = getCharteGrandeur(produitSelectionne);
