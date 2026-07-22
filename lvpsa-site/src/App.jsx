@@ -1892,6 +1892,7 @@ function CreerCompte() {
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
+  const [afficherMotDePasse, setAfficherMotDePasse] = useState(false);
   const [confirmationMotDePasse, setConfirmationMotDePasse] = useState("");
   const [message, setMessage] = useState("");
 
@@ -3801,6 +3802,7 @@ const semaineActive = selection.length > 0 ? selection[0] : null;
 function Connexion() {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
+  const [afficherMotDePasse, setAfficherMotDePasse] = useState(false);
   const [message, setMessage] = useState("");
   const [seSouvenir, setSeSouvenir] = useState(false);
 
