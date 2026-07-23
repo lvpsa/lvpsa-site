@@ -99,7 +99,7 @@ export default function HeroLVPSA() {
             className="mt-8 flex flex-col gap-3 sm:flex-row"
           >
             <Link
-              to="/inscriptions"
+              to="/inscription-ligue"
               className="inline-flex items-center justify-center gap-3 rounded-2xl bg-cyan-300 px-7 py-4 font-black text-slate-950 shadow-xl shadow-cyan-500/20 transition hover:-translate-y-1 hover:bg-cyan-200"
             >
               Rejoindre la ligue
