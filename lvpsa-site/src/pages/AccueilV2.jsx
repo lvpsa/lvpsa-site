@@ -22,6 +22,7 @@ import GalerieLVPSA from "../components/GalerieLVPSA";
 import StatsLVPSA from "../components/StatsLVPSA";
 import HeaderLVPSA from "../components/HeaderLVPSA";
 import ActionsLVPSA from "../components/ActionsLVPSA";
+import PourquoiLVPSA from "../components/PourquoiLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -365,6 +366,9 @@ export default function AccueilV2() {
 
         {/* Galerie immersive */}
         <GalerieLVPSA />
+
+        {/* Pourquoi la LVPSA */}
+        <PourquoiLVPSA />
 
         {/* Partenaires */}
         <section className="mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pb-24">
