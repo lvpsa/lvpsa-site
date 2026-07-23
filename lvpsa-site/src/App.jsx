@@ -4520,6 +4520,47 @@ function MesDemandesRemplacement() {
   );
 }
 
+const URL_CLASSEMENT_RECREATIF =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1356137713&single=true&output=csv";
+
+const URL_CLASSEMENT_COMPETITIF =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1226338215&single=true&output=csv";
+
+async function chargerClassementCSV(url) {
+  const reponse = await fetch(url);
+
+  if (!reponse.ok) {
+    throw new Error(`Erreur de chargement du classement : ${reponse.status}`);
+  }
+
+  const csv = await reponse.text();
+
+  const lignes = csv
+    .trim()
+    .split(/\r?\n/)
+    .map((ligne) =>
+      ligne
+        .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
+        .map((cellule) =>
+          cellule.replace(/^"|"$/g, "").trim()
+        )
+    );
+
+  return lignes
+    .slice(1)
+    .filter((ligne) => ligne[0] && ligne[1])
+    .map((ligne) => ({
+      rang: ligne[0],
+      equipe: ligne[1],
+      pj: ligne[2],
+      sg: ligne[3],
+      sp: ligne[4],
+      pp: ligne[5],
+      pc: ligne[6],
+      differentiel: ligne[7],
+      points: ligne[8],
+    }));
+}
 
 function MonEspace() {
   const [user, setUser] = useState(null);
@@ -4530,6 +4571,10 @@ function MonEspace() {
   const [demandesRecues, setDemandesRecues] = useState([]);
   const [demandesEnvoyees, setDemandesEnvoyees] = useState([]);
   const [commandes, setCommandes] = useState([]);
+
+  const [classementEquipe, setClassementEquipe] = useState(null);
+  const [classementChargement, setClassementChargement] = useState(false);
+  const [erreurClassement, setErreurClassement] = useState("");
 
   const [editionProfil, setEditionProfil] = useState(false);
   const [profilForm, setProfilForm] = useState({
@@ -4774,6 +4819,65 @@ function MonEspace() {
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+  const chargerClassementEquipe = async () => {
+    const categorie = normaliserCategorieGlobal(
+      userData?.categorie ||
+        equipeActuelle?.categorie ||
+        equipeActuelle?.catégorie
+    );
+
+    const nomEquipe =
+      userData?.equipeNom ||
+      userData?.equipenom ||
+      nomEquipeGlobal(equipeActuelle) ||
+      "";
+
+    if (!categorie || !nomEquipe) {
+      setClassementEquipe(null);
+      return;
+    }
+
+    const url =
+      categorie === "recreatif"
+        ? URL_CLASSEMENT_RECREATIF
+        : categorie === "competitif"
+        ? URL_CLASSEMENT_COMPETITIF
+        : "";
+
+    if (!url) {
+      setClassementEquipe(null);
+      return;
+    }
+
+    setClassementChargement(true);
+    setErreurClassement("");
+
+    try {
+      const classement = await chargerClassementCSV(url);
+
+      const equipeTrouvee =
+        classement.find(
+          (ligne) =>
+            normaliserTexteGlobal(ligne.equipe) ===
+            normaliserTexteGlobal(nomEquipe)
+        ) || null;
+
+      setClassementEquipe(equipeTrouvee);
+    } catch (error) {
+      console.error("Erreur classement Mon espace :", error);
+      setClassementEquipe(null);
+      setErreurClassement(
+        "Le classement est temporairement indisponible."
+      );
+    } finally {
+      setClassementChargement(false);
+    }
+  };
+
+  chargerClassementEquipe();
+}, [userData, equipeActuelle]);
 
   if (chargement) {
   return (
@@ -5262,6 +5366,110 @@ const statistiquesMembre = [
           )}
         </div>
 
+        <div className="rounded-3xl border border-yellow-300/20 bg-gradient-to-br from-yellow-300/10 via-white/[0.04] to-slate-950 p-6">
+  <div className="flex items-start justify-between gap-4">
+    <div>
+      <p className="text-sm font-black uppercase tracking-[0.15em] text-yellow-300">
+        Mon classement
+      </p>
+
+      <h2 className="mt-3 text-2xl font-black text-white">
+        {nomEquipeActuelle || "Mon équipe"}
+      </h2>
+    </div>
+
+    <Trophy className="h-7 w-7 text-yellow-300" />
+  </div>
+
+  {classementChargement ? (
+    <div className="mt-6">
+      <div className="h-10 w-20 animate-pulse rounded-xl bg-white/10" />
+      <div className="mt-4 h-4 w-40 animate-pulse rounded bg-white/10" />
+    </div>
+  ) : classementEquipe ? (
+    <>
+      <div className="mt-6 flex items-end gap-3">
+        <p className="text-5xl font-black text-white">
+          {classementEquipe.rang}
+          <span className="text-2xl text-yellow-300">
+            {classementEquipe.rang === "1" ? "er" : "e"}
+          </span>
+        </p>
+
+        <p className="pb-1 text-sm font-bold text-slate-400">
+          au classement
+        </p>
+      </div>
+
+      <div className="mt-6 grid grid-cols-3 gap-3">
+        <div className="rounded-2xl bg-black/20 p-3 text-center">
+          <p className="text-2xl font-black text-white">
+            {classementEquipe.pj}
+          </p>
+          <p className="mt-1 text-xs text-slate-400">
+            Parties
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-black/20 p-3 text-center">
+          <p className="text-2xl font-black text-white">
+            {classementEquipe.sg}
+          </p>
+          <p className="mt-1 text-xs text-slate-400">
+            Sets gagnés
+          </p>
+        </div>
+
+        <div className="rounded-2xl bg-black/20 p-3 text-center">
+          <p className="text-2xl font-black text-yellow-300">
+            {classementEquipe.points}
+          </p>
+          <p className="mt-1 text-xs text-slate-400">
+            Points
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+        <span className="text-sm text-slate-400">
+          Différentiel
+        </span>
+
+        <span className="font-black text-emerald-300">
+          {classementEquipe.differentiel}
+        </span>
+      </div>
+
+      <Link
+        to={
+          categorieActive === "recreatif"
+            ? "/classements/recreatif"
+            : "/classements/competitif"
+        }
+        className="mt-5 inline-flex items-center gap-2 font-black text-cyan-300"
+      >
+        Voir le classement complet
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </>
+  ) : (
+    <div className="mt-6 rounded-2xl bg-white/5 p-4">
+      <p className="text-sm text-slate-400">
+        {erreurClassement ||
+          "Ton équipe n’a pas été trouvée dans le classement actuel."}
+      </p>
+
+      <Link
+        to="/classements"
+        className="mt-4 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
+      >
+        Consulter les classements
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+  )}
+</div>
+        
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-fuchsia-300/10 text-fuchsia-300">
             <ShoppingBag className="h-5 w-5" />
