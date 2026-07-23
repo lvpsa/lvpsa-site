@@ -151,7 +151,7 @@ export default function PourquoiLVPSA() {
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
-                to="/inscriptions"
+                to="/inscription-ligue"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-6 py-4 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
               >
                 Faire partie de la communauté
