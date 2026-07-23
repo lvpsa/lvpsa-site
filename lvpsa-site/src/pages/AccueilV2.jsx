@@ -20,6 +20,7 @@ import {
 import HeroLVPSA from "../components/HeroLVPSA";
 import GalerieLVPSA from "../components/GalerieLVPSA";
 import StatsLVPSA from "../components/StatsLVPSA";
+import HeaderLVPSA from "../components/HeaderLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -88,72 +89,7 @@ export default function AccueilV2() {
         <div className="absolute -right-32 top-80 h-96 w-96 rounded-full bg-yellow-400/10 blur-3xl" />
       </div>
 
-      {/* En-tête */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-          <a href="/" className="flex items-center gap-3">
-  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-full bg-slate-950">
-    <img
-      src="/logo.jpg"
-      alt="Logo LVPSA"
-      className="h-full w-full scale-110 object-cover"
-    />
-  </div>
-
-  <div>
-    <p className="text-lg font-black leading-none tracking-tight">
-      LVPSA
-    </p>
-
-    <p className="mt-1 text-xs text-slate-400">
-      Volleyball de plage
-    </p>
-  </div>
-</a>
-
-          <nav className="hidden items-center gap-7 lg:flex">
-            <a
-              href="/"
-              className="text-sm font-semibold text-white transition hover:text-cyan-300"
-            >
-              Accueil
-            </a>
-            <a
-              href="/ligue"
-              className="text-sm font-semibold text-slate-300 transition hover:text-white"
-            >
-              Ligue
-            </a>
-            <a
-              href="/tournoi"
-              className="text-sm font-semibold text-slate-300 transition hover:text-white"
-            >
-              Tournoi
-            </a>
-            <a
-              href="/boutique"
-              className="text-sm font-semibold text-slate-300 transition hover:text-white"
-            >
-              Boutique
-            </a>
-          </nav>
-
-          <a
-            href="/connexion"
-            className="hidden rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-cyan-100 lg:inline-flex"
-          >
-            Connexion
-          </a>
-
-          <button
-            type="button"
-            aria-label="Ouvrir le menu"
-            className="rounded-xl border border-white/10 bg-white/5 p-2.5 lg:hidden"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-      </header>
+      <HeaderLVPSA />
 
       <main className="relative z-10">
 
