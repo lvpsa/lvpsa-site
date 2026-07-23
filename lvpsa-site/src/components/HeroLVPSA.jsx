@@ -41,7 +41,7 @@ const cartes = [
 
 export default function HeroLVPSA() {
   return (
-    <section className="relative min-h-[760px] overflow-hidden border-b border-white/10 lg:min-h-[820px]">
+    <section className="relative min-h-screen overflow-hidden border-b border-white/10">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -53,7 +53,7 @@ export default function HeroLVPSA() {
       <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/75 to-slate-950/10" />
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/20" />
 
-      <div className="relative z-10 mx-auto flex min-h-[760px] max-w-7xl flex-col justify-end px-5 pb-8 pt-24 lg:min-h-[820px] lg:px-8 lg:pb-10">
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col justify-end px-5 pb-8 pt-32 lg:px-8 lg:pb-10">
         <div className="max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
