@@ -36,34 +36,37 @@ const partenaires = [
 ];
 
 function LogoPartenaire({ partenaire }) {
-  const gererErreur = (event) => {
-    event.currentTarget.style.display = "none";
-    event.currentTarget.nextElementSibling.style.display = "flex";
-  };
-
   return (
     <motion.a
       href={partenaire.lien}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Visiter le site de ${partenaire.nom}`}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.25 }}
-      className="group flex min-h-[170px] items-center justify-center rounded-3xl border border-white/10 bg-white p-7 transition hover:border-cyan-300/40 hover:shadow-2xl hover:shadow-cyan-500/10"
+      aria-label={`Visiter ${partenaire.nom}`}
+      whileHover={{
+        y: -8,
+        scale: 1.02,
+      }}
+      transition={{
+        duration: 0.25,
+      }}
+      className="group relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-950 to-black p-8 transition"
     >
+      {/* Halo lumineux */}
+      <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
+        <div className="absolute inset-0 bg-cyan-400/5" />
+        <div className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/20 blur-3xl" />
+      </div>
+
+      {/* Logo */}
       <img
         src={partenaire.logo}
-        alt={`Logo ${partenaire.nom}`}
-        loading="lazy"
-        onError={gererErreur}
-        className={`${partenaire.imageClass} transition duration-300 group-hover:scale-105`}
+        alt={partenaire.nom}
+        className={`${partenaire.imageClass}
+          relative z-10
+          transition-all
+          duration-500
+          group-hover:scale-110`}
       />
-
-      <div className="hidden h-full w-full items-center justify-center text-center">
-        <p className="text-lg font-black text-slate-800">
-          {partenaire.nom}
-        </p>
-      </div>
     </motion.a>
   );
 }
@@ -93,13 +96,13 @@ export default function PartenairesLVPSA() {
           </div>
 
           <h2 className="mt-5 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Ils croient en notre mission.
+            Ils font grandir le volleyball de plage.
           </h2>
 
           <p className="mt-5 text-base leading-7 text-slate-400 sm:text-lg">
-            Grâce à leur soutien, nous pouvons développer le volleyball de
-            plage, organiser des activités rassembleuses et offrir une
-            expérience de qualité à notre communauté.
+          Chaque partenaire contribue directement à offrir une ligue de qualité,
+          un tournoi rassembleur et à promouvoir l'activité physique dans notre
+          région. Nous leur sommes sincèrement reconnaissants de leur confiance.
           </p>
         </motion.div>
 
@@ -144,7 +147,7 @@ export default function PartenairesLVPSA() {
         
             className="mt-5 inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-yellow-300 px-6 py-4 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-yellow-200 sm:mt-0"
           >
-            Devenir partenaire
+            Joignez-vous à l'aventure →
             <ArrowRight className="h-5 w-5" />
           </Link>
         </motion.div>
