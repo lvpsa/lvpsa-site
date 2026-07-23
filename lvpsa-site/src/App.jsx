@@ -5504,8 +5504,6 @@ const statistiquesMembre = [
     roleAffichage={roleAffichage}
   />
 
-  {estRemplacant && (
-
         {estRemplacant && (
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
             <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
