@@ -19,11 +19,11 @@ const liensRapides = [
 
 const liensMembres = [
   { titre: "Connexion", lien: "/connexion" },
-  { titre: "Inscriptions", lien: "/inscriptions" },
+  { titre: "Mon espace", lien: "/mon-espace" },
+  { titre: "Inscriptions", lien: "/inscription-ligue" },
   { titre: "Gestion d’équipe", lien: "/gestion-equipe" },
   { titre: "Remplaçants", lien: "/remplacants" },
 ];
-
 const partenaires = [
   {
     nom: "Soccer Sport Fitness",
@@ -96,7 +96,7 @@ export default function FooterLVPSA() {
 
           <div className="mt-7 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
             <Link
-              to="/inscriptions"
+              to="/inscription-ligue"
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-6 py-4 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
             >
               Rejoindre la ligue
@@ -150,7 +150,7 @@ export default function FooterLVPSA() {
               <div className="flex items-start gap-3 text-slate-300">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
                 <span>
-                  Parc Portneuf
+                  Parc Place Portneuf
                   <br />
                   Saint-Augustin-de-Desmaures
                 </span>
