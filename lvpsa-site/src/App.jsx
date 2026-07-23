@@ -54,14 +54,19 @@ import { uniformiserRemplacementsSansSupprimer } from "./firebase";
 
 import {
   Calendar,
-  Trophy,
   Mail,
   MapPin,
   ExternalLink,
- CheckCircle2,
+  CheckCircle2,
   CloudSun,
   Lock,
   LogIn,
+  ArrowRight,
+  CalendarDays,
+  ShoppingBag,
+  Trophy,
+  UserRound,
+  UsersRound,
   Eye,
   EyeOff,
 } from "lucide-react";
@@ -4820,15 +4825,59 @@ function MonEspace() {
   const aujourdHui = new Date();
   aujourdHui.setHours(0, 0, 0, 0);
 
-  const prochainMatch =
-    horairesLigue.find((date) => {
-      const dateMatch = new Date(`${date.id}T00:00:00`);
+  const nomEquipeActuelle =
+  userData?.equipeNom ||
+  userData?.equipenom ||
+  nomEquipeGlobal(equipeActuelle) ||
+  "";
 
-      return (
-        dateMatch >= aujourdHui &&
-        (!categorieActive || date.categorie === categorieActive)
-      );
-    }) || null;
+const prochainMatchEquipeEquipe = (() => {
+  if (!nomEquipeActuelle) return null;
+
+  for (const journee of horairesLigue) {
+    const dateMatch = new Date(`${journee.id}T00:00:00`);
+
+    if (dateMatch < aujourdHui) continue;
+
+    if (
+      categorieActive &&
+      journee.categorie !== categorieActive
+    ) {
+      continue;
+    }
+
+    const matchTrouve = journee.matchs.find((match) =>
+      normaliserTexteGlobal(match).includes(
+        normaliserTexteGlobal(nomEquipeActuelle)
+      )
+    );
+
+    if (!matchTrouve) continue;
+
+    const [heure = "", confrontation = ""] =
+      matchTrouve.split(" — ");
+
+    const equipes = confrontation.split(" vs ");
+
+    const adversaire =
+      equipes.find(
+        (equipe) =>
+          normaliserTexteGlobal(equipe) !==
+          normaliserTexteGlobal(nomEquipeActuelle)
+      ) || "Adversaire à confirmer";
+
+    return {
+      ...journee,
+      date: dateMatch,
+      heure,
+      confrontation,
+      adversaire,
+      matchComplet: matchTrouve,
+    };
+  }
+
+  return null;
+})();
 
   const demandesRecuesEnAttente = demandesRecues.filter(
     (demande) => demande.statut === "en_attente"
@@ -4915,21 +4964,209 @@ function MonEspace() {
 
   const prenom = userData?.nom?.split(" ")[0] || "membre";
 
+  const dateprochainMatchEquipe = prochainMatchEquipeEquipe
+  ? prochainMatchEquipeEquipe.date.toLocaleDateString("fr-CA", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    })
+  : null;
+
+const nombreDemandesActives = estRemplacant
+  ? demandesRecuesEnAttente.length
+  : estCapitaine
+  ? demandesEnvoyeesEnAttente.length
+  : 0;
+
   return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        LVPSA
-      </p>
+    <section className="min-h-screen bg-slate-950 px-5 pb-20 pt-28 text-white lg:px-8">
+  <div className="mx-auto max-w-7xl">
+    {/* En-tête du tableau de bord */}
+    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-cyan-500/20 via-slate-900 to-yellow-300/10 p-6 sm:p-8 lg:p-10">
+      <div
+        aria-hidden="true"
+        className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl"
+      />
 
-      <h1 className="mt-2 text-5xl font-black text-white">
-        Mon espace
-      </h1>
+      <div className="relative">
+        <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-300">
+          Mon espace LVPSA
+        </p>
 
-      <p className="mt-5 text-xl text-slate-300">
-        Bonjour {prenom}, voici ce qui te concerne actuellement.
-      </p>
+        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+          Bonjour {prenom} 👋
+        </h1>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+          Retrouve ton équipe, ton prochain match, tes demandes et tes
+          commandes dans un seul espace.
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-black text-cyan-200">
+            {roleAffichage}
+          </span>
+
+          {nomEquipeActuelle && (
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-slate-200">
+              {nomEquipeActuelle}
+            </span>
+          )}
+
+          {categorieActive && (
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold capitalize text-slate-200">
+              {categorieActive === "recreatif"
+                ? "Récréatif"
+                : "Compétitif"}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+
+    {/* Résumé principal */}
+    <div className="mt-6 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+      <div className="relative overflow-hidden rounded-3xl border border-cyan-300/20 bg-gradient-to-br from-cyan-400/15 via-slate-900 to-slate-950 p-6 sm:p-8">
+        <div className="flex items-center gap-3 text-cyan-300">
+          <CalendarDays className="h-6 w-6" />
+
+          <p className="text-sm font-black uppercase tracking-[0.18em]">
+            Prochain match
+          </p>
+        </div>
+
+        {prochainMatchEquipeEquipe ? (
+          <>
+            <p className="mt-6 text-lg font-bold capitalize text-slate-300">
+              {dateprochainMatchEquipe}
+            </p>
+
+            <h2 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">
+              {prochainMatchEquipeEquipe.heure}
+            </h2>
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-5">
+              <p className="text-sm font-bold text-slate-400">
+                Votre adversaire
+              </p>
+
+              <p className="mt-2 text-2xl font-black text-white">
+                {prochainMatchEquipeEquipe.adversaire}
+              </p>
+            </div>
+
+            <div className="mt-5 flex items-center gap-2 text-sm text-slate-400">
+              <MapPin className="h-4 w-4 text-cyan-300" />
+              Parc Portneuf, Saint-Augustin-de-Desmaures
+            </div>
+
+            <Link
+              to="/calendrier"
+              className="mt-7 inline-flex items-center gap-2 rounded-2xl bg-cyan-300 px-5 py-3 font-black text-slate-950 transition hover:bg-cyan-200"
+            >
+              Voir le calendrier
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </>
+        ) : (
+          <>
+            <h2 className="mt-6 text-3xl font-black">
+              Aucun match à venir
+            </h2>
+
+            <p className="mt-3 text-slate-300">
+              Aucun prochain match n’a été trouvé pour ton équipe dans
+              l’horaire actuel.
+            </p>
+
+            <Link
+              to="/calendrier"
+              className="mt-7 inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-3 font-black text-white"
+            >
+              Consulter le calendrier
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </>
+        )}
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-yellow-300/10 text-yellow-300">
+            <UsersRound className="h-5 w-5" />
+          </div>
+
+          <p className="mt-5 text-sm font-bold uppercase tracking-[0.15em] text-slate-400">
+            Mon équipe
+          </p>
+
+          <p className="mt-2 text-2xl font-black">
+            {nomEquipeActuelle || "Aucune équipe"}
+          </p>
+
+          {(estJoueur || estCapitaine) && (
+            <Link
+              to={estCapitaine ? "/gestion-equipe" : "/classements"}
+              className="mt-5 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
+            >
+              {estCapitaine
+                ? "Gérer mon équipe"
+                : "Voir les classements"}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
+        </div>
+
+        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-fuchsia-300/10 text-fuchsia-300">
+            <ShoppingBag className="h-5 w-5" />
+          </div>
+
+          <p className="mt-5 text-sm font-bold uppercase tracking-[0.15em] text-slate-400">
+            Mes commandes
+          </p>
+
+          <p className="mt-2 text-4xl font-black">
+            {commandes.length}
+          </p>
+
+          <a
+            href="#mes-commandes"
+            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
+          >
+            Voir les commandes
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+
+        {(estRemplacant || estCapitaine) && (
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:col-span-2 lg:col-span-1">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-300/10 text-emerald-300">
+              <Trophy className="h-5 w-5" />
+            </div>
+
+            <p className="mt-5 text-sm font-bold uppercase tracking-[0.15em] text-slate-400">
+              Remplacements
+            </p>
+
+            <p className="mt-2 text-4xl font-black">
+              {nombreDemandesActives}
+            </p>
+
+            <Link
+              to={estCapitaine ? "/gestion-equipe" : "/remplacants"}
+              className="mt-5 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
+            >
+              Voir les demandes
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+
+    {/* Contenu existant */}
+    <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="flex items-start justify-between gap-3">
             <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
@@ -5037,14 +5274,14 @@ function MonEspace() {
                 : "Non précisée"}
             </p>
 
-            {prochainMatch ? (
+            {prochainMatchEquipe ? (
               <div className="mt-4 rounded-2xl bg-emerald-400/10 p-4">
                 <p className="font-black text-emerald-300">
-                  Prochain match : {prochainMatch.label}
+                  Prochain match : {prochainMatchEquipe.label}
                 </p>
 
                 <div className="mt-3 space-y-2 text-sm text-slate-200">
-                  {prochainMatch.matchs.map((match, index) => (
+                  {prochainMatchEquipe.matchs.map((match, index) => (
                     <p key={index} className="rounded-xl bg-black/20 p-3">
                       {match}
                     </p>
