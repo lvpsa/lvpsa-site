@@ -5252,50 +5252,6 @@ const nombreDemandesActives = estRemplacant
           )}
         </div>
 
-        {(estJoueur || estCapitaine) && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 xl:col-span-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              Équipe
-            </p>
-
-            <h2 className="mt-3 text-2xl font-black text-white">
-              {userData?.equipeNom ||
-                userData?.equipenom ||
-                nomEquipeGlobal(equipeActuelle) ||
-                "Aucune équipe"}
-            </h2>
-
-            <p className="mt-2 text-slate-300">
-              Catégorie :{" "}
-              {categorieActive === "recreatif"
-                ? "Récréatif"
-                : categorieActive === "competitif"
-                ? "Compétitif"
-                : "Non précisée"}
-            </p>
-
-            {prochainMatchEquipe ? (
-              <div className="mt-4 rounded-2xl bg-emerald-400/10 p-4">
-                <p className="font-black text-emerald-300">
-                  Prochain match : {prochainMatchEquipe.label}
-                </p>
-
-                <div className="mt-3 space-y-2 text-sm text-slate-200">
-                  {prochainMatchEquipe.matchs.map((match, index) => (
-                    <p key={index} className="rounded-xl bg-black/20 p-3">
-                      {match}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p className="mt-4 rounded-2xl bg-white/10 p-4 text-slate-300">
-                Aucun prochain match affiché.
-              </p>
-            )}
-          </div>
-        )}
-
         {estRemplacant && (
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
             <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
@@ -5512,35 +5468,38 @@ const nombreDemandesActives = estRemplacant
           </div>
         )}
 
-        <div className="rounded-3xl border border-amber-400/20 bg-gradient-to-br from-amber-400/10 to-slate-900 p-8">
-          <p className="font-bold uppercase tracking-wider text-amber-300">
-            Événement à venir
-          </p>
+        <div className="relative overflow-hidden rounded-3xl border border-fuchsia-300/20 bg-slate-900 p-8">
+  <img
+    src="/galerie/galerie-01.jpg"
+    alt="Tournoi LVPSA 2026"
+    className="absolute inset-0 h-full w-full object-cover opacity-25"
+  />
 
-          <h2 className="mt-2 text-3xl font-black text-white">
-            Tournoi LVPSA 2026
-          </h2>
+  <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/50" />
 
-          <p className="mt-4 text-slate-300">
-            Le tournoi est complet, mais l'horaire, les règlements et les informations importantes restent disponibles en tout temps.
-          </p>
+  <div className="relative">
+    <p className="font-bold uppercase tracking-wider text-fuchsia-300">
+      Galerie officielle
+    </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              to="/tournoi"
-              className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-            >
-              Informations
-            </Link>
+    <h2 className="mt-2 text-3xl font-black text-white">
+      Revivez le tournoi LVPSA 2026
+    </h2>
 
-            <Link
-              to="/tournoi/horaire"
-              className="rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              Horaire
-            </Link>
-          </div>
-        </div>
+    <p className="mt-4 max-w-xl leading-7 text-slate-300">
+      Découvrez les équipes, les bénévoles, les partenaires et tous les
+      moments marquants de cette journée exceptionnelle.
+    </p>
+
+    <Link
+      to="/galerie"
+      className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-fuchsia-300 px-6 py-3 font-black text-slate-950 transition hover:bg-fuchsia-200"
+    >
+      Voir les photos
+      <ArrowRight className="h-5 w-5" />
+    </Link>
+  </div>
+</div>
 
         {estMembre && (
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
