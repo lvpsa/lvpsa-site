@@ -23,6 +23,7 @@ import StatsLVPSA from "../components/StatsLVPSA";
 import HeaderLVPSA from "../components/HeaderLVPSA";
 import ActionsLVPSA from "../components/ActionsLVPSA";
 import PourquoiLVPSA from "../components/PourquoiLVPSA";
+import PartenairesLVPSA from "../components/PartenairesLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -371,36 +372,8 @@ export default function AccueilV2() {
         <PourquoiLVPSA />
 
         {/* Partenaires */}
-        <section className="mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pb-24">
-          <motion.div
-            {...animations}
-            className="rounded-3xl border border-white/10 bg-white/[0.03] p-7 text-center sm:p-10"
-          >
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">
-              Merci à nos partenaires
-            </p>
-
-            <h2 className="mx-auto mt-4 max-w-2xl text-2xl font-black tracking-tight sm:text-3xl">
-              Leur soutien fait grandir le volleyball dans notre région.
-            </h2>
-
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              {[
-                "Desjardins",
-                "Applied Industrial Technologies",
-                "Canac",
-                "Ville de Saint-Augustin",
-              ].map((partenaire) => (
-                <div
-                  key={partenaire}
-                  className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-bold text-slate-300"
-                >
-                  {partenaire}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </section>
+        <PartenairesLVPSA />
+        
       </main>
     </div>
   );
