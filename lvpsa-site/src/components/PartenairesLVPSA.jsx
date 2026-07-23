@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Handshake } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const partenaires = [
   {
@@ -123,7 +122,7 @@ export default function PartenairesLVPSA() {
           ))}
         </div>
 
-        <motion.div
+               <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -143,13 +142,12 @@ export default function PartenairesLVPSA() {
 
           <a
             href="mailto:liguevpsa@gmail.com?subject=Partenariat%20LVPSA"
-            className="..."
+            className="mt-5 inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-yellow-300 px-6 py-4 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-yellow-200 sm:mt-0"
           >
             Joignez-vous à l’aventure
             <ArrowRight className="h-5 w-5" />
           </a>
-          
-          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
