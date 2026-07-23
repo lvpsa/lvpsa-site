@@ -24,6 +24,7 @@ import HeaderLVPSA from "../components/HeaderLVPSA";
 import ActionsLVPSA from "../components/ActionsLVPSA";
 import PourquoiLVPSA from "../components/PourquoiLVPSA";
 import PartenairesLVPSA from "../components/PartenairesLVPSA";
+import FooterLVPSA from "../components/FooterLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -373,6 +374,9 @@ export default function AccueilV2() {
 
         {/* Partenaires */}
         <PartenairesLVPSA />
+
+        {/* Footer LVPSA */}
+        <FooterLVPSA />
         
       </main>
     </div>
