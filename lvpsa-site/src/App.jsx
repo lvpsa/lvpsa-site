@@ -4772,29 +4772,74 @@ function MonEspace() {
   }, []);
 
   if (chargement) {
-    return null;
-  }
+  return (
+    <section className="flex min-h-[70vh] items-center justify-center bg-slate-950 px-6 text-white">
+      <div className="text-center">
+        <div className="mx-auto h-14 w-14 animate-spin rounded-full border-4 border-white/10 border-t-cyan-300" />
+
+        <p className="mt-6 text-lg font-black">
+          Chargement de ton espace
+        </p>
+
+        <p className="mt-2 text-sm text-slate-400">
+          Nous récupérons ton équipe, tes matchs et tes commandes.
+        </p>
+      </div>
+    </section>
+  );
+}
 
   if (!user) {
-    return (
-      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
-        <h1 className="text-4xl font-black text-white">
+  return (
+    <section className="relative flex min-h-[75vh] items-center justify-center overflow-hidden bg-slate-950 px-5 py-32 text-white">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[url('/hero-lvpsa.jpg')] bg-cover bg-center opacity-20"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/90 to-slate-950" />
+
+      <div className="relative max-w-2xl rounded-[2rem] border border-white/10 bg-slate-950/70 p-8 text-center shadow-2xl backdrop-blur-xl sm:p-12">
+        <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border border-white/15">
+          <img
+            src="/logo.jpg"
+            alt="Logo LVPSA"
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        <p className="mt-6 text-sm font-black uppercase tracking-[0.2em] text-cyan-300">
+          Espace membre
+        </p>
+
+        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
           Connexion requise
         </h1>
 
-        <p className="mt-4 text-slate-300">
-          Connectez-vous pour accéder à votre espace LVPSA.
+        <p className="mx-auto mt-5 max-w-lg leading-7 text-slate-300">
+          Connecte-toi pour consulter ton équipe, ton prochain match, tes
+          demandes de remplacement et tes commandes.
         </p>
 
-        <Link
-          to="/connexion"
-          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
-        >
-          Connexion
-        </Link>
-      </section>
-    );
-  }
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link
+            to="/connexion"
+            className="rounded-2xl bg-cyan-300 px-7 py-4 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
+          >
+            Se connecter
+          </Link>
+
+          <Link
+            to="/creer-compte"
+            className="rounded-2xl border border-white/15 bg-white/5 px-7 py-4 font-black text-white transition hover:bg-white/10"
+          >
+            Créer un compte
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
 
   const role = userData?.role || "membre";
   const equipeId = String(userData?.equipeId || userData?.idEquipe || "").trim();
