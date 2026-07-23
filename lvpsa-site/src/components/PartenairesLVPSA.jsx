@@ -4,20 +4,34 @@ import { Link } from "react-router-dom";
 
 const partenaires = [
   {
-    nom: "Desjardins",
-    logo: "/partenaires/desjardins.png",
+    nom: "Soccer Sport Fitness",
+    logo: "/soccer-sport-fitness.png",
+    lien: "https://www.soccersportfitness.ca/collections/equipement-de-volleyball",
+    imageClass: "max-h-28 w-full object-contain",
   },
   {
     nom: "Applied Industrial Technologies",
-    logo: "/partenaires/applied.png",
+    logo: "/Applied.png",
+    lien: "https://www.appliedcanada.ca",
+    imageClass: "max-h-28 w-full object-contain",
   },
   {
     nom: "Canac",
-    logo: "/partenaires/canac.png",
+    logo: "/Canac.png",
+    lien: "https://www.canac.ca",
+    imageClass: "max-h-28 w-full object-contain",
   },
   {
     nom: "Ville de Saint-Augustin-de-Desmaures",
-    logo: "/partenaires/ville-sad.png",
+    logo: "/VSAD.png",
+    lien: "https://www.vsad.ca",
+    imageClass: "max-h-40 w-full object-contain",
+  },
+  {
+    nom: "Desjardins",
+    logo: "/Desjardins.png",
+    lien: "https://www.desjardins.com",
+    imageClass: "max-h-28 w-full object-contain",
   },
 ];
 
@@ -28,25 +42,29 @@ function LogoPartenaire({ partenaire }) {
   };
 
   return (
-    <motion.article
+    <motion.a
+      href={partenaire.lien}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Visiter le site de ${partenaire.nom}`}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.25 }}
-      className="group flex min-h-[170px] items-center justify-center rounded-3xl border border-white/10 bg-white/[0.04] p-7 transition hover:border-cyan-300/30 hover:bg-white/[0.07]"
+      className="group flex min-h-[170px] items-center justify-center rounded-3xl border border-white/10 bg-white p-7 transition hover:border-cyan-300/40 hover:shadow-2xl hover:shadow-cyan-500/10"
     >
       <img
         src={partenaire.logo}
         alt={`Logo ${partenaire.nom}`}
         loading="lazy"
         onError={gererErreur}
-        className="max-h-20 max-w-[220px] object-contain brightness-0 invert opacity-75 transition duration-300 group-hover:opacity-100"
+        className={`${partenaire.imageClass} transition duration-300 group-hover:scale-105`}
       />
 
       <div className="hidden h-full w-full items-center justify-center text-center">
-        <p className="text-lg font-black text-slate-300">
+        <p className="text-lg font-black text-slate-800">
           {partenaire.nom}
         </p>
       </div>
-    </motion.article>
+    </motion.a>
   );
 }
 
@@ -120,8 +138,10 @@ export default function PartenairesLVPSA() {
             </p>
           </div>
 
-          <Link
-            to="/contact"
+          <a
+            href="mailto:liguevpsa@gmail.com?subject=Partenariat%20LVPSA"
+          </a>
+        
             className="mt-5 inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-yellow-300 px-6 py-4 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-yellow-200 sm:mt-0"
           >
             Devenir partenaire
