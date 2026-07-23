@@ -15,6 +15,7 @@ const liensRapides = [
   { titre: "Tournoi", lien: "/tournoi" },
   { titre: "Boutique", lien: "/boutique" },
   { titre: "Galerie", lien: "/galerie" },
+  { titre: "Partenaires", lien: "/partenaires" },
 ];
 
 const liensMembres = [
