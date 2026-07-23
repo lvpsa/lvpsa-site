@@ -79,7 +79,7 @@ const actionsRapides = [
 
 export default function AccueilV2() {
   return (
-    <div className="min-h-screen bg-slate-950 pb-24 text-white lg:pb-0">
+    <div className="min-h-screen bg-slate-950 text-white">
       {/* Arrière-plan */}
       <div
         aria-hidden="true"
@@ -460,51 +460,6 @@ export default function AccueilV2() {
           </motion.div>
         </section>
       </main>
-
-      {/* Navigation mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-slate-950/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
-        <div className="mx-auto grid max-w-md grid-cols-5">
-          <a
-            href="/"
-            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-cyan-300"
-          >
-            <Home className="h-5 w-5" />
-            <span className="text-[10px] font-bold">Accueil</span>
-          </a>
-
-          <a
-            href="/calendrier"
-            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400"
-          >
-            <CalendarDays className="h-5 w-5" />
-            <span className="text-[10px] font-semibold">Matchs</span>
-          </a>
-
-          <a
-            href="/boutique"
-            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400"
-          >
-            <ShoppingBag className="h-5 w-5" />
-            <span className="text-[10px] font-semibold">Boutique</span>
-          </a>
-
-          <a
-            href="/connexion"
-            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400"
-          >
-            <UserRound className="h-5 w-5" />
-            <span className="text-[10px] font-semibold">Compte</span>
-          </a>
-
-          <a
-            href="/"
-            className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400"
-          >
-            <Menu className="h-5 w-5" />
-            <span className="text-[10px] font-semibold">Plus</span>
-          </a>
-        </div>
-      </nav>
     </div>
   );
 }
