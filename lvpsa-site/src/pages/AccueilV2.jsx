@@ -21,6 +21,7 @@ import HeroLVPSA from "../components/HeroLVPSA";
 import GalerieLVPSA from "../components/GalerieLVPSA";
 import StatsLVPSA from "../components/StatsLVPSA";
 import HeaderLVPSA from "../components/HeaderLVPSA";
+import ActionsLVPSA from "../components/ActionsLVPSA";
 
 const animations = {
   initial: { opacity: 0, y: 20 },
@@ -50,33 +51,6 @@ const nouvelles = [
   },
 ];
 
-const actionsRapides = [
-  {
-    titre: "Calendrier",
-    texte: "Consulter les matchs",
-    icone: CalendarDays,
-    lien: "/calendrier",
-  },
-  {
-    titre: "Classements",
-    texte: "Voir les résultats",
-    icone: Trophy,
-    lien: "/classements",
-  },
-  {
-    titre: "Mon équipe",
-    texte: "Accéder à mon espace",
-    icone: UsersRound,
-    lien: "/connexion",
-  },
-  {
-    titre: "Boutique",
-    texte: "Découvrir les vêtements",
-    icone: ShoppingBag,
-    lien: "/boutique",
-  },
-];
-
 export default function AccueilV2() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -98,44 +72,8 @@ export default function AccueilV2() {
           {/* Statistiques */}
         <StatsLVPSA />
 
-        {/* Actions rapides */}
-        <section className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
-          <motion.div {...animations}>
-            <div className="mb-5 flex items-end justify-between">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">
-                  Accès rapide
-                </p>
-                <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">
-                  Tout ce dont vous avez besoin
-                </h2>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
-              {actionsRapides.map((action) => {
-                const Icone = action.icone;
-
-                return (
-                  <a
-                    key={action.titre}
-                    href={action.lien}
-                    className="group rounded-2xl border border-white/10 bg-white/[0.04] p-4 transition hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-white/[0.07] sm:p-5"
-                  >
-                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 transition group-hover:bg-cyan-300 group-hover:text-slate-950">
-                      <Icone className="h-5 w-5" />
-                    </div>
-
-                    <h3 className="font-extrabold">{action.titre}</h3>
-                    <p className="mt-1 text-sm text-slate-400">{action.texte}</p>
-
-                    <ChevronRight className="mt-4 h-5 w-5 text-slate-600 transition group-hover:translate-x-1 group-hover:text-cyan-300" />
-                  </a>
-                );
-              })}
-            </div>
-          </motion.div>
-        </section>
+       {/* Accès principaux */}
+        <ActionsLVPSA />
 
         {/* Informations principales */}
         <section className="mx-auto grid max-w-7xl gap-5 px-5 py-8 lg:grid-cols-3 lg:px-8">
