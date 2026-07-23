@@ -5716,10 +5716,11 @@ const nombreDemandesActives = estRemplacant
               🙋 Inscriptions
             </Link>
           )}
-        </div>
+                </div>
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }
 
 function Footer() {
