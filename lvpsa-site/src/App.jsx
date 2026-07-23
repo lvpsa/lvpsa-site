@@ -5328,144 +5328,15 @@ const statistiquesMembre = [
             {nomEquipeActuelle || "Aucune équipe"}
           </p>
 
-          {(estJoueur || estCapitaine) && (
-            <Link
-              to={estCapitaine ? "/gestion-equipe" : "/classements"}
-              className="mt-5 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
-            >
-              {estCapitaine
-                ? "Gérer mon équipe"
-                : "Voir les classements"}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          )}
-        </div>
-
-        <div className="rounded-3xl border border-yellow-300/20 bg-gradient-to-br from-yellow-300/10 via-white/[0.04] to-slate-950 p-6">
-  <div className="flex items-start justify-between gap-4">
-    <div>
-      <p className="text-sm font-black uppercase tracking-[0.15em] text-yellow-300">
-        Mon classement
-      </p>
-
-      <h2 className="mt-3 text-2xl font-black text-white">
-        {nomEquipeActuelle || "Mon équipe"}
-      </h2>
-    </div>
-
-    <Trophy className="h-7 w-7 text-yellow-300" />
-  </div>
-
-  {classementChargement ? (
-    <div className="mt-6">
-      <div className="h-10 w-20 animate-pulse rounded-xl bg-white/10" />
-      <div className="mt-4 h-4 w-40 animate-pulse rounded bg-white/10" />
-    </div>
-  ) : classementEquipe ? (
-    <>
-      <div className="mt-6 flex items-end gap-3">
-        <p className="text-5xl font-black text-white">
-          {classementEquipe.rang}
-          <span className="text-2xl text-yellow-300">
-            {classementEquipe.rang === "1" ? "er" : "e"}
-          </span>
-        </p>
-
-        <p className="pb-1 text-sm font-bold text-slate-400">
-          au classement
-        </p>
-      </div>
-
-      <div className="mt-6 grid grid-cols-3 gap-3">
-        <div className="rounded-2xl bg-black/20 p-3 text-center">
-          <p className="text-2xl font-black text-white">
-            {classementEquipe.pj}
-          </p>
-          <p className="mt-1 text-xs text-slate-400">
-            Parties
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-black/20 p-3 text-center">
-          <p className="text-2xl font-black text-white">
-            {classementEquipe.sg}
-          </p>
-          <p className="mt-1 text-xs text-slate-400">
-            Sets gagnés
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-black/20 p-3 text-center">
-          <p className="text-2xl font-black text-yellow-300">
-            {classementEquipe.points}
-          </p>
-          <p className="mt-1 text-xs text-slate-400">
-            Points
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-        <span className="text-sm text-slate-400">
-          Différentiel
-        </span>
-
-        <span className="font-black text-emerald-300">
-          {classementEquipe.differentiel}
-        </span>
-      </div>
-
-      <Link
-        to={
-          categorieActive === "recreatif"
-            ? "/classements/recreatif"
-            : "/classements/competitif"
-        }
-        className="mt-5 inline-flex items-center gap-2 font-black text-cyan-300"
-      >
-        Voir le classement complet
-        <ArrowRight className="h-4 w-4" />
-      </Link>
-    </>
-  ) : (
-    <div className="mt-6 rounded-2xl bg-white/5 p-4">
-      <p className="text-sm text-slate-400">
-        {erreurClassement ||
-          "Ton équipe n’a pas été trouvée dans le classement actuel."}
-      </p>
-
-      <Link
-        to="/classements"
-        className="mt-4 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
-      >
-        Consulter les classements
-        <ArrowRight className="h-4 w-4" />
-      </Link>
-    </div>
-  )}
-</div>
-        
-        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-fuchsia-300/10 text-fuchsia-300">
-            <ShoppingBag className="h-5 w-5" />
-          </div>
-
-          <p className="mt-5 text-sm font-bold uppercase tracking-[0.15em] text-slate-400">
-            Mes commandes
-          </p>
-
-          <p className="mt-2 text-4xl font-black">
-            {commandes.length}
-          </p>
-
-          <a
-            href="#mes-commandes"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-black text-cyan-300"
-          >
-            Voir les commandes
-            <ArrowRight className="h-4 w-4" />
-          </a>
-        </div>
+{(estJoueur || estCapitaine) && (
+  <CarteEquipe
+    equipeActuelle={equipeActuelle}
+    userData={userData}
+    categorieActive={categorieActive}
+    prochainMatch={prochainMatch}
+    nomEquipeGlobal={nomEquipeGlobal}
+  />
+)}
 
         {(estRemplacant || estCapitaine) && (
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:col-span-2 lg:col-span-1">
