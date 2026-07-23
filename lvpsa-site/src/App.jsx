@@ -69,6 +69,10 @@ import {
   UsersRound,
   Eye,
   EyeOff,
+  Bell,
+  Clock3,
+  PackageCheck,
+  Repeat2,
 } from "lucide-react";
 import "./index.css";
 import emailjs from "@emailjs/browser";
@@ -5023,6 +5027,102 @@ const nombreDemandesActives = estRemplacant
   ? demandesEnvoyeesEnAttente.length
   : 0;
 
+  const commandesPretes = commandes.filter((commande) => {
+  const statut = normaliserTexteGlobal(statutCommande(commande));
+
+  return (
+    statut.includes("prete") ||
+    statut.includes("prête") ||
+    statut.includes("cueillette") ||
+    statut.includes("terminee") ||
+    statut.includes("terminée")
+  );
+});
+
+const demandesAcceptees = [
+  ...demandesRecues,
+  ...demandesEnvoyees,
+].filter((demande) => demande.statut === "accepte");
+
+const notifications = [
+  ...(prochainMatchEquipe
+    ? [
+        {
+          id: "prochain-match",
+          titre: "Prochain match",
+          texte: `${dateProchainMatch} — ${prochainMatchEquipe.heure} contre ${prochainMatchEquipe.adversaire}`,
+          type: "match",
+          lien: "/calendrier",
+        },
+      ]
+    : []),
+
+  ...commandesPretes.slice(0, 2).map((commande) => ({
+    id: `commande-${commande.id}`,
+    titre: `Commande ${numeroCommande(commande)}`,
+    texte: "Ta commande semble prête ou terminée.",
+    type: "commande",
+    lien: "#mes-commandes",
+  })),
+
+  ...demandesAcceptees.slice(0, 2).map((demande) => ({
+    id: `demande-${demande.id}`,
+    titre: "Remplacement confirmé",
+    texte:
+      demande.remplacantNom ||
+      demande.equipeNom ||
+      "Une demande de remplacement a été acceptée.",
+    type: "remplacement",
+    lien: estCapitaine ? "/gestion-equipe" : "/remplacants",
+  })),
+
+  ...(nombreDemandesActives > 0
+    ? [
+        {
+          id: "demandes-actives",
+          titre: "Demandes en attente",
+          texte: `${nombreDemandesActives} demande${
+            nombreDemandesActives > 1 ? "s" : ""
+          } à consulter.`,
+          type: "attente",
+          lien: estCapitaine ? "/gestion-equipe" : "/remplacants",
+        },
+      ]
+    : []),
+].slice(0, 5);
+
+const dateCreationCompte =
+  userData?.createdAt?.toDate?.() ||
+  userData?.dateCreation?.toDate?.() ||
+  null;
+
+const membreDepuis = dateCreationCompte
+  ? dateCreationCompte.getFullYear()
+  : "2026";
+
+const statistiquesMembre = [
+  {
+    titre: "Commandes",
+    valeur: commandes.length,
+    icone: ShoppingBag,
+  },
+  {
+    titre: "Remplacements",
+    valeur: demandesAcceptees.length,
+    icone: Repeat2,
+  },
+  {
+    titre: "En attente",
+    valeur: nombreDemandesActives,
+    icone: Clock3,
+  },
+  {
+    titre: "Membre depuis",
+    valeur: membreDepuis,
+    icone: UserRound,
+  },
+];
+  
   return (
     <section className="min-h-screen bg-slate-950 px-5 pb-20 pt-28 text-white lg:px-8">
   <div className="mx-auto max-w-7xl">
@@ -5210,6 +5310,131 @@ const nombreDemandesActives = estRemplacant
       </div>
     </div>
 
+    {/* Tableau de bord intelligent */}
+<div className="mt-6 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+  {/* Notifications */}
+  <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+    <div className="flex items-center justify-between gap-4">
+      <div>
+        <div className="flex items-center gap-3 text-cyan-300">
+          <Bell className="h-6 w-6" />
+
+          <p className="text-sm font-black uppercase tracking-[0.18em]">
+            À surveiller
+          </p>
+        </div>
+
+        <h2 className="mt-3 text-3xl font-black">
+          Tes notifications
+        </h2>
+      </div>
+
+      {notifications.length > 0 && (
+        <span className="rounded-full bg-cyan-300 px-3 py-1 text-sm font-black text-slate-950">
+          {notifications.length}
+        </span>
+      )}
+    </div>
+
+    <div className="mt-6 space-y-3">
+      {notifications.length > 0 ? (
+        notifications.map((notification) => {
+          const Icone =
+            notification.type === "commande"
+              ? PackageCheck
+              : notification.type === "remplacement"
+              ? CheckCircle2
+              : notification.type === "attente"
+              ? Clock3
+              : CalendarDays;
+
+          return (
+             <a
+              key={notification.id}
+              href={notification.lien}
+              className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:border-cyan-300/30 hover:bg-white/[0.06]"
+            >
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-300/10 text-cyan-300">
+                <Icone className="h-5 w-5" />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p className="font-black text-white">
+                  {notification.titre}
+                </p>
+
+                <p className="mt-1 text-sm leading-6 text-slate-400">
+                  {notification.texte}
+                </p>
+              </div>
+
+              <ArrowRight className="mt-3 h-4 w-4 shrink-0 text-slate-600 transition group-hover:translate-x-1 group-hover:text-cyan-300" />
+            </a>
+          );
+        })
+      ) : (
+        <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="h-6 w-6 text-emerald-300" />
+
+            <div>
+              <p className="font-black text-white">
+                Tout est à jour
+              </p>
+
+              <p className="mt-1 text-sm text-slate-400">
+                Tu n’as aucune action urgente pour le moment.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {/* Statistiques membre */}
+  <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-yellow-300/10 via-white/[0.04] to-cyan-300/10 p-6 sm:p-8">
+    <p className="text-sm font-black uppercase tracking-[0.18em] text-yellow-300">
+      Mon activité
+    </p>
+
+    <h2 className="mt-3 text-3xl font-black">
+      En un coup d’œil
+    </h2>
+
+    <div className="mt-6 grid grid-cols-2 gap-3">
+      {statistiquesMembre.map((statistique) => {
+        const Icone = statistique.icone;
+
+        return (
+          <div
+            key={statistique.titre}
+            className="rounded-2xl border border-white/10 bg-slate-950/55 p-4"
+          >
+            <Icone className="h-5 w-5 text-cyan-300" />
+
+            <p className="mt-5 text-3xl font-black text-white">
+              {statistique.valeur}
+            </p>
+
+            <p className="mt-1 text-sm text-slate-400">
+              {statistique.titre}
+            </p>
+          </div>
+        );
+      })}
+    </div>
+
+    <Link
+      to="/classements"
+      className="mt-6 inline-flex items-center gap-2 font-black text-cyan-300 transition hover:text-cyan-200"
+    >
+      Voir les classements
+      <ArrowRight className="h-4 w-4" />
+    </Link>
+  </section>
+</div>
+    
     {/* Contenu existant */}
     <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
