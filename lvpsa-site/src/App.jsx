@@ -5842,64 +5842,11 @@ const statistiquesMembre = [
         </div>
       </div>
 
-      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h2 className="text-3xl font-black text-amber-300">
-          Accès rapides
-        </h2>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Link
-            to="/calendrier"
-            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            📅 Calendrier
-          </Link>
-
-          <Link
-            to="/classements"
-            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            🏆 Classements
-          </Link>
-
-          <Link
-            to="/boutique"
-            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            🛒 Boutique
-          </Link>
-
-          {estAdmin ? (
-            <Link
-              to="/admin"
-              className="rounded-2xl border border-amber-400 bg-amber-400 p-5 font-black text-slate-950 hover:bg-amber-300"
-            >
-              ⚙️ Administration
-            </Link>
-          ) : estCapitaine ? (
-            <Link
-              to="/gestion-equipe"
-              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              👥 Gestion d'équipe
-            </Link>
-          ) : estRemplacant ? (
-            <Link
-              to="/remplacants"
-              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              🔁 Remplaçants
-            </Link>
-          ) : (
-            <Link
-              to="/inscription-ligue"
-              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              🙋 Inscriptions
-            </Link>
-          )}
-                </div>
-      </div>
+      <CarteAccesRapides
+  estAdmin={estAdmin}
+  estCapitaine={estCapitaine}
+  estRemplacant={estRemplacant}
+/>
     </div>
   </section>
 );
