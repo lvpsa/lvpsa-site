@@ -1,3 +1,3 @@
-export default function CarteProfil() {
+export default function CarteClassement() {
   return null;
 }
