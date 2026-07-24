@@ -1,51 +1,44 @@
+import { Trophy } from "lucide-react";
+
 export default function DashboardHeader({
   prenom,
   roleAffichage,
   nomEquipe,
   categorieActive,
 }) {
-  const categorieAffichage =
-    categorieActive === "recreatif"
-      ? "Récréatif"
-      : categorieActive === "competitif"
-      ? "Compétitif"
-      : "";
-
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-cyan-500/20 via-slate-900 to-yellow-300/10 p-6 sm:p-8 lg:p-10">
-      <div
-        aria-hidden="true"
-        className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl"
-      />
+    <div className="rounded-[2rem] bg-gradient-to-r from-cyan-500 via-blue-600 to-slate-900 p-8 shadow-2xl">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-100">
+            Mon espace
+          </p>
 
-      <div className="relative">
-        <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-300">
-          Mon espace LVPSA
-        </p>
+          <h1 className="mt-2 text-4xl font-black text-white">
+            Bonjour {prenom} 👋
+          </h1>
 
-        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-          Bonjour {prenom} 👋
-        </h1>
+          <p className="mt-4 text-lg text-cyan-100">
+            Bienvenue dans ton espace personnel LVPSA.
+          </p>
+        </div>
 
-        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-          Retrouve ton équipe, ton prochain match, tes demandes et tes
-          commandes dans un seul espace.
-        </p>
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-black text-cyan-200">
+        <div className="flex flex-wrap gap-3">
+          <span className="rounded-full bg-white/10 px-5 py-3 font-bold text-white backdrop-blur">
             {roleAffichage}
           </span>
 
           {nomEquipe && (
-            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-slate-200">
+            <span className="rounded-full bg-white/10 px-5 py-3 font-bold text-white backdrop-blur">
               {nomEquipe}
             </span>
           )}
 
-          {categorieAffichage && (
-            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-slate-200">
-              {categorieAffichage}
+          {categorieActive && (
+            <span className="rounded-full bg-amber-400 px-5 py-3 font-black text-slate-900">
+              {categorieActive === "recreatif"
+                ? "Récréatif"
+                : "Compétitif"}
             </span>
           )}
         </div>
