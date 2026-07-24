@@ -445,28 +445,24 @@ function ContenuApplication() {
           <Route path="/" element={<AccueilV2 />} />
           <Route path="/galerie" element={<Galerie />} />
           <Route path="/mon-espace" element={<MonEspace />} />
-          <Route path="/classements" element={<Classements />} />
-
           <Route
-            path="/classements/recreatif"
-            element={
-              <ClassementDetail titre="Classement récréatif" />
-            }
-          />
+  path="/classements"
+  element={<Classements />}
+/>
 
-          <Route
-            path="/classements/competitif"
-            element={
-              <ClassementDetail titre="Classement compétitif" />
-            }
-          />
+<Route
+  path="/classements/recreatif"
+  element={
+    <ClassementDetail categorie="recreatif" />
+  }
+/>
 
-          <Route
-            path="/classements/facebook"
-            element={
-              <ClassementDetail titre="Classement Facebook" />
-            }
-          />
+<Route
+  path="/classements/competitif"
+  element={
+    <ClassementDetail categorie="competitif" />
+  }
+/>
 
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/tournoi/horaire" element={<HoraireTournoi />} />
@@ -1326,233 +1322,6 @@ return (
   );
 }
 
-function Classements() {
- return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        Classements
-      </p>
-
-      <h1 className="mt-2 text-4xl font-black">
-        Classements officiels LVPSA
-      </h1>
-
-      <p className="mt-4 text-slate-300">
-        Consultez les résultats et classements mis à jour de la saison.
-      </p>
-
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
-        <Link
-          to="/classements/recreatif"
-          className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15"
-        >
-          <Trophy className="mb-4 text-amber-300" size={34} />
-          <h2 className="text-2xl font-black">Récréatif</h2>
-          <p className="mt-3 text-slate-300">
-            Voir le classement récréatif
-          </p>
-        </Link>
-
-        <Link
-          to="/classements/competitif"
-          className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15"
-        >
-          <Trophy className="mb-4 text-amber-300" size={34} />
-          <h2 className="text-2xl font-black">Compétitif</h2>
-          <p className="mt-3 text-slate-300">
-            Voir le classement compétitif
-          </p>
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-function ClassementCard({ titre, lien }) {
-  return (
-    <Link to={lien} className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15">
-      <Trophy className="mb-4 text-amber-300" size={34} />
-      <h2 className="text-2xl font-black">{titre}</h2>
-      <p className="mt-3 text-slate-300">Voir ce tableau seulement</p>
-    </Link>
-  );
-}
-
-function ClassementTable({ url, titre }) {
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    fetch(url)
-      .then((res) => res.text())
-      .then((csv) => {
-        const lignes = csv
-          .trim()
-          .split("\n")
-          .map((ligne) =>
-            ligne
-              .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-              .map((cell) => cell.replace(/^"|"$/g, "").trim())
-          );
-
-        setRows(lignes.slice(1).filter((row) => row[0] && row[1]));
-      });
-  }, [url]);
-
-const medaille = (rang) => {
-  const medals = {
-    "1": "🥇",
-    "2": "🥈",
-    "3": "🥉",
-    "4": "😎",
-  };
-
-  return medals[rang] || "";
-};
-
-  const formatDiff = (value) => {
-    const nombre = Number(String(value).replace(",", "."));
-    if (Number.isNaN(nombre)) return value;
-    return nombre.toFixed(2);
-  };
-
-  const formatPoints = (value) => {
-    return String(value).replace(/"/g, "");
-  };
-
-  return (
-    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 shadow-2xl">
-      <div className="bg-amber-400 px-8 py-6 text-slate-950">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl">🏆</span>
-          <div>
-            <h2 className="text-4xl font-black uppercase">{titre}</h2>
-            <p className="mt-1 text-sm font-black uppercase tracking-widest">
-              Ligue de volleyball de plage de St-Augustin
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6">
-        <div className="overflow-x-auto rounded-3xl border border-white/10 bg-slate-900">
-          <table className="w-full min-w-[900px] text-left">
-            <thead>
-              <tr className="bg-slate-900 text-amber-300">
-                {["Rang", "Équipe", "PJ", "SG", "SP", "PP", "PC", "Diff.", "Points"].map(
-                  (header) => (
-                    <th key={header} className="px-6 py-5 text-lg font-black">
-                      {header}
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-
-            <tbody>
-              {rows.map((row, index) => {
-                const rang = row[0];
-                const equipe = row[1];
-                const pj = row[2];
-                const sg = row[3];
-                const sp = row[4];
-                const pp = row[5];
-                const pc = row[6];
-                const diff = row[7];
-                const points = row[8];
-
-                return (
-                  <tr
-                    key={`${equipe}-${index}`}
-                    className={`border-t border-white/10 text-white ${
-                      rang === "1"
-                        ? "bg-amber-400/10"
-                        : rang === "2"
-                        ? "bg-white/5"
-                        : rang === "3"
-                        ? "bg-orange-400/10"
-                        : "bg-slate-950/40"
-                    }`}
-                  >
-                    <td className="px-6 py-5 text-2xl font-black">
-                      <span className="mr-3">{medaille(rang)}</span>
-                      <span className={rang === "1" ? "text-amber-300" : ""}>
-                        {rang}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-5 text-xl font-bold">{equipe}</td>
-                    <td className="px-6 py-5 text-xl">{pj}</td>
-                    <td className="px-6 py-5 text-xl">{sg}</td>
-                    <td className="px-6 py-5 text-xl">{sp}</td>
-                    <td className="px-6 py-5 text-xl">{pp}</td>
-                    <td className="px-6 py-5 text-xl">{pc}</td>
-
-                    <td className="px-6 py-5 text-xl font-bold text-lime-400">
-                      {formatDiff(diff)}
-                    </td>
-
-                    <td className="px-6 py-5 text-2xl font-black text-amber-300">
-                      {formatPoints(points)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="mt-6 grid gap-4 rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300 md:grid-cols-4">
-          <div>
-            <span className="font-black text-amber-300">PJ</span> : Parties jouées
-          </div>
-          <div>
-            <span className="font-black text-amber-300">SG</span> : Sets gagnés
-          </div>
-          <div>
-            <span className="font-black text-amber-300">SP</span> : Sets perdus
-          </div>
-          <div>
-            <span className="font-black text-amber-300">Points</span> : Points au classement
-          </div>
-          <div>
-            <span className="font-black text-amber-300">PP</span> : Points pour
-          </div>
-          <div>
-            <span className="font-black text-amber-300">PC</span> : Points contre
-          </div>
-          <div>
-            <span className="font-black text-amber-300">Diff.</span> : Différentiel
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-function ClassementDetail({ titre }) {
-  let lien = "";
-
-  if (titre === "Classement récréatif") {
-    lien =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1356137713&single=true&output=csv";
-  }
-
-  if (titre === "Classement compétitif") {
-    lien =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1226338215&single=true&output=csv";
-  }
-
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <Link to="/classements" className="text-amber-300">
-        ← Retour aux classements
-      </Link>
-
-      <h1 className="mt-6 text-4xl font-black">{titre}</h1>
-
-      <ClassementTable url={lien} titre={titre} />
-    </section>
-  );
-}
 function Tournoi() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
