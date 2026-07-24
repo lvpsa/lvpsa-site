@@ -9,8 +9,8 @@
   </h2>
 
   <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-slate-300">
-    Grâce à l'incroyable succès de notre premier tournoi, nous travaillons
-    déjà sur la prochaine étape de la LVPSA.
+      Le tournoi 2026 est maintenant derrière nous… mais une nouvelle expérience
+      LVPSA, distincte de la saison régulière, est déjà en préparation.
   </p>
 
   <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
