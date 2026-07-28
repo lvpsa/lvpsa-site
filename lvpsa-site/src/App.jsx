@@ -12,10 +12,10 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import InstallerPWA from "./components/InstallerPWA";
 import Galerie from "./pages/Galerie";
 import MonEspace from "./pages/MonEspace";
-import {
-  Classements,
-  ClassementDetail,
-} from "./pages/Classements";
+import {Classements, ClassementDetail,} from "./pages/Classements";
+import Tournoi from "./pages/Tournoi";
+import HoraireTournoi from "./pages/HoraireTournoi";
+import ReglementsTournoi from "./pages/ReglementsTournoi";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
@@ -586,11 +586,12 @@ function Header() {
     { label: "Règlements Ligue", to: "/reglements" },
   ];
 
-  const tournoiItems = [
-    { label: "Informations", to: "/tournoi" },
-    { label: "Horaire", to: "/tournoi/horaire" },
-    { label: "Règlements", to: "/tournoi/reglements" },
-  ];
+const tournoiItems = [
+  { label: "Prochain événement", to: "/tournoi" },
+  { label: "Horaire — À venir", to: "/tournoi/horaire" },
+  { label: "Règlements — À venir", to: "/tournoi/reglements" },
+  { label: "Galerie du tournoi 2026", to: "/galerie" },
+];
 
   return (
    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl">
@@ -1324,145 +1325,6 @@ return (
     </>
   );
 }
-
-function Tournoi() {
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="grid gap-10 lg:grid-cols-2">
-        <div>
-          <div className="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
-            🏆 Tournoi LVPSA 2026
-          </div>
-
-          <h1 className="mt-8 text-6xl font-black leading-tight text-white md:text-7xl">
-            Tournoi de
-            <span className="block text-amber-300">volleyball</span>
-            <span className="block">de plage</span>
-          </h1>
-
-          <p className="mt-6 max-w-xl text-xl leading-8 text-slate-300">
-            Rejoignez-nous pour une journée de compétition, de plaisir et
-            d’ambiance estivale sur le sable.
-          </p>
-
-          <div className="mt-8 max-w-xl rounded-3xl border border-red-500/30 bg-red-500/10 p-5">
-  <p className="text-center text-xl font-black uppercase tracking-wide text-red-300">
-    🔴 Le tournoi est maintenant : COMPLET
-  </p>
-
-  <p className="mt-2 text-center text-slate-300">
-    Merci pour votre enthousiasme ! On se voit bientôt sur le sable!!!
-  </p>
-</div>
-          
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">📅</div>
-              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Date
-              </p>
-              <p className="mt-2 text-3xl font-black">18</p>
-              <p className="font-bold">juillet 2026</p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">🗺</div>
-              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Parc Portneuf
-              </p>
-               <p className="mt-3 font-bold">St-Augustin-de-Desmaures</p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">🎁</div>
-              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Bourses
-              </p>
-              <p className="mt-2 text-3xl font-black">prix</p>
-              <p className="font-bold">de présence</p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-4">
-  <Link
-    to="/tournoi/reglements"
-    className="inline-flex items-center rounded-full border border-white/15 px-10 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
-  >
-    Règlements du tournoi
-  </Link>
-</div>
-          </div>
-
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
-          <img
-            src="/tournoi-lvpsa-2026.png"
-            alt="Tournoi LVPSA"
-            className="w-full h-auto"
-          />
-        </div>
-      </div>
-
-      <div className="mt-20 grid gap-8 lg:grid-cols-3">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            2 catégories
-          </h2>
-
-          <div className="mt-6 space-y-4 text-slate-300">
-            <p>
-              🏆 <span className="font-bold text-white">Compétitif :</span>{" "}
-              pour les équipes qui veulent se dépasser et jouer pour gagner.
-            </p>
-
-            <p>
-              😎 <span className="font-bold text-white">Récréatif :</span>{" "}
-              pour le plaisir, l’ambiance et le jeu sans pression.
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Format du tournoi
-          </h2>
-
-          <ul className="mt-6 space-y-3 text-slate-300">
-            <li>✅ Tournoi sur 1 journée</li>
-            <li>✅ Matchs en continu de 8 h à 20 h</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
-            <li>✅ Séries éliminatoires : 2 sets de 25 points</li>
-          </ul>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Sur place
-          </h2>
-
-          <ul className="mt-6 space-y-3 text-slate-300">
-            <li>🍔 BBQ et nourriture</li>
-            <li>🥤 Boissons froides</li>
-            <li>🍉 Collations et fruits</li>
-            <li>🎵 Musique d’ambiance</li>
-            <li>🏖️ Zone détente</li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/10 p-8 text-center">
-        <h2 className="text-3xl font-black text-amber-300">
-          Bourses aux équipes gagnantes
-        </h2>
-
-        <p className="mt-3 text-lg text-slate-300">
-          Une journée complète pour jouer, encourager, profiter de l’ambiance et
-          célébrer le volleyball de plage à Saint-Augustin.
-        </p>
-      </div>
-    </section>
-  );
-}
-
 function Reglements() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -5880,109 +5742,3 @@ const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
     </section>
   );
 }
-function ReglementsTournoi() {
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        Tournoi LVPSA
-      </p>
-
-      <h1 className="mt-2 text-5xl font-black">
-        Règlements du tournoi
-      </h1>
-
-      <p className="mt-4 text-xl text-slate-300">
-        Tournoi du 18 juillet 2026
-      </p>
-
-      <div className="mt-12 grid gap-8 lg:grid-cols-2">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Format de jeu
-          </h2>
-
-          <ul className="mt-6 space-y-4 text-slate-300">
-            <li>🏐 4 contre 4 avec au moins une fille sur le terrain en tout temps.</li>
-            <li>👥 Une équipe peut avoir plus de 4 joueurs, mais seulement 4 joueurs sur le terrain.</li>
-            <li>✅ S'il y a de l'avance, les parties peuvent commencer jursqu'à 10 minutes avant l'horaire prévu</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points (max de 21, pas besoin de 2 points d'écarts)</li>
-            <li>✅ Phase séries : 2 sets de 25 points (2 points d'écarts, plafond à 29), un set de 15 points si égalité (2 points d'écarts, plafond à 19).</li>
-            <li>⚠️ Si une équipe joue à 3, un joueur fantôme perdra un point à sa rotation au service.</li>
-            <li>⚠️ Pour qu'un joueur/joueuse soit admissible à la phase ''série'', il/elle doit avoir jouer au moins une match complet en ronde préléminaire.</li>
-          </ul>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Interdictions
-          </h2>
-
-          <ul className="mt-6 space-y-4 text-slate-300">
-            <li>❌ Bloquer ou feinte de bloquer une femme sur une action à l’attaque pour les hommes.</li>
-            <li>✅ Bloc permis sur une femme uniquement lors d’un deuxième contact ou d’un retour en manchette.</li>
-            <li>❌ Renvoyer en touche ou en tip, sauf pour le volet récréatif.</li>
-            <li>❌ Aucune faute de double touche ne sera appelée.</li>
-            <li>❌ Toucher le filet.</li>
-            <li>❌ Aucune pause entre les sets et les matchs pour assurer le respect de l'horaire.</li>
-            <li>❌ Traverser de l’autre côté.</li>
-            <li>❌ Faire un transport.</li>
-          </ul>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Rotation/Position
-          </h2>
-
-          <p className="mt-6 text-slate-300 leading-8">
-            L’ordre des serveurs doit être respecté en tout temps. Il n’y a
-            toutefois aucune erreur de position : tous les joueurs peuvent
-            attaquer au filet en tout temps.
-          </p>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Arbitrage et marqueur
-          </h2>
-
-          <p className="mt-6 text-slate-300 leading-8">
-            Un arbitre non officiel/marqueur sera attitré. Toutes les équipes
-            devront fournir un arbitre/marqueur 2 fois pendant la journée. En cas de
-            doute, le point sera repris.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/10 p-8">
-        <h2 className="text-3xl font-black text-amber-300">
-          Météo
-        </h2>
-
-        <p className="mt-4 text-lg text-slate-300">
-          En cas de mauvais temps, le tournoi sera remis au 19 juillet 2026.
-        </p>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
-        <h2 className="text-3xl font-black">
-          Organisateurs
-        </h2>
-
-        <p className="mt-4 text-slate-300">
-          Valérie Thomassin et Michael Théroux
-        </p>
-
-        <a
-          href="mailto:liguevpsa@gmail.com"
-          className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-        >
-          Nous joindre
-        </a>
-      </div>
-    </section>
-  );
-}
-
-
-
