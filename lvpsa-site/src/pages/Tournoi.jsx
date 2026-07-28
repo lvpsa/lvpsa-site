@@ -1,50 +1,111 @@
-<div className="mt-20 overflow-hidden rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-950 p-12 text-center shadow-2xl">
+import { ArrowRight, Images, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
-  <p className="text-sm font-black uppercase tracking-[0.25em] text-cyan-300">
-    LVPSA
-  </p>
+export default function Tournoi() {
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <div className="overflow-hidden rounded-[2.5rem] border border-cyan-300/20 bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-950 shadow-2xl">
+        <div className="grid items-center lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="p-8 sm:p-12 lg:p-16">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-5 py-2 text-sm font-black uppercase tracking-[0.2em] text-cyan-300">
+              <Sparkles className="h-4 w-4" />
+              Prochain événement LVPSA
+            </div>
 
-  <h2 className="mt-4 text-5xl font-black text-white md:text-6xl">
-    Une nouvelle aventure commence...
-  </h2>
+            <h1 className="mt-8 text-5xl font-black leading-tight text-white sm:text-6xl">
+              Quelque chose de nouveau prend forme...
+            </h1>
 
-  <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-slate-300">
-      Le tournoi 2026 est maintenant derrière nous… mais une nouvelle expérience
-      LVPSA, distincte de la saison régulière, est déjà en préparation.
-  </p>
+            <p className="mt-7 max-w-2xl text-xl leading-9 text-slate-300">
+              Le tournoi 2026 est maintenant derrière nous, mais une nouvelle
+              expérience LVPSA, distincte de la saison régulière, est déjà en
+              préparation.
+            </p>
 
-  <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
-    Un tout nouvel événement est en préparation. Plus grand. Plus rassembleur.
-    Toujours avec la même mission : faire bouger notre région et créer des
-    souvenirs inoubliables.
-  </p>
+            <p className="mt-6 text-xl font-black text-cyan-300">
+              👀 Dévoilement prochainement.
+            </p>
 
-  <div className="mt-10 rounded-3xl border border-cyan-300/20 bg-cyan-400/10 p-6">
-    <p className="text-2xl font-black text-cyan-300">
-      👀 Dévoilement prochainement...
-    </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link
+                to="/galerie"
+                className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-8 py-4 font-black text-slate-950 transition hover:bg-cyan-200"
+              >
+                Revivre le tournoi 2026
+                <Images className="h-5 w-5" />
+              </Link>
 
-    <p className="mt-3 text-lg text-slate-300">
-      Suivez-nous pour être parmi les premiers à découvrir ce qui s'en vient.
-    </p>
-  </div>
+              <a
+                href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-8 py-4 font-black text-white transition hover:border-cyan-300 hover:text-cyan-300"
+              >
+                Suivre les annonces
+                <ArrowRight className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
 
-  <div className="mt-10 flex flex-wrap justify-center gap-4">
-    <Link
-      to="/galerie"
-      className="rounded-full bg-cyan-300 px-8 py-4 font-black text-slate-950 transition hover:bg-cyan-200"
-    >
-      📸 Revivre le tournoi 2026
-    </Link>
+          <div className="relative min-h-[440px] overflow-hidden border-t border-white/10 lg:border-l lg:border-t-0">
+            <img
+              src="/galerie/galerie-01.jpg"
+              alt="Souvenir du tournoi LVPSA 2026"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
 
-    <a
-      href="https://www.facebook.com/profile.php?id=61572358300215"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="rounded-full border border-white/15 px-8 py-4 font-black text-white transition hover:border-cyan-300 hover:text-cyan-300"
-    >
-      📢 Suivre la LVPSA
-    </a>
-  </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/20 to-transparent lg:bg-gradient-to-l" />
 
-</div>
+            <div className="absolute bottom-6 left-6 right-6 rounded-3xl border border-white/10 bg-slate-950/75 p-6 backdrop-blur-xl">
+              <p className="text-sm font-black uppercase tracking-[0.2em] text-cyan-300">
+                Tournoi 2026
+              </p>
+
+              <p className="mt-2 text-2xl font-black text-white">
+                Merci aux équipes, bénévoles et partenaires.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <Link
+          to="/tournoi/horaire"
+          className="rounded-3xl border border-white/10 bg-white/5 p-8 transition hover:border-cyan-300/40 hover:bg-white/10"
+        >
+          <p className="text-sm font-black uppercase tracking-wider text-cyan-300">
+            Horaire
+          </p>
+
+          <h2 className="mt-3 text-3xl font-black text-white">
+            Aucun horaire publié
+          </h2>
+
+          <p className="mt-4 text-slate-300">
+            L’horaire du prochain événement sera affiché dès que les
+            informations seront confirmées.
+          </p>
+        </Link>
+
+        <Link
+          to="/tournoi/reglements"
+          className="rounded-3xl border border-white/10 bg-white/5 p-8 transition hover:border-cyan-300/40 hover:bg-white/10"
+        >
+          <p className="text-sm font-black uppercase tracking-wider text-cyan-300">
+            Règlements
+          </p>
+
+          <h2 className="mt-3 text-3xl font-black text-white">
+            Publication à venir
+          </h2>
+
+          <p className="mt-4 text-slate-300">
+            Les règlements seront disponibles lors de l’annonce officielle du
+            prochain événement.
+          </p>
+        </Link>
+      </div>
+    </section>
+  );
+}
