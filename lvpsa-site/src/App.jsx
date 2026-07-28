@@ -12,7 +12,10 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import InstallerPWA from "./components/InstallerPWA";
 import Galerie from "./pages/Galerie";
 import MonEspace from "./pages/MonEspace";
-
+import {
+  Classements,
+  ClassementDetail,
+} from "./pages/Classements";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
