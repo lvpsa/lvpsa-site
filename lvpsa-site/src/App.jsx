@@ -587,10 +587,22 @@ function Header() {
   ];
 
 const tournoiItems = [
-  { label: "Prochain événement", to: "/tournoi" },
-  { label: "Horaire — À venir", to: "/tournoi/horaire" },
-  { label: "Règlements — À venir", to: "/tournoi/reglements" },
-  { label: "Galerie du tournoi 2026", to: "/galerie" },
+  {
+    label: "✨ Prochain événement",
+    to: "/tournoi",
+  },
+  {
+    label: "📅 Horaire (à venir)",
+    to: "/tournoi/horaire",
+  },
+  {
+    label: "📖 Règlements (à venir)",
+    to: "/tournoi/reglements",
+  },
+  {
+    label: "📸 Galerie 2026",
+    to: "/galerie",
+  },
 ];
 
   return (
