@@ -52,6 +52,33 @@ const liensLigue = [
   },
 ];
 
+const liensTournoi = [
+  {
+    titre: "Prochain événement",
+    description: "Découvrez le prochain tournoi LVPSA.",
+    lien: "/tournoi",
+    icone: Trophy,
+  },
+  {
+    titre: "Horaire",
+    description: "Publié lorsque les inscriptions seront terminées.",
+    lien: "/tournoi/horaire",
+    icone: CalendarDays,
+  },
+  {
+    titre: "Règlements",
+    description: "Consultez les règlements du tournoi.",
+    lien: "/tournoi/reglements",
+    icone: BookOpen,
+  },
+  {
+    titre: "Galerie 2026",
+    description: "Revivez les meilleurs moments du tournoi.",
+    lien: "/galerie",
+    icone: Users,
+  },
+];
+
 export default function HeaderLVPSA() {
   const location = useLocation();
 
