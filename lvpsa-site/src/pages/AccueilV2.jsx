@@ -173,68 +173,81 @@ export default function AccueilV2() {
       }
     };
 
-    const chargerMeteo = async () => {
-      try {
-        const url =
-  "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation_probability,uv_index&timezone=America%2FToronto&forecast_days=2";
+   const chargerMeteo = async () => {
+  try {
+    const url =
+      "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation_probability,uv_index&timezone=America%2FToronto&forecast_days=2";
 
-const reponse = await fetch(url);
+    const reponse = await fetch(url);
 
-        const reponse = await fetch(url);
+    if (!reponse.ok) {
+      throw new Error(`Erreur météo : ${reponse.status}`);
+    }
 
-        if (!reponse.ok) {
-          throw new Error(`Erreur météo : ${reponse.status}`);
-        }
+    const data = await reponse.json();
 
-        const data = await reponse.json();
-        const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
+    const heuresVoulues = [
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00",
+      "22:00",
+    ];
 
-        const resultats = (data.hourly?.time || [])
-          .map((time, index) => ({
-            time,
-            heure: time.slice(11, 16),
-            temperature: Math.round(
-              Number(data.hourly.temperature_2m?.[index] || 0)
-            ),
-            vent: Math.round(
-              Number(data.hourly.wind_speed_10m?.[index] || 0)
-            ),
-            humidite:
-              data.hourly.relative_humidity_2m?.[index] ?? null,
-            precipitation:
-              data.hourly.precipitation_probability?.[index] ?? null,
-            uv:
-              data.hourly.uv_index?.[index] ?? null,
-            code: data.hourly.weather_code?.[index] ?? 0,
-          }))
-          .filter((item) => heuresVoulues.includes(item.heure))
-          .slice(0, 5);
+    const resultats = (data.hourly?.time || [])
+      .map((time, index) => ({
+        time,
+        heure: time.slice(11, 16),
 
-        if (actif) {
-          setMeteoHeures(resultats);
-        }
-      } catch (error) {
-        console.warn("Météo indisponible :", error);
+        temperature: Math.round(
+          Number(data.hourly.temperature_2m?.[index] || 0)
+        ),
 
-        if (actif) {
-          setMeteoHeures([]);
-        }
-      } finally {
-        if (actif) {
-          setMeteoChargement(false);
-        }
-      }
-    };
+        vent: Math.round(
+          Number(data.hourly.wind_speed_10m?.[index] || 0)
+        ),
 
-    chargerStats();
-    chargerStatut();
-    chargerMeteo();
+        humidite:
+          data.hourly.relative_humidity_2m?.[index] ?? null,
 
-    return () => {
-      actif = false;
-    };
-  }, []);
+        precipitation:
+          data.hourly.precipitation_probability?.[index] ?? null,
 
+        uv:
+          data.hourly.uv_index?.[index] ?? null,
+
+        code:
+          data.hourly.weather_code?.[index] ?? 0,
+      }))
+      .filter((item) =>
+        heuresVoulues.includes(item.heure)
+      )
+      .slice(0, 5);
+
+    if (actif) {
+      setMeteoHeures(resultats);
+    }
+  } catch (error) {
+    console.warn("Météo indisponible :", error);
+
+    if (actif) {
+      setMeteoHeures([]);
+    }
+  } finally {
+    if (actif) {
+      setMeteoChargement(false);
+    }
+  }
+};
+
+chargerStats();
+chargerStatut();
+chargerMeteo();
+
+return () => {
+  actif = false;
+};
+}, []);
   const statsAffichees = useMemo(
     () => [
       ["Équipes", stats.equipes, UsersRound],
