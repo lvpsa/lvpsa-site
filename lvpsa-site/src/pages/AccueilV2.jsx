@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Home,
   Images,
-  Menu,
   ShoppingBag,
   Sparkles,
   Trophy,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import HeaderLVPSA from "../components/HeaderLVPSA";
 
 const reveal = {
   initial: { opacity: 0, y: 22 },
@@ -46,7 +46,6 @@ const normaliser = (valeur) =>
     .trim();
 
 export default function AccueilV2() {
-  const [menuOuvert, setMenuOuvert] = useState(false);
   const [stats, setStats] = useState({
     equipes: 8,
     joueurs: "—",
@@ -130,66 +129,8 @@ export default function AccueilV2() {
         <div className="absolute -right-32 top-80 h-96 w-96 rounded-full bg-yellow-400/10 blur-3xl" />
       </div>
 
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-          <a href="/" className="flex items-center gap-3">
-            <div className="h-14 w-14 overflow-hidden rounded-full">
-              <img src="/logo.jpg" alt="Logo LVPSA" className="h-full w-full scale-110 object-cover" />
-            </div>
-
-            <div>
-              <p className="text-lg font-black leading-none">LVPSA</p>
-              <p className="mt-1 text-xs text-slate-400">Volleyball de plage</p>
-            </div>
-          </a>
-
-          <nav className="hidden items-center gap-7 lg:flex">
-            {[
-              ["Accueil", "/"],
-              ["Ligue", "/ligue"],
-              ["Tournoi", "/tournoi"],
-              ["Boutique", "/boutique"],
-              ["Partenaires", "/partenaires"],
-            ].map(([label, lien]) => (
-              <a
-                key={lien}
-                href={lien}
-                className="text-sm font-semibold text-slate-300 transition hover:text-white"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-
-          <a href="/connexion" className="hidden rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-950 lg:inline-flex">
-            Connexion
-          </a>
-
-          <button
-            type="button"
-            onClick={() => setMenuOuvert((valeur) => !valeur)}
-            aria-label="Ouvrir le menu"
-            className="rounded-xl border border-white/10 bg-white/5 p-2.5 lg:hidden"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-
-        {menuOuvert && (
-          <div className="border-t border-white/10 px-5 py-5 lg:hidden">
-            <div className="flex flex-col gap-4 font-bold">
-              <a href="/">Accueil</a>
-              <a href="/ligue">Ligue</a>
-              <a href="/tournoi">Tournoi</a>
-              <a href="/boutique">Boutique</a>
-              <a href="/partenaires">Partenaires</a>
-              <a href="/connexion" className="rounded-xl bg-cyan-300 px-5 py-3 text-center text-slate-950">
-                Connexion
-              </a>
-            </div>
-          </div>
-        )}
-      </header>
+      <HeaderLVPSA />
+      <div className="h-20" />
 
       <main className="relative z-10">
         <section className="mx-auto max-w-7xl px-5 pb-12 pt-8 lg:px-8 lg:pb-20 lg:pt-16">
