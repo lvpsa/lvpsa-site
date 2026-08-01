@@ -9,7 +9,7 @@ import MegaMenuTournoi from "./MegaMenuTournoi";
 const liensPrincipaux = [
   {
     titre: "Boutique",
-    lien: "/boutique",
+    lien: "/boutique-v2",
   },
   {
     titre: "Galerie",
