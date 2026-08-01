@@ -67,7 +67,7 @@ export default function MegaMenuLigue({ ouvert, onFermer }) {
             duration: 0.18,
             ease: "easeOut",
           }}
-          className="absolute left-1/2 top-full z-50 w-[620px] -translate-x-1/2 pt-5"
+          className="absolute left-1/2 top-full z-[10000] w-[620px] -translate-x-1/2 pt-3"
         >
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl">
             <div className="grid grid-cols-2 gap-2">
