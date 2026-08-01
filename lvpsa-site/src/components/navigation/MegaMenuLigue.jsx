@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
-  ClipboardList,
   ShieldCheck,
   Trophy,
   Users,
@@ -20,12 +19,6 @@ const liensLigue = [
     description: "Suis les résultats et le classement des équipes.",
     lien: "/classements",
     icone: Trophy,
-  },
-  {
-    titre: "Inscriptions",
-    description: "Inscris une équipe ou deviens joueur indépendant.",
-    lien: "/inscription-ligue",
-    icone: ClipboardList,
   },
   {
     titre: "Gestion d’équipe",
