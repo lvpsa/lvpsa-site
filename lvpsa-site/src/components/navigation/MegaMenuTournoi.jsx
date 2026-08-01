@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarClock,
   ClipboardCheck,
+  Images,
   Trophy,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -24,6 +25,12 @@ const liensTournoi = [
     description: "Consulte les règlements officiels du tournoi.",
     lien: "/tournoi/reglements",
     icone: ClipboardCheck,
+  },
+  {
+    titre: "Galerie",
+    description: "Revois les photos du tournoi LVPSA 2026.",
+    lien: "/galerie",
+    icone: Images,
   },
 ];
 export default function MegaMenuTournoi({ ouvert, onFermer }) {
