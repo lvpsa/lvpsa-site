@@ -3,17 +3,26 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   CalendarDays,
+  CheckCircle2,
   ChevronRight,
-  Menu,
-  Home,
+  CloudSun,
   Images,
+  MapPin,
   ShoppingBag,
   Sparkles,
   Trophy,
   UserRound,
   UsersRound,
+  Wind,
 } from "lucide-react";
-import { collection, getDocs } from "firebase/firestore";
+import { Link } from "react-router-dom";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
+
 import { db } from "../firebase";
 import HeaderLVPSA from "../components/HeaderLVPSA";
 
@@ -25,10 +34,30 @@ const reveal = {
 };
 
 const actions = [
-  { titre: "Calendrier", texte: "Consulter les matchs", icone: CalendarDays, lien: "/calendrier" },
-  { titre: "Classements", texte: "Voir les résultats", icone: Trophy, lien: "/classements" },
-  { titre: "Mon espace", texte: "Équipe, profil et commandes", icone: UsersRound, lien: "/mon-espace" },
-  { titre: "Boutique", texte: "Découvrir les vêtements", icone: ShoppingBag, lien: "/boutique" },
+  {
+    titre: "Calendrier",
+    texte: "Consulter les matchs",
+    icone: CalendarDays,
+    lien: "/calendrier",
+  },
+  {
+    titre: "Classements",
+    texte: "Voir les résultats",
+    icone: Trophy,
+    lien: "/classements",
+  },
+  {
+    titre: "Mon espace",
+    texte: "Équipe, profil et commandes",
+    icone: UsersRound,
+    lien: "/mon-espace",
+  },
+  {
+    titre: "Boutique",
+    texte: "Découvrir les vêtements",
+    icone: ShoppingBag,
+    lien: "/boutique-v2",
+  },
 ];
 
 const partenaires = [
@@ -46,6 +75,15 @@ const normaliser = (valeur) =>
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
+const iconeMeteo = (code) => {
+  if (code === 0) return "☀️";
+  if (code <= 3) return "⛅";
+  if (code < 60) return "☁️";
+  if (code < 80) return "🌧️";
+  if (code < 90) return "🌦️";
+  return "⛈️";
+};
+
 export default function AccueilV2() {
   const [stats, setStats] = useState({
     equipes: 8,
@@ -53,6 +91,15 @@ export default function AccueilV2() {
     categories: 2,
     partenaires: partenaires.length,
   });
+
+  const [statutMatchs, setStatutMatchs] = useState({
+    texte: "Les parties ont lieu ce soir",
+    couleur: "emerald",
+    message: "Mise à jour officielle LVPSA",
+  });
+
+  const [meteoHeures, setMeteoHeures] = useState([]);
+  const [meteoChargement, setMeteoChargement] = useState(true);
 
   useEffect(() => {
     let actif = true;
@@ -77,7 +124,10 @@ export default function AccueilV2() {
             docItem.id;
 
           const cle = normaliser(nom) || docItem.id;
-          if (!equipesUniques.has(cle)) equipesUniques.set(cle, true);
+
+          if (!equipesUniques.has(cle)) {
+            equipesUniques.set(cle, true);
+          }
         });
 
         const joueurs = usersSnap.docs.filter((docItem) => {
@@ -106,7 +156,75 @@ export default function AccueilV2() {
       }
     };
 
+    const chargerStatut = async () => {
+      try {
+        const statutSnap = await getDoc(
+          doc(db, "settings", "matchStatus")
+        );
+
+        if (actif && statutSnap.exists()) {
+          setStatutMatchs((precedent) => ({
+            ...precedent,
+            ...statutSnap.data(),
+          }));
+        }
+      } catch (error) {
+        console.warn("Statut des parties indisponible :", error);
+      }
+    };
+
+    const chargerMeteo = async () => {
+      try {
+        const url =
+          "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation_probability&timezone=America%2FToronto&forecast_days=2";
+
+        const reponse = await fetch(url);
+
+        if (!reponse.ok) {
+          throw new Error(`Erreur météo : ${reponse.status}`);
+        }
+
+        const data = await reponse.json();
+        const heuresVoulues = ["18:00", "19:00", "20:00", "21:00", "22:00"];
+
+        const resultats = (data.hourly?.time || [])
+          .map((time, index) => ({
+            time,
+            heure: time.slice(11, 16),
+            temperature: Math.round(
+              Number(data.hourly.temperature_2m?.[index] || 0)
+            ),
+            vent: Math.round(
+              Number(data.hourly.wind_speed_10m?.[index] || 0)
+            ),
+            humidite:
+              data.hourly.relative_humidity_2m?.[index] ?? null,
+            precipitation:
+              data.hourly.precipitation_probability?.[index] ?? null,
+            code: data.hourly.weather_code?.[index] ?? 0,
+          }))
+          .filter((item) => heuresVoulues.includes(item.heure))
+          .slice(0, 5);
+
+        if (actif) {
+          setMeteoHeures(resultats);
+        }
+      } catch (error) {
+        console.warn("Météo indisponible :", error);
+
+        if (actif) {
+          setMeteoHeures([]);
+        }
+      } finally {
+        if (actif) {
+          setMeteoChargement(false);
+        }
+      }
+    };
+
     chargerStats();
+    chargerStatut();
+    chargerMeteo();
 
     return () => {
       actif = false;
@@ -123,9 +241,16 @@ export default function AccueilV2() {
     [stats]
   );
 
+  const partiesAnnulees =
+    normaliser(statutMatchs.couleur) === "red" ||
+    normaliser(statutMatchs.texte).includes("annule");
+
   return (
-    <div className="min-h-screen bg-slate-950 pb-24 text-white lg:pb-0">
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-white">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 overflow-hidden"
+      >
         <div className="absolute -left-32 top-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
         <div className="absolute -right-32 top-80 h-96 w-96 rounded-full bg-yellow-400/10 blur-3xl" />
       </div>
@@ -134,19 +259,24 @@ export default function AccueilV2() {
       <div className="h-20" />
 
       <main className="relative z-10">
-        <section className="mx-auto max-w-7xl px-5 pb-12 pt-8 lg:px-8 lg:pb-20 lg:pt-16">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900 shadow-2xl lg:min-h-[620px]">
-            <img src="/volley-bg.jpg" alt="Terrain LVPSA" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/30" />
+        <section className="mx-auto max-w-7xl px-5 pb-10 pt-8 lg:px-8 lg:pb-16 lg:pt-14">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900 shadow-2xl lg:min-h-[610px]">
+            <img
+              src="/volley-bg.jpg"
+              alt="Terrain LVPSA"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
 
-            <div className="relative z-10 flex min-h-[620px] max-w-3xl flex-col justify-center p-6 sm:p-10 lg:p-14">
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/25" />
+
+            <div className="relative z-10 flex min-h-[610px] max-w-3xl flex-col justify-center p-6 sm:p-10 lg:p-14">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
                 className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/20 bg-slate-950/60 px-4 py-2 text-sm font-semibold text-cyan-200 backdrop-blur-xl"
               >
-                <span className="h-2 w-2 rounded-full bg-cyan-300" />
+                <MapPin className="h-4 w-4" />
                 Saint-Augustin-de-Desmaures
               </motion.div>
 
@@ -168,7 +298,8 @@ export default function AccueilV2() {
                 transition={{ duration: 0.5, delay: 0.16 }}
                 className="mt-6 max-w-2xl text-lg leading-8 text-slate-300"
               >
-                Jouez, suivez vos résultats, restez connecté à votre équipe et vivez pleinement l’expérience LVPSA.
+                Jouez, suivez vos résultats, restez connecté à votre équipe
+                et vivez pleinement l’expérience LVPSA.
               </motion.p>
 
               <motion.div
@@ -177,31 +308,182 @@ export default function AccueilV2() {
                 transition={{ duration: 0.5, delay: 0.24 }}
                 className="mt-8 flex flex-col gap-3 sm:flex-row"
               >
-                <a href="/mon-espace" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-slate-950">
+                <Link
+                  to="/mon-espace"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-slate-950 transition hover:-translate-y-0.5"
+                >
                   Accéder à mon espace
                   <ArrowRight className="h-5 w-5" />
-                </a>
+                </Link>
 
-                <a href="/calendrier" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-slate-950/50 px-6 py-3.5 font-bold">
+                <Link
+                  to="/calendrier"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-slate-950/50 px-6 py-3.5 font-bold transition hover:border-cyan-300/40"
+                >
                   Voir le calendrier
                   <CalendarDays className="h-5 w-5" />
-                </a>
+                </Link>
               </motion.div>
             </div>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+        <section className="mx-auto max-w-7xl px-5 py-6 lg:px-8">
+          <motion.div
+            {...reveal}
+            className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]"
+          >
+            <div
+              className={`rounded-3xl border p-6 sm:p-8 ${
+                partiesAnnulees
+                  ? "border-red-400/30 bg-red-400/10"
+                  : "border-emerald-400/30 bg-emerald-400/10"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div
+                  className={`flex items-center gap-3 ${
+                    partiesAnnulees
+                      ? "text-red-300"
+                      : "text-emerald-300"
+                  }`}
+                >
+                  <CheckCircle2 className="h-6 w-6" />
+                  <p className="text-sm font-black uppercase tracking-[0.18em]">
+                    Statut des parties
+                  </p>
+                </div>
+
+                <span
+                  className={`rounded-full px-4 py-2 text-xs font-black uppercase ${
+                    partiesAnnulees
+                      ? "bg-red-400/15 text-red-300"
+                      : "bg-emerald-400/15 text-emerald-300"
+                  }`}
+                >
+                  {partiesAnnulees ? "Annulées" : "Confirmées"}
+                </span>
+              </div>
+
+              <h2 className="mt-7 text-3xl font-black text-white">
+                {statutMatchs.texte}
+              </h2>
+
+              <p className="mt-3 leading-7 text-slate-300">
+                {statutMatchs.message}
+              </p>
+
+              <p className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4 text-sm text-slate-300">
+                Mise à jour officielle de la LVPSA.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-3 text-cyan-300">
+                    <CloudSun className="h-6 w-6" />
+                    <p className="text-sm font-black uppercase tracking-[0.18em]">
+                      Météo de la soirée
+                    </p>
+                  </div>
+
+                  <h2 className="mt-3 text-3xl font-black">
+                    Parc Portneuf
+                  </h2>
+                </div>
+
+                {meteoHeures[0] && (
+                  <div className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-sm text-slate-300">
+                    <Wind className="h-4 w-4 text-cyan-300" />
+                    {meteoHeures[0].vent} km/h
+                  </div>
+                )}
+              </div>
+
+              {meteoChargement ? (
+                <div className="mt-7 grid grid-cols-5 gap-3">
+                  {[1, 2, 3, 4, 5].map((item) => (
+                    <div
+                      key={item}
+                      className="h-32 animate-pulse rounded-2xl bg-white/10"
+                    />
+                  ))}
+                </div>
+              ) : meteoHeures.length > 0 ? (
+                <>
+                  <div className="mt-7 grid grid-cols-5 gap-2 sm:gap-3">
+                    {meteoHeures.map((item) => (
+                      <div
+                        key={item.time}
+                        className="rounded-2xl border border-white/10 bg-slate-950/55 p-2 text-center sm:p-3"
+                      >
+                        <p className="text-xs font-bold text-slate-400 sm:text-sm">
+                          {item.heure.replace(":00", "h")}
+                        </p>
+
+                        <p className="mt-2 text-2xl sm:text-3xl">
+                          {iconeMeteo(item.code)}
+                        </p>
+
+                        <p className="mt-2 text-lg font-black text-white sm:text-xl">
+                          {item.temperature}°
+                        </p>
+
+                        <p className="mt-1 text-[10px] text-cyan-300 sm:text-xs">
+                          {item.precipitation ?? 0}% pluie
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-300">
+                    <span className="rounded-full bg-white/5 px-4 py-2">
+                      Humidité : {meteoHeures[0]?.humidite ?? "--"}%
+                    </span>
+
+                    <a
+                      href="https://www.meteomedia.com/ca/meteo/quebec/saint-augustin-de-desmaures"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full border border-white/10 px-4 py-2 font-bold text-cyan-300 transition hover:border-cyan-300/40"
+                    >
+                      Voir MétéoMédia ↗
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <div className="mt-7 rounded-2xl border border-white/10 bg-white/5 p-5 text-slate-300">
+                  La météo est temporairement indisponible.
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
           <motion.div {...reveal}>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">La LVPSA en chiffres</p>
-            <h2 className="mt-2 text-3xl font-black">Une ligue locale qui rassemble</h2>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">
+              La LVPSA en chiffres
+            </p>
+
+            <h2 className="mt-2 text-3xl font-black">
+              Une ligue locale qui rassemble
+            </h2>
 
             <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
               {statsAffichees.map(([libelle, valeur, Icone]) => (
-                <div key={libelle} className="rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+                <div
+                  key={libelle}
+                  className="rounded-3xl border border-white/10 bg-white/[0.04] p-5"
+                >
                   <Icone className="h-6 w-6 text-cyan-300" />
+
                   <p className="mt-6 text-4xl font-black">{valeur}</p>
-                  <p className="mt-1 text-sm font-bold uppercase text-slate-400">{libelle}</p>
+
+                  <p className="mt-1 text-sm font-bold uppercase text-slate-400">
+                    {libelle}
+                  </p>
                 </div>
               ))}
             </div>
@@ -210,20 +492,34 @@ export default function AccueilV2() {
 
         <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
           <motion.div {...reveal}>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-yellow-300">Accès rapide</p>
-            <h2 className="mt-2 text-3xl font-black">Tout ce dont vous avez besoin</h2>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-yellow-300">
+              Accès rapide
+            </p>
 
-            <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <h2 className="mt-2 text-3xl font-black">
+              Tout ce dont vous avez besoin
+            </h2>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {actions.map((action) => {
                 const Icone = action.icone;
 
                 return (
-                  <a key={action.titre} href={action.lien} className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-cyan-300/30">
+                  <Link
+                    key={action.titre}
+                    to={action.lien}
+                    className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-cyan-300/30"
+                  >
                     <Icone className="h-6 w-6 text-cyan-300" />
+
                     <h3 className="mt-5 font-extrabold">{action.titre}</h3>
-                    <p className="mt-1 text-sm text-slate-400">{action.texte}</p>
+
+                    <p className="mt-1 text-sm text-slate-400">
+                      {action.texte}
+                    </p>
+
                     <ChevronRight className="mt-4 h-5 w-5 text-slate-600 transition group-hover:translate-x-1 group-hover:text-cyan-300" />
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -231,7 +527,10 @@ export default function AccueilV2() {
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-          <motion.div {...reveal} className="overflow-hidden rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-cyan-400/10 via-slate-900 to-yellow-300/10">
+          <motion.div
+            {...reveal}
+            className="overflow-hidden rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-cyan-400/10 via-slate-900 to-yellow-300/10"
+          >
             <div className="grid items-center lg:grid-cols-[1.1fr_0.9fr]">
               <div className="p-7 sm:p-10 lg:p-12">
                 <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-black uppercase tracking-[0.16em] text-cyan-300">
@@ -244,26 +543,41 @@ export default function AccueilV2() {
                 </h2>
 
                 <p className="mt-6 text-lg leading-8 text-slate-300">
-                  Le tournoi 2026 est maintenant derrière nous, mais une nouvelle expérience LVPSA, distincte de la saison régulière, est déjà en préparation.
+                  Le tournoi 2026 est maintenant derrière nous, mais une
+                  nouvelle expérience LVPSA, distincte de la saison régulière,
+                  est déjà en préparation.
                 </p>
 
-                <p className="mt-4 text-lg font-bold text-cyan-300">👀 Dévoilement prochainement.</p>
+                <p className="mt-4 text-lg font-bold text-cyan-300">
+                  👀 Dévoilement prochainement.
+                </p>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <a href="/tournoi" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-6 py-3.5 font-black text-slate-950">
+                  <Link
+                    to="/tournoi"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-6 py-3.5 font-black text-slate-950"
+                  >
                     Découvrir l’annonce
                     <ArrowRight className="h-5 w-5" />
-                  </a>
+                  </Link>
 
-                  <a href="/galerie" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 font-black">
+                  <Link
+                    to="/galerie"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 py-3.5 font-black"
+                  >
                     Revoir le tournoi 2026
                     <Images className="h-5 w-5" />
-                  </a>
+                  </Link>
                 </div>
               </div>
 
               <div className="relative min-h-[360px] overflow-hidden border-t border-white/10 lg:border-l lg:border-t-0">
-                <img src="/galerie/galerie-01.jpg" alt="Tournoi LVPSA 2026" className="absolute inset-0 h-full w-full object-cover" />
+                <img
+                  src="/galerie/galerie-01.jpg"
+                  alt="Tournoi LVPSA 2026"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+
                 <div className="absolute inset-0 bg-gradient-to-l from-slate-950/20 to-slate-950/80" />
               </div>
             </div>
@@ -274,90 +588,150 @@ export default function AccueilV2() {
           <motion.div {...reveal}>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-fuchsia-300">Galerie</p>
-                <h2 className="mt-2 text-4xl font-black">L’énergie de la LVPSA en images</h2>
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-fuchsia-300">
+                  Galerie
+                </p>
+
+                <h2 className="mt-2 text-4xl font-black">
+                  L’énergie de la LVPSA en images
+                </h2>
               </div>
 
-              <a href="/galerie" className="inline-flex items-center gap-2 font-black text-cyan-300">
+              <Link
+                to="/galerie"
+                className="inline-flex items-center gap-2 font-black text-cyan-300"
+              >
                 Voir toute la galerie
                 <ArrowRight className="h-5 w-5" />
-              </a>
+              </Link>
             </div>
 
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              <a href="/galerie" className="group relative min-h-[420px] overflow-hidden rounded-3xl border border-white/10">
-                <img src="/galerie/galerie-01.jpg" alt="Galerie LVPSA" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-              </a>
+              <Link
+                to="/galerie"
+                className="group relative min-h-[420px] overflow-hidden rounded-3xl border border-white/10"
+              >
+                <img
+                  src="/galerie/galerie-01.jpg"
+                  alt="Galerie LVPSA"
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                />
+              </Link>
 
               <div className="grid gap-4">
-                <a href="/galerie" className="group relative min-h-[200px] overflow-hidden rounded-3xl border border-white/10">
-                  <img src="/volley-bg.jpg" alt="Terrain LVPSA" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                </a>
+                <Link
+                  to="/galerie"
+                  className="group relative min-h-[200px] overflow-hidden rounded-3xl border border-white/10"
+                >
+                  <img
+                    src="/volley-bg.jpg"
+                    alt="Terrain LVPSA"
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                </Link>
 
-                <a href="/galerie" className="group relative min-h-[200px] overflow-hidden rounded-3xl border border-white/10 bg-white">
-                  <img src="/tournoi-lvpsa-2026.png" alt="Tournoi LVPSA" className="h-full w-full object-contain transition duration-700 group-hover:scale-105" />
-                </a>
+                <Link
+                  to="/galerie"
+                  className="group relative min-h-[200px] overflow-hidden rounded-3xl border border-white/10 bg-white"
+                >
+                  <img
+                    src="/tournoi-lvpsa-2026.png"
+                    alt="Tournoi LVPSA"
+                    className="h-full w-full object-contain transition duration-700 group-hover:scale-105"
+                  />
+                </Link>
               </div>
             </div>
           </motion.div>
         </section>
 
         <section className="mx-auto grid max-w-7xl gap-5 px-5 py-10 lg:grid-cols-2 lg:px-8">
-          <motion.a {...reveal} href="/boutique" className="group min-h-[340px] rounded-3xl bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-400 p-8 text-slate-950">
-            <ShoppingBag className="h-12 w-12" />
-            <p className="mt-10 text-sm font-black uppercase">Boutique officielle</p>
-            <h2 className="mt-3 text-4xl font-black">Affichez fièrement vos couleurs.</h2>
-            <p className="mt-4 max-w-md font-medium text-slate-800">Découvrez les vêtements officiels LVPSA.</p>
-            <span className="mt-10 inline-flex items-center gap-2 font-black">Visiter la boutique <ArrowRight className="h-5 w-5" /></span>
-          </motion.a>
+          <motion.div {...reveal}>
+            <Link
+              to="/boutique-v2"
+              className="group block min-h-[340px] rounded-3xl bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-400 p-8 text-slate-950"
+            >
+              <ShoppingBag className="h-12 w-12" />
 
-          <motion.a {...reveal} href="/classements" className="group min-h-[340px] rounded-3xl bg-gradient-to-br from-blue-700 via-cyan-700 to-slate-900 p-8">
-            <Trophy className="h-12 w-12 text-yellow-300" />
-            <p className="mt-10 text-sm font-black uppercase text-cyan-200">Classements</p>
-            <h2 className="mt-3 text-4xl font-black">Suivez l’évolution des équipes.</h2>
-            <p className="mt-4 max-w-md text-slate-200">Consultez les résultats officiels.</p>
-            <span className="mt-10 inline-flex items-center gap-2 font-black">Voir les classements <ArrowRight className="h-5 w-5" /></span>
-          </motion.a>
+              <p className="mt-10 text-sm font-black uppercase">
+                Boutique officielle
+              </p>
+
+              <h2 className="mt-3 text-4xl font-black">
+                Affichez fièrement vos couleurs.
+              </h2>
+
+              <p className="mt-4 max-w-md font-medium text-slate-800">
+                Découvrez les vêtements officiels LVPSA.
+              </p>
+
+              <span className="mt-10 inline-flex items-center gap-2 font-black">
+                Visiter la boutique
+                <ArrowRight className="h-5 w-5" />
+              </span>
+            </Link>
+          </motion.div>
+
+          <motion.div {...reveal}>
+            <Link
+              to="/classements"
+              className="group block min-h-[340px] rounded-3xl bg-gradient-to-br from-blue-700 via-cyan-700 to-slate-900 p-8"
+            >
+              <Trophy className="h-12 w-12 text-yellow-300" />
+
+              <p className="mt-10 text-sm font-black uppercase text-cyan-200">
+                Classements
+              </p>
+
+              <h2 className="mt-3 text-4xl font-black">
+                Suivez l’évolution des équipes.
+              </h2>
+
+              <p className="mt-4 max-w-md text-slate-200">
+                Consultez les résultats officiels.
+              </p>
+
+              <span className="mt-10 inline-flex items-center gap-2 font-black">
+                Voir les classements
+                <ArrowRight className="h-5 w-5" />
+              </span>
+            </Link>
+          </motion.div>
         </section>
 
         <section className="mx-auto max-w-7xl px-5 pb-24 pt-10 lg:px-8">
-          <motion.div {...reveal} className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+          <motion.div
+            {...reveal}
+            className="rounded-3xl border border-white/10 bg-white/[0.03] p-8"
+          >
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">Merci à nos partenaires</p>
-              <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-black">Leur soutien fait grandir le volleyball dans notre région.</h2>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-slate-400">
+                Merci à nos partenaires
+              </p>
+
+              <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-black">
+                Leur soutien fait grandir le volleyball dans notre région.
+              </h2>
             </div>
 
             <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {partenaires.map(([nom, logo]) => (
-                <a key={nom} href="/partenaires" className="flex min-h-32 items-center justify-center rounded-2xl border border-white/10 bg-white p-5">
-                  <img src={logo} alt={nom} className="max-h-20 w-full object-contain" />
-                </a>
+                <Link
+                  key={nom}
+                  to="/partenaires"
+                  className="flex min-h-32 items-center justify-center rounded-2xl border border-white/10 bg-white p-5 transition hover:-translate-y-1"
+                >
+                  <img
+                    src={logo}
+                    alt={nom}
+                    className="max-h-20 w-full object-contain"
+                  />
+                </Link>
               ))}
             </div>
           </motion.div>
         </section>
       </main>
-
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-slate-950/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl lg:hidden">
-        <div className="mx-auto grid max-w-md grid-cols-5">
-          {[
-            ["Accueil", "/", Home],
-            ["Matchs", "/calendrier", CalendarDays],
-            ["Boutique", "/boutique", ShoppingBag],
-            ["Compte", "/mon-espace", UserRound],
-          ].map(([label, lien, Icone]) => (
-            <a key={lien} href={lien} className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400">
-              <Icone className="h-5 w-5" />
-              <span className="text-[10px] font-semibold">{label}</span>
-            </a>
-          ))}
-
-          <button type="button" onClick={() => setMenuOuvert((valeur) => !valeur)} className="flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-slate-400">
-            <Menu className="h-5 w-5" />
-            <span className="text-[10px] font-semibold">Plus</span>
-          </button>
-        </div>
-      </nav>
     </div>
   );
 }
