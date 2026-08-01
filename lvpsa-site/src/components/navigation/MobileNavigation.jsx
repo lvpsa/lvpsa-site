@@ -61,6 +61,11 @@ const liensTournoi = [
     lien: "/tournoi/reglements",
     icone: ShieldCheck,
   },
+  {
+  titre: "Galerie",
+  lien: "/galerie",
+  icone: Images,
+  },
 ];
 
 export default function MobileNavigation() {
@@ -274,15 +279,6 @@ export default function MobileNavigation() {
                   >
                     <ShoppingBag className="h-5 w-5 text-cyan-300" />
                     Boutique
-                  </Link>
-
-                  <Link
-                    to="/galerie"
-                    onClick={fermerMenu}
-                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
-                  >
-                    <Images className="h-5 w-5 text-cyan-300" />
-                    Galerie
                   </Link>
 
                   <Link
