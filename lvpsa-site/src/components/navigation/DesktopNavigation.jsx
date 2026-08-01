@@ -76,7 +76,7 @@ export default function DesktopNavigation() {
 
   return (
     <>
-      <nav className="hidden items-center gap-7 lg:flex">
+      <nav className="relative hidden items-center gap-7 overflow-visible lg:flex">
         <NavLink
           to="/"
           className={({ isActive }) =>
