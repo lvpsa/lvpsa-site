@@ -1,18 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
   CalendarDays,
   CheckCircle2,
-  ChevronRight,
   CloudSun,
   Images,
   MapPin,
   ShoppingBag,
   Sparkles,
   Trophy,
-  UserRound,
-  UsersRound,
   Wind,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -32,33 +29,6 @@ const reveal = {
   viewport: { once: true, amount: 0.15 },
   transition: { duration: 0.5 },
 };
-
-const actions = [
-  {
-    titre: "Calendrier",
-    texte: "Consulter les matchs",
-    icone: CalendarDays,
-    lien: "/calendrier",
-  },
-  {
-    titre: "Classements",
-    texte: "Voir les résultats",
-    icone: Trophy,
-    lien: "/classements",
-  },
-  {
-    titre: "Mon espace",
-    texte: "Équipe, profil et commandes",
-    icone: UsersRound,
-    lien: "/mon-espace",
-  },
-  {
-    titre: "Boutique",
-    texte: "Découvrir les vêtements",
-    icone: ShoppingBag,
-    lien: "/boutique-v2",
-  },
-];
 
 const partenaires = [
   ["Soccer Sport Fitness", "/soccer-sport-fitness.png"],
@@ -231,16 +201,6 @@ export default function AccueilV2() {
       actif = false;
     };
   }, []);
-
-  const statsAffichees = useMemo(
-    () => [
-      ["Équipes", stats.equipes, UsersRound],
-      ["Joueurs", stats.joueurs, UserRound],
-      ["Catégories", stats.categories, Trophy],
-      ["Partenaires", stats.partenaires, Sparkles],
-    ],
-    [stats]
-  );
 
   const partiesAnnulees =
     normaliser(statutMatchs.couleur) === "red" ||
@@ -468,71 +428,6 @@ export default function AccueilV2() {
               </motion.div>
             </div>
           </div>
-        </section>
-        
-        <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-          <motion.div {...reveal}>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">
-              La LVPSA en chiffres
-            </p>
-
-            <h2 className="mt-2 text-3xl font-black">
-              Une ligue locale qui rassemble
-            </h2>
-
-            <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-              {statsAffichees.map(([libelle, valeur, Icone]) => (
-                <div
-                  key={libelle}
-                  className="rounded-3xl border border-white/10 bg-white/[0.04] p-5"
-                >
-                  <Icone className="h-6 w-6 text-cyan-300" />
-
-                  <p className="mt-6 text-4xl font-black">{valeur}</p>
-
-                  <p className="mt-1 text-sm font-bold uppercase text-slate-400">
-                    {libelle}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-          <motion.div {...reveal}>
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-yellow-300">
-              Accès rapide
-            </p>
-
-            <h2 className="mt-2 text-3xl font-black">
-              Tout ce dont vous avez besoin
-            </h2>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {actions.map((action) => {
-                const Icone = action.icone;
-
-                return (
-                  <Link
-                    key={action.titre}
-                    to={action.lien}
-                    className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-cyan-300/30"
-                  >
-                    <Icone className="h-6 w-6 text-cyan-300" />
-
-                    <h3 className="mt-5 font-extrabold">{action.titre}</h3>
-
-                    <p className="mt-1 text-sm text-slate-400">
-                      {action.texte}
-                    </p>
-
-                    <ChevronRight className="mt-4 h-5 w-5 text-slate-600 transition group-hover:translate-x-1 group-hover:text-cyan-300" />
-                  </Link>
-                );
-              })}
-            </div>
-          </motion.div>
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
