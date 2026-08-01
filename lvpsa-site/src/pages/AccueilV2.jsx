@@ -260,74 +260,6 @@ export default function AccueilV2() {
       <div className="h-20" />
 
       <main className="relative z-10">
-        <section className="mx-auto max-w-7xl px-5 pb-10 pt-8 lg:px-8 lg:pb-16 lg:pt-14">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900 shadow-2xl lg:min-h-[610px]">
-            <img
-              src="/volley-bg.jpg"
-              alt="Terrain LVPSA"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/25" />
-
-            <div className="relative z-10 flex min-h-[610px] max-w-3xl flex-col justify-center p-6 sm:p-10 lg:p-14">
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/20 bg-slate-950/60 px-4 py-2 text-sm font-semibold text-cyan-200 backdrop-blur-xl"
-              >
-                <MapPin className="h-4 w-4" />
-                Saint-Augustin-de-Desmaures
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.08 }}
-                className="text-4xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
-              >
-                Plus qu’une ligue.
-                <span className="block bg-gradient-to-r from-cyan-300 via-white to-yellow-300 bg-clip-text text-transparent">
-                  Une communauté.
-                </span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.16 }}
-                className="mt-6 max-w-2xl text-lg leading-8 text-slate-300"
-              >
-                Jouez, suivez vos résultats, restez connecté à votre équipe
-                et vivez pleinement l’expérience LVPSA.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.24 }}
-                className="mt-8 flex flex-col gap-3 sm:flex-row"
-              >
-                <Link
-                  to="/mon-espace"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-slate-950 transition hover:-translate-y-0.5"
-                >
-                  Accéder à mon espace
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-
-                <Link
-                  to="/calendrier"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-slate-950/50 px-6 py-3.5 font-bold transition hover:border-cyan-300/40"
-                >
-                  Voir le calendrier
-                  <CalendarDays className="h-5 w-5" />
-                </Link>
-              </motion.div>
-            </div>
-          </div>
-        </section>
 
         <section className="mx-auto max-w-7xl px-5 py-6 lg:px-8">
           <motion.div
@@ -469,6 +401,75 @@ export default function AccueilV2() {
           </motion.div>
         </section>
 
+        <section className="mx-auto max-w-7xl px-5 pb-10 pt-8 lg:px-8 lg:pb-16 lg:pt-14">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900 shadow-2xl lg:min-h-[610px]">
+            <img
+              src="/volley-bg.jpg"
+              alt="Terrain LVPSA"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/25" />
+
+            <div className="relative z-10 flex min-h-[610px] max-w-3xl flex-col justify-center p-6 sm:p-10 lg:p-14">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/20 bg-slate-950/60 px-4 py-2 text-sm font-semibold text-cyan-200 backdrop-blur-xl"
+              >
+                <MapPin className="h-4 w-4" />
+                Saint-Augustin-de-Desmaures
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.08 }}
+                className="text-4xl font-black leading-[1.02] sm:text-6xl lg:text-7xl"
+              >
+                Plus qu’une ligue.
+                <span className="block bg-gradient-to-r from-cyan-300 via-white to-yellow-300 bg-clip-text text-transparent">
+                  Une communauté.
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.16 }}
+                className="mt-6 max-w-2xl text-lg leading-8 text-slate-300"
+              >
+                Jouez, suivez vos résultats, restez connecté à votre équipe
+                et vivez pleinement l’expérience LVPSA.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.24 }}
+                className="mt-8 flex flex-col gap-3 sm:flex-row"
+              >
+                <Link
+                  to="/mon-espace"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-slate-950 transition hover:-translate-y-0.5"
+                >
+                  Accéder à mon espace
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+
+                <Link
+                  to="/calendrier"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-slate-950/50 px-6 py-3.5 font-bold transition hover:border-cyan-300/40"
+                >
+                  Voir le calendrier
+                  <CalendarDays className="h-5 w-5" />
+                </Link>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+        
         <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
           <motion.div {...reveal}>
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">
