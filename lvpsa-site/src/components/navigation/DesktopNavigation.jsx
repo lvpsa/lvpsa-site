@@ -12,8 +12,8 @@ const liensPrincipaux = [
     lien: "/boutique-v2",
   },
   {
-    titre: "Galerie",
-    lien: "/galerie",
+    titre: "Partenaires",
+    lien: "/partenaires",
   },
 ];
 
