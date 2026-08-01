@@ -1,52 +1,45 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  CalendarDays,
-  ClipboardList,
-  ShieldCheck,
+  CalendarClock,
+  CircleHelp,
+  ClipboardCheck,
   Trophy,
-  Users,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const liensLigue = [
+const liensTournoi = [
   {
-    titre: "Calendrier",
-    description: "Consulte les dates et les heures des matchs.",
-    lien: "/ligue/calendrier",
-    icone: CalendarDays,
-  },
-  {
-    titre: "Classements",
-    description: "Suis les résultats et le classement des équipes.",
-    lien: "/classements",
+    titre: "Le tournoi",
+    description: "Découvre les informations générales du tournoi LVPSA.",
+    lien: "/tournoi",
     icone: Trophy,
   },
   {
-    titre: "Inscriptions",
-    description: "Inscris ton équipe ou joins-toi à la ligue.",
-    lien: "/inscriptions",
-    icone: ClipboardList,
-  },
-  {
-    titre: "Gestion d’équipe",
-    description: "Gère les joueurs et les informations de ton équipe.",
-    lien: "/ligue/equipe",
-    icone: Users,
+    titre: "Horaire",
+    description: "Consulte l’horaire complet des matchs du tournoi.",
+    lien: "/tournoi/horaire",
+    icone: CalendarClock,
   },
   {
     titre: "Règlements",
-    description: "Consulte les règlements officiels de la ligue.",
-    lien: "/ligue/reglements",
-    icone: ShieldCheck,
+    description: "Consulte les règlements officiels du tournoi.",
+    lien: "/tournoi/reglements",
+    icone: ClipboardCheck,
+  },
+  {
+    titre: "Questions fréquentes",
+    description: "Trouve rapidement les réponses à tes questions.",
+    lien: "/tournoi#questions",
+    icone: CircleHelp,
   },
 ];
 
-export default function MegaMenuLigue({ ouvert, onFermer }) {
+export default function MegaMenuTournoi({ ouvert, onFermer }) {
   return (
     <AnimatePresence>
       {ouvert && (
         <motion.div
-          id="mega-menu-ligue"
+          id="mega-menu-tournoi"
           role="menu"
           initial={{
             opacity: 0,
@@ -71,21 +64,16 @@ export default function MegaMenuLigue({ ouvert, onFermer }) {
         >
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl">
             <div className="grid grid-cols-2 gap-2">
-              {liensLigue.map((item, index) => {
+              {liensTournoi.map((item) => {
                 const Icone = item.icone;
-                const pleineLargeur =
-                  liensLigue.length % 2 !== 0 &&
-                  index === liensLigue.length - 1;
 
                 return (
                   <Link
-                    key={item.lien}
+                    key={item.titre}
                     to={item.lien}
                     role="menuitem"
                     onClick={onFermer}
-                    className={`group flex items-start gap-4 rounded-2xl border border-transparent p-4 transition hover:border-cyan-300/20 hover:bg-white/10 ${
-                      pleineLargeur ? "col-span-2" : ""
-                    }`}
+                    className="group flex items-start gap-4 rounded-2xl border border-transparent p-4 transition hover:border-cyan-300/20 hover:bg-white/10"
                   >
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300 transition group-hover:bg-cyan-300 group-hover:text-slate-950">
                       <Icone className="h-5 w-5" />
@@ -108,20 +96,20 @@ export default function MegaMenuLigue({ ouvert, onFermer }) {
             <div className="mt-2 flex items-center justify-between rounded-2xl bg-gradient-to-r from-cyan-300/15 to-blue-500/10 px-5 py-4">
               <div>
                 <p className="text-sm font-black text-white">
-                  Prêt à jouer?
+                  Tournoi LVPSA
                 </p>
 
                 <p className="mt-0.5 text-xs text-white/60">
-                  Rejoins la communauté LVPSA.
+                  Une journée de volleyball, de plaisir et de compétition.
                 </p>
               </div>
 
               <Link
-                to="/inscriptions"
+                to="/tournoi"
                 onClick={onFermer}
                 className="rounded-xl bg-cyan-300 px-4 py-2 text-xs font-black text-slate-950 transition hover:bg-cyan-200"
               >
-                S’inscrire
+                Voir le tournoi
               </Link>
             </div>
           </div>
