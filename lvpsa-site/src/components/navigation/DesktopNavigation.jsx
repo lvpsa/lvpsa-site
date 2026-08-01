@@ -18,11 +18,11 @@ const liensPrincipaux = [
 ];
 
 const routesLigue = [
-  "/ligue/calendrier",
+  "/calendrier",
   "/classements",
-  "/inscriptions",
-  "/ligue/equipe",
-  "/ligue/reglements",
+  "/inscription-ligue",
+  "/gestion-equipe",
+  "/reglements",
 ];
 
 const routeEstActive = (pathname, route) =>
