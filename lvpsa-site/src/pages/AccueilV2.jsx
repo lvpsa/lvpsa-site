@@ -488,67 +488,6 @@ export default function AccueilV2() {
           </motion.div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-          <motion.div {...reveal}>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] text-fuchsia-300">
-                  Galerie
-                </p>
-
-                <h2 className="mt-2 text-4xl font-black">
-                  L’énergie de la LVPSA en images
-                </h2>
-              </div>
-
-              <Link
-                to="/galerie"
-                className="inline-flex items-center gap-2 font-black text-cyan-300"
-              >
-                Voir toute la galerie
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
-
-            <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              <Link
-                to="/galerie"
-                className="group relative min-h-[420px] overflow-hidden rounded-3xl border border-white/10"
-              >
-                <img
-                  src="/galerie/galerie-01.jpg"
-                  alt="Galerie LVPSA"
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-              </Link>
-
-              <div className="grid gap-4">
-                <Link
-                  to="/galerie"
-                  className="group relative min-h-[200px] overflow-hidden rounded-3xl border border-white/10"
-                >
-                  <img
-                    src="/volley-bg.jpg"
-                    alt="Terrain LVPSA"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                </Link>
-
-                <Link
-                  to="/galerie"
-                  className="group relative min-h-[200px] overflow-hidden rounded-3xl border border-white/10 bg-white"
-                >
-                  <img
-                    src="/tournoi-lvpsa-2026.png"
-                    alt="Tournoi LVPSA"
-                    className="h-full w-full object-contain transition duration-700 group-hover:scale-105"
-                  />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
         <section className="mx-auto grid max-w-7xl gap-5 px-5 py-10 lg:grid-cols-2 lg:px-8">
           <motion.div {...reveal}>
             <Link
