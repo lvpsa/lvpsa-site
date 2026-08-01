@@ -205,6 +205,13 @@ export default function MobileNavigation() {
                           <div className="space-y-1 border-t border-white/10 p-2">
                             {liensLigue.map((item) => {
                               const Icone = item.icone;
+                          <Link
+  to="/inscription-ligue"
+  onClick={fermerMenu}
+  className="mt-2 flex w-full items-center justify-center rounded-xl bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
+>
+  S’inscrire à la ligue
+</Link>
 
                               return (
                                 <Link
