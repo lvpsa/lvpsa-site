@@ -16,6 +16,7 @@ import {Classements, ClassementDetail,} from "./pages/Classements";
 import Tournoi from "./pages/Tournoi";
 import HoraireTournoi from "./pages/HoraireTournoi";
 import ReglementsTournoi from "./pages/ReglementsTournoi";
+import HeaderLVPSA from "./components/HeaderLVPSA";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
@@ -442,7 +443,12 @@ function ContenuApplication() {
       <ScrollToTop />
 
       <div className="min-h-screen bg-slate-950 text-white">
-        {!estAccueilV2 && <Header />}
+        {!estAccueilV2 && (
+          <>
+            <HeaderLVPSA />
+            <div className="h-20" />
+          </>
+        )}
 
         <Routes>
           <Route path="/" element={<AccueilV2 />} />
