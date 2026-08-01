@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import DesktopNavigation from "./navigation/DesktopNavigation";
 
 const liensPrincipaux = [
   { titre: "Tournoi", lien: "/tournoi" },
