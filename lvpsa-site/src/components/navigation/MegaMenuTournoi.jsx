@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarClock,
-  CircleHelp,
   ClipboardCheck,
   Trophy,
 } from "lucide-react";
@@ -26,14 +25,7 @@ const liensTournoi = [
     lien: "/tournoi/reglements",
     icone: ClipboardCheck,
   },
-  {
-    titre: "Questions fréquentes",
-    description: "Trouve rapidement les réponses à tes questions.",
-    lien: "/tournoi#questions",
-    icone: CircleHelp,
-  },
 ];
-
 export default function MegaMenuTournoi({ ouvert, onFermer }) {
   return (
     <AnimatePresence>
