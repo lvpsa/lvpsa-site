@@ -4,6 +4,7 @@ import {
   ArrowRight,
   CalendarDays,
   ChevronRight,
+  Menu,
   Home,
   Images,
   ShoppingBag,
