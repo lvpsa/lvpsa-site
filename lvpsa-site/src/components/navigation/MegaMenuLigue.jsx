@@ -12,7 +12,7 @@ const liensLigue = [
   {
     titre: "Calendrier",
     description: "Consulte les dates et les heures des matchs.",
-    lien: "/ligue/calendrier",
+    lien: "/calendrier",
     icone: CalendarDays,
   },
   {
@@ -23,20 +23,20 @@ const liensLigue = [
   },
   {
     titre: "Inscriptions",
-    description: "Inscris ton équipe ou joins-toi à la ligue.",
-    lien: "/inscriptions",
+    description: "Inscris une équipe ou deviens joueur indépendant.",
+    lien: "/inscription-ligue",
     icone: ClipboardList,
   },
   {
     titre: "Gestion d’équipe",
-    description: "Gère les joueurs et les informations de ton équipe.",
-    lien: "/ligue/equipe",
+    description: "Gère les joueurs et les remplacements de ton équipe.",
+    lien: "/gestion-equipe",
     icone: Users,
   },
   {
     titre: "Règlements",
     description: "Consulte les règlements officiels de la ligue.",
-    lien: "/ligue/reglements",
+    lien: "/reglements",
     icone: ShieldCheck,
   },
 ];
