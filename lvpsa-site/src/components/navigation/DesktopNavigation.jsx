@@ -203,7 +203,7 @@ export default function DesktopNavigation() {
           to="/inscriptions"
           className="rounded-xl bg-cyan-300 px-5 py-2.5 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
         >
-          S’inscrire
+          Créer un compte
         </Link>
       </div>
     </>
