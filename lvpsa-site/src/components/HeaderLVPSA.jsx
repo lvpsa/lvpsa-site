@@ -22,13 +22,13 @@ export default function HeaderLVPSA() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-[9999] overflow-visible transition-all duration-300 ${
         defilement
           ? "border-b border-white/10 bg-slate-950/95 shadow-xl backdrop-blur-xl"
           : "bg-gradient-to-b from-slate-950/90 to-transparent"
       }`}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between overflow-visible px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
           aria-label="Retour à l’accueil"
