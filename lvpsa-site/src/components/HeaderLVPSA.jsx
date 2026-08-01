@@ -13,10 +13,10 @@ import {
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 const liensPrincipaux = [
-  { titre: "Accueil", lien: "/" },
   { titre: "Tournoi", lien: "/tournoi" },
   { titre: "Boutique", lien: "/boutique" },
   { titre: "Galerie", lien: "/galerie" },
+  { titre: "Partenaires", lien: "/partenaires" },
 ];
 
 const liensLigue = [
@@ -84,8 +84,8 @@ export default function HeaderLVPSA() {
 
   const [estDefile, setEstDefile] = useState(false);
   const [menuOuvert, setMenuOuvert] = useState(false);
-  const [ligueDesktopOuverte, setLigueDesktopOuverte] = useState(false);
-  const [ligueMobileOuverte, setLigueMobileOuverte] = useState(false);
+  const [menuDesktopOuvert, setMenuDesktopOuvert] = useState(null);
+  const [menuMobileOuvert, setMenuMobileOuvert] = useState(null);
 
   const ligueEstActive = liensLigue.some(
     (item) =>
@@ -116,13 +116,13 @@ export default function HeaderLVPSA() {
 
   useEffect(() => {
     setMenuOuvert(false);
-    setLigueDesktopOuverte(false);
-    setLigueMobileOuverte(false);
+    setmenuDesktopOuvert === "ligue"(false);
+    setmenuMobileOuvert === "ligue"(false);
   }, [location.pathname]);
 
   const fermerMenuMobile = () => {
     setMenuOuvert(false);
-    setLigueMobileOuverte(false);
+    setmenuMobileOuvert === "ligue"(false);
   };
 
   return (
@@ -204,15 +204,15 @@ export default function HeaderLVPSA() {
             {/* Sous-menu Ligue */}
             <div
               className="relative"
-              onMouseEnter={() => setLigueDesktopOuverte(true)}
-              onMouseLeave={() => setLigueDesktopOuverte(false)}
+              onMouseEnter={() => setmenuDesktopOuvert === "ligue"(true)}
+              onMouseLeave={() => setmenuDesktopOuvert === "ligue"(false)}
             >
               <button
                 type="button"
                 onClick={() =>
-                  setLigueDesktopOuverte((ouvert) => !ouvert)
+                  setmenuDesktopOuvert === "ligue"((ouvert) => !ouvert)
                 }
-                aria-expanded={ligueDesktopOuverte}
+                aria-expanded={menuDesktopOuvert === "ligue"}
                 className={`relative flex items-center gap-1.5 py-2 text-sm font-bold transition ${
                   ligueEstActive
                     ? "text-cyan-300"
@@ -223,7 +223,7 @@ export default function HeaderLVPSA() {
 
                 <ChevronDown
                   className={`h-4 w-4 transition-transform duration-200 ${
-                    ligueDesktopOuverte ? "rotate-180" : ""
+                    menuDesktopOuvert === "ligue" ? "rotate-180" : ""
                   }`}
                 />
 
@@ -236,7 +236,7 @@ export default function HeaderLVPSA() {
               </button>
 
               <AnimatePresence>
-                {ligueDesktopOuverte && (
+                {menuDesktopOuvert === "ligue" && (
                   <motion.div
                     initial={{ opacity: 0, y: 10, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -417,9 +417,9 @@ export default function HeaderLVPSA() {
                 <button
                   type="button"
                   onClick={() =>
-                    setLigueMobileOuverte((ouvert) => !ouvert)
+                    setmenuMobileOuvert === "ligue"((ouvert) => !ouvert)
                   }
-                  aria-expanded={ligueMobileOuverte}
+                  aria-expanded={menuMobileOuvert === "ligue"}
                   className={`flex w-full items-center justify-between py-5 text-left text-2xl font-black ${
                     ligueEstActive ? "text-cyan-300" : "text-white"
                   }`}
@@ -431,14 +431,14 @@ export default function HeaderLVPSA() {
 
                     <ChevronDown
                       className={`h-5 w-5 transition-transform duration-200 ${
-                        ligueMobileOuverte ? "rotate-180" : ""
+                        menuMobileOuvert === "ligue" ? "rotate-180" : ""
                       }`}
                     />
                   </div>
                 </button>
 
                 <AnimatePresence initial={false}>
-                  {ligueMobileOuverte && (
+                  {menuMobileOuvert === "ligue" && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
