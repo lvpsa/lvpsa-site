@@ -61,11 +61,6 @@ const liensTournoi = [
     lien: "/tournoi/reglements",
     icone: ShieldCheck,
   },
-  {
-    titre: "Questions fréquentes",
-    lien: "/tournoi#questions",
-    icone: CircleHelp,
-  },
 ];
 
 export default function MobileNavigation() {
@@ -273,7 +268,7 @@ export default function MobileNavigation() {
                   </div>
 
                   <Link
-                    to="/boutique"
+                    to="/boutique-v2"
                     onClick={fermerMenu}
                     className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
                   >
