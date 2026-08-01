@@ -529,15 +529,6 @@ function Header() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const verifierExpiration = () => {
-      const expiration = localStorage.getItem("lvpsaSessionExpire");
-
-      if (expiration && Date.now() > Number(expiration)) {
-        localStorage.removeItem("lvpsaSessionExpire");
-        signOut(auth);
-        window.location.href = "/connexion";
-      }
-    };
 
     verifierExpiration();
 
@@ -3542,38 +3533,26 @@ function Connexion() {
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
 
   const seConnecter = async (e) => {
-    e.preventDefault();
-    setMessage("");
+  e.preventDefault();
+  setMessage("");
 
-    try {
-      await setPersistence(
-        auth,
-        seSouvenir
-          ? browserLocalPersistence
-          : browserSessionPersistence
-      );
+  try {
+    localStorage.removeItem("lvpsaSessionExpire");
 
-      await signInWithEmailAndPassword(
-        auth,
-        email.trim(),
-        motDePasse
-      );
+    await setPersistence(auth, browserLocalPersistence);
 
-      if (!seSouvenir) {
-        localStorage.setItem(
-          "lvpsaSessionExpire",
-          String(Date.now() + 60 * 60 * 1000)
-        );
-      } else {
-        localStorage.removeItem("lvpsaSessionExpire");
-      }
+    await signInWithEmailAndPassword(
+      auth,
+      email.trim(),
+      motDePasse
+    );
 
-      window.location.href = "/mon-espace";
-    } catch (error) {
-      console.error("Erreur de connexion :", error);
-      setMessage("Courriel ou mot de passe invalide.");
-    }
-  };
+    window.location.replace("/mon-espace");
+  } catch (error) {
+    console.error("Erreur de connexion :", error);
+    setMessage("Courriel ou mot de passe invalide.");
+  }
+};
 
   const ouvrirPopupMotDePasse = () => {
     setCourrielReinitialisation(email.trim());
