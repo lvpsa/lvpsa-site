@@ -788,12 +788,12 @@ export default function MonEspace() {
                 )}
               </div>
 
-              {(estJoueur || estCapitaine) && (
+              {estCapitaine && (
                 <Link
-                  to={estCapitaine ? "/gestion-equipe" : "/classements"}
+                  to="/gestion-equipe"
                   className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-black text-white transition hover:border-cyan-300/40 hover:text-cyan-300"
                 >
-                  {estCapitaine ? "Gérer mon équipe" : "Voir les classements"}
+                  Gérer mon équipe
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
