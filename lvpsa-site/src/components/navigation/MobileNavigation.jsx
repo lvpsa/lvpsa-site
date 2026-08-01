@@ -316,7 +316,7 @@ export default function MobileNavigation() {
                   onClick={fermerMenu}
                   className="flex w-full items-center justify-center rounded-xl bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
                 >
-                  S’inscrire
+                  Créer un compte
                 </Link>
               </div>
             </motion.div>
