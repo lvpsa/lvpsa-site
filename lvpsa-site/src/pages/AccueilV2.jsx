@@ -176,7 +176,9 @@ export default function AccueilV2() {
     const chargerMeteo = async () => {
       try {
         const url =
-          "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation_probability,uv_index
+  "https://api.open-meteo.com/v1/forecast?latitude=46.74&longitude=-71.45&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation_probability,uv_index&timezone=America%2FToronto&forecast_days=2";
+
+const reponse = await fetch(url);
 
         const reponse = await fetch(url);
 
