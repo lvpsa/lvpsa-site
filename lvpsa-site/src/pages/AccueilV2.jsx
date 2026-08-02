@@ -217,7 +217,7 @@ export default function AccueilV2() {
       </div>
 
       <HeaderLVPSA />
-      <div className="h-20" />
+      <div className="h-24" />
 
       <main className="relative z-10">
 
