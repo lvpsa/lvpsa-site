@@ -444,11 +444,11 @@ function ContenuApplication() {
 
       <div className="min-h-screen bg-slate-950 text-white">
         {!estAccueilV2 && (
-          <>
-            <HeaderLVPSA />
-            <div className="h-20" />
-          </>
-        )}
+  <>
+    <HeaderLVPSA />
+    <div className="h-32" />
+  </>
+)}
 
         <Routes>
           <Route path="/" element={<AccueilV2 />} />
