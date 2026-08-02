@@ -364,7 +364,7 @@ export default function AccueilV2() {
         <section className="mx-auto max-w-7xl px-5 pb-10 pt-8 lg:px-8 lg:pb-16 lg:pt-14">
           <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900 shadow-2xl lg:min-h-[610px]">
             <img
-              src="/volley-bg.jpg"
+              src="/hero-lvpsa.jpg"
               alt="Terrain LVPSA"
               className="absolute inset-0 h-full w-full object-cover"
             />
