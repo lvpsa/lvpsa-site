@@ -35,7 +35,7 @@ export default function HeaderLVPSA() {
         className="flex shrink-0 items-center gap-4"
       >
         <img
-          src="/logo.jpg"
+          src="/Logo.png"
           alt="Logo LVPSA"
           className="h-20 w-20 object-contain"
         />
