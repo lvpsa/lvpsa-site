@@ -558,14 +558,14 @@ export default function AccueilV2() {
             </div>
 
             <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {partenaires.map(([nom, logo]) => (
+              {partenaires.map(([nom, Logo]) => (
                 <Link
                   key={nom}
                   to="/partenaires"
                   className="flex min-h-32 items-center justify-center rounded-2xl border border-white/10 bg-white p-5 transition hover:-translate-y-1"
                 >
                   <img
-                    src={logo}
+                    src={Logo}
                     alt={nom}
                     className="max-h-20 w-full object-contain"
                   />
