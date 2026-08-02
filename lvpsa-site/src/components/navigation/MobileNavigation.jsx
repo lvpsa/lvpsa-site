@@ -15,7 +15,7 @@ import {
   Images,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const liensLigue = [
   {
@@ -70,6 +70,7 @@ const liensTournoi = [
 
 export default function MobileNavigation() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [menuOuvert, setMenuOuvert] = useState(false);
   const [sectionOuverte, setSectionOuverte] = useState(null);
