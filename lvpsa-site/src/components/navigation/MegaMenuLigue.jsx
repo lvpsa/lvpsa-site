@@ -110,7 +110,7 @@ export default function MegaMenuLigue({ ouvert, onFermer }) {
               </div>
 
               <Link
-                to="/inscriptions"
+                to="/inscription-ligue"
                 onClick={onFermer}
                 className="rounded-xl bg-cyan-300 px-4 py-2 text-xs font-black text-slate-950 transition hover:bg-cyan-200"
               >
