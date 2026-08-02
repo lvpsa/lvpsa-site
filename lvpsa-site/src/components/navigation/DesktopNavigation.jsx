@@ -12,6 +12,10 @@ const liensPrincipaux = [
     lien: "/boutique-v2",
   },
   {
+  titre: "Mon espace",
+  lien: "/mon-espace",
+  },
+  {
     titre: "Partenaires",
     lien: "/partenaires",
   },
