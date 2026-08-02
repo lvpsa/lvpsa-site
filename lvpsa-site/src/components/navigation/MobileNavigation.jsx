@@ -300,6 +300,15 @@ export default function MobileNavigation() {
                 </div>
               </div>
 
+<Link
+  to="/mon-espace"
+  onClick={fermerMenu}
+  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
+>
+  <UserRound className="h-5 w-5 text-cyan-300" />
+  Mon espace
+</Link>
+              
               <div className="space-y-3 border-t border-white/10 p-4">
                 <Link
                   to="/connexion"
