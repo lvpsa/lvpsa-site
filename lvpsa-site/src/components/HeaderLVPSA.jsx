@@ -41,15 +41,11 @@ export default function HeaderLVPSA() {
         />
       
         <div className="hidden sm:block">
-          <p className="text-2xl font-black leading-none text-white">
-            LVPSA
-          </p>
-      
-          <p className="mt-2 text-[12px] font-black uppercase tracking-[0.16em] text-cyan-300">
+          <p className="text-[13px] font-black uppercase tracking-[0.16em] text-cyan-300">
             Ligue de volleyball de plage
           </p>
-      
-          <p className="mt-1 text-[11px] font-semibold text-slate-400">
+        
+          <p className="mt-1 text-[12px] font-semibold text-slate-400">
             Saint-Augustin-de-Desmaures
           </p>
         </div>
