@@ -37,7 +37,7 @@ export default function HeaderLVPSA() {
         <img
           src="/logo.jpg"
           alt="Logo LVPSA"
-          className="h-16 w-16 rounded-2xl border border-white/15 object-cover shadow-xl"
+          className="h-20 w-20 object-contain"
         />
       
         <div className="hidden sm:block">
