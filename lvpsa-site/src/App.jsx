@@ -1,8 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 import ScrollToTop from "./ScrollToTop";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import InstallerPWA from "./components/InstallerPWA";
+import Galerie from "./pages/Galerie";
+import MonEspace from "./pages/MonEspace";
+import {Classements, ClassementDetail,} from "./pages/Classements";
+import Tournoi from "./pages/Tournoi";
+import HoraireTournoi from "./pages/HoraireTournoi";
+import ReglementsTournoi from "./pages/ReglementsTournoi";
+import HeaderLVPSA from "./components/HeaderLVPSA";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
@@ -36,6 +50,8 @@ import { useInventaire } from "./hooks/useInventaire";
 
 import BoutiquesV2 from "./pages/BoutiquesV2";
 
+import AccueilV2 from "./pages/AccueilV2";
+
 import { initialiserBoutiqueFirebase } from "./services/firebaseBoutique";
 
 import AdminBoutiqueV2 from "./components/admin/boutique/AdminBoutiqueV2";
@@ -44,16 +60,25 @@ import { uniformiserRemplacementsSansSupprimer } from "./firebase";
 
 import {
   Calendar,
-  Trophy,
   Mail,
   MapPin,
   ExternalLink,
- CheckCircle2,
+  CheckCircle2,
   CloudSun,
   Lock,
   LogIn,
+  ArrowRight,
+  CalendarDays,
+  ShoppingBag,
+  Trophy,
+  UserRound,
+  UsersRound,
   Eye,
   EyeOff,
+  Bell,
+  Clock3,
+  PackageCheck,
+  Repeat2,
 } from "lucide-react";
 import "./index.css";
 import emailjs from "@emailjs/browser";
@@ -404,18 +429,50 @@ await envoyerNotificationCapitaineRemplacement(demande, "accepte");
 export default function App() {
   return (
     <BrowserRouter>
+      <ContenuApplication />
+    </BrowserRouter>
+  );
+}
 
+function ContenuApplication() {
+  const location = useLocation();
+  const estAccueilV2 = location.pathname === "/";
+
+  return (
+    <>
       <ScrollToTop />
-      
+
       <div className="min-h-screen bg-slate-950 text-white">
-        <Header />
+        {!estAccueilV2 && (
+          <>
+            <HeaderLVPSA />
+            <div className="h-20" />
+          </>
+        )}
+
         <Routes>
-          <Route path="/" element={<Accueil />} />
+          <Route path="/" element={<AccueilV2 />} />
+          <Route path="/galerie" element={<Galerie />} />
           <Route path="/mon-espace" element={<MonEspace />} />
-          <Route path="/classements" element={<Classements />} />
-          <Route path="/classements/recreatif" element={<ClassementDetail titre="Classement récréatif" />} />
-          <Route path="/classements/competitif" element={<ClassementDetail titre="Classement compétitif" />} />
-          <Route path="/classements/facebook" element={<ClassementDetail titre="Classement Facebook" />} />
+          <Route
+  path="/classements"
+  element={<Classements />}
+/>
+
+<Route
+  path="/classements/recreatif"
+  element={
+    <ClassementDetail categorie="recreatif" />
+  }
+/>
+
+<Route
+  path="/classements/competitif"
+  element={
+    <ClassementDetail categorie="competitif" />
+  }
+/>
+
           <Route path="/tournoi" element={<Tournoi />} />
           <Route path="/tournoi/horaire" element={<HoraireTournoi />} />
           <Route path="/boutique" element={<BoutiquesV2 />} />
@@ -423,25 +480,47 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/reglements" element={<Reglements />} />
           <Route path="/ligue" element={<Ligue />} />
-          <Route path="/inscription-ligue" element={<InscriptionLigueProtegee />} />
+
+          <Route
+            path="/inscription-ligue"
+            element={<InscriptionLigueProtegee />}
+          />
+
           <Route path="/gestion-equipe" element={<Protegee />} />
-          <Route path="/mes-demandes" element={<MesDemandesRemplacement />} />
-          <Route path="/remplacants" element={<MesDemandesRemplacement />} />
-          <Route path="/demande-remplacement/:demandeId/:action" element={<ReponseDemandeRemplacement />} />
-          <Route path="/tournoi/reglements" element={<ReglementsTournoi />} />
+          <Route
+            path="/mes-demandes"
+            element={<MesDemandesRemplacement />}
+          />
+
+          <Route
+            path="/remplacants"
+            element={<MesDemandesRemplacement />}
+          />
+
+          <Route
+            path="/demande-remplacement/:demandeId/:action"
+            element={<ReponseDemandeRemplacement />}
+          />
+
+          <Route
+            path="/tournoi/reglements"
+            element={<ReglementsTournoi />}
+          />
+
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/membres" element={<Membres />} />
           <Route path="/partenaires" element={<Partenaires />} />
           <Route path="/calendrier" element={<Calendrier />} />
           <Route path="/creer-compte" element={<CreerCompte />} />
         </Routes>
-        <Footer />
+
+        {!estAccueilV2 && <Footer />}
+
         <InstallerPWA />
       </div>
-    </BrowserRouter>
+    </>
   );
 }
-
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [ligueOpen, setLigueOpen] = useState(false);
@@ -450,15 +529,6 @@ function Header() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const verifierExpiration = () => {
-      const expiration = localStorage.getItem("lvpsaSessionExpire");
-
-      if (expiration && Date.now() > Number(expiration)) {
-        localStorage.removeItem("lvpsaSessionExpire");
-        signOut(auth);
-        window.location.href = "/connexion";
-      }
-    };
 
     verifierExpiration();
 
@@ -513,11 +583,24 @@ function Header() {
     { label: "Règlements Ligue", to: "/reglements" },
   ];
 
-  const tournoiItems = [
-    { label: "Informations", to: "/tournoi" },
-    { label: "Horaire", to: "/tournoi/horaire" },
-    { label: "Règlements", to: "/tournoi/reglements" },
-  ];
+const tournoiItems = [
+  {
+    label: "✨ Prochain événement",
+    to: "/tournoi",
+  },
+  {
+    label: "📅 Horaire (à venir)",
+    to: "/tournoi/horaire",
+  },
+  {
+    label: "📖 Règlements (à venir)",
+    to: "/tournoi/reglements",
+  },
+  {
+    label: "📸 Galerie 2026",
+    to: "/galerie",
+  },
+];
 
   return (
    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl">
@@ -1251,372 +1334,6 @@ return (
     </>
   );
 }
-
-function Classements() {
- return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        Classements
-      </p>
-
-      <h1 className="mt-2 text-4xl font-black">
-        Classements officiels LVPSA
-      </h1>
-
-      <p className="mt-4 text-slate-300">
-        Consultez les résultats et classements mis à jour de la saison.
-      </p>
-
-      <div className="mt-10 grid gap-6 md:grid-cols-2">
-        <Link
-          to="/classements/recreatif"
-          className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15"
-        >
-          <Trophy className="mb-4 text-amber-300" size={34} />
-          <h2 className="text-2xl font-black">Récréatif</h2>
-          <p className="mt-3 text-slate-300">
-            Voir le classement récréatif
-          </p>
-        </Link>
-
-        <Link
-          to="/classements/competitif"
-          className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15"
-        >
-          <Trophy className="mb-4 text-amber-300" size={34} />
-          <h2 className="text-2xl font-black">Compétitif</h2>
-          <p className="mt-3 text-slate-300">
-            Voir le classement compétitif
-          </p>
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-function ClassementCard({ titre, lien }) {
-  return (
-    <Link to={lien} className="rounded-3xl border border-white/10 bg-white/10 p-8 transition hover:bg-white/15">
-      <Trophy className="mb-4 text-amber-300" size={34} />
-      <h2 className="text-2xl font-black">{titre}</h2>
-      <p className="mt-3 text-slate-300">Voir ce tableau seulement</p>
-    </Link>
-  );
-}
-
-function ClassementTable({ url, titre }) {
-  const [rows, setRows] = useState([]);
-
-  useEffect(() => {
-    fetch(url)
-      .then((res) => res.text())
-      .then((csv) => {
-        const lignes = csv
-          .trim()
-          .split("\n")
-          .map((ligne) =>
-            ligne
-              .split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)
-              .map((cell) => cell.replace(/^"|"$/g, "").trim())
-          );
-
-        setRows(lignes.slice(1).filter((row) => row[0] && row[1]));
-      });
-  }, [url]);
-
-const medaille = (rang) => {
-  const medals = {
-    "1": "🥇",
-    "2": "🥈",
-    "3": "🥉",
-    "4": "😎",
-  };
-
-  return medals[rang] || "";
-};
-
-  const formatDiff = (value) => {
-    const nombre = Number(String(value).replace(",", "."));
-    if (Number.isNaN(nombre)) return value;
-    return nombre.toFixed(2);
-  };
-
-  const formatPoints = (value) => {
-    return String(value).replace(/"/g, "");
-  };
-
-  return (
-    <div className="mt-10 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 shadow-2xl">
-      <div className="bg-amber-400 px-8 py-6 text-slate-950">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl">🏆</span>
-          <div>
-            <h2 className="text-4xl font-black uppercase">{titre}</h2>
-            <p className="mt-1 text-sm font-black uppercase tracking-widest">
-              Ligue de volleyball de plage de St-Augustin
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6">
-        <div className="overflow-x-auto rounded-3xl border border-white/10 bg-slate-900">
-          <table className="w-full min-w-[900px] text-left">
-            <thead>
-              <tr className="bg-slate-900 text-amber-300">
-                {["Rang", "Équipe", "PJ", "SG", "SP", "PP", "PC", "Diff.", "Points"].map(
-                  (header) => (
-                    <th key={header} className="px-6 py-5 text-lg font-black">
-                      {header}
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-
-            <tbody>
-              {rows.map((row, index) => {
-                const rang = row[0];
-                const equipe = row[1];
-                const pj = row[2];
-                const sg = row[3];
-                const sp = row[4];
-                const pp = row[5];
-                const pc = row[6];
-                const diff = row[7];
-                const points = row[8];
-
-                return (
-                  <tr
-                    key={`${equipe}-${index}`}
-                    className={`border-t border-white/10 text-white ${
-                      rang === "1"
-                        ? "bg-amber-400/10"
-                        : rang === "2"
-                        ? "bg-white/5"
-                        : rang === "3"
-                        ? "bg-orange-400/10"
-                        : "bg-slate-950/40"
-                    }`}
-                  >
-                    <td className="px-6 py-5 text-2xl font-black">
-                      <span className="mr-3">{medaille(rang)}</span>
-                      <span className={rang === "1" ? "text-amber-300" : ""}>
-                        {rang}
-                      </span>
-                    </td>
-
-                    <td className="px-6 py-5 text-xl font-bold">{equipe}</td>
-                    <td className="px-6 py-5 text-xl">{pj}</td>
-                    <td className="px-6 py-5 text-xl">{sg}</td>
-                    <td className="px-6 py-5 text-xl">{sp}</td>
-                    <td className="px-6 py-5 text-xl">{pp}</td>
-                    <td className="px-6 py-5 text-xl">{pc}</td>
-
-                    <td className="px-6 py-5 text-xl font-bold text-lime-400">
-                      {formatDiff(diff)}
-                    </td>
-
-                    <td className="px-6 py-5 text-2xl font-black text-amber-300">
-                      {formatPoints(points)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="mt-6 grid gap-4 rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300 md:grid-cols-4">
-          <div>
-            <span className="font-black text-amber-300">PJ</span> : Parties jouées
-          </div>
-          <div>
-            <span className="font-black text-amber-300">SG</span> : Sets gagnés
-          </div>
-          <div>
-            <span className="font-black text-amber-300">SP</span> : Sets perdus
-          </div>
-          <div>
-            <span className="font-black text-amber-300">Points</span> : Points au classement
-          </div>
-          <div>
-            <span className="font-black text-amber-300">PP</span> : Points pour
-          </div>
-          <div>
-            <span className="font-black text-amber-300">PC</span> : Points contre
-          </div>
-          <div>
-            <span className="font-black text-amber-300">Diff.</span> : Différentiel
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-function ClassementDetail({ titre }) {
-  let lien = "";
-
-  if (titre === "Classement récréatif") {
-    lien =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1356137713&single=true&output=csv";
-  }
-
-  if (titre === "Classement compétitif") {
-    lien =
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQgd0CSVXzpiJknzlFzR3ePmhD33lTUh2GDmEv7-XTpXA9rWz_X4Cl7QverC1jzsOEwvyvBHIMALhEm/pub?gid=1226338215&single=true&output=csv";
-  }
-
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <Link to="/classements" className="text-amber-300">
-        ← Retour aux classements
-      </Link>
-
-      <h1 className="mt-6 text-4xl font-black">{titre}</h1>
-
-      <ClassementTable url={lien} titre={titre} />
-    </section>
-  );
-}
-function Tournoi() {
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <div className="grid gap-10 lg:grid-cols-2">
-        <div>
-          <div className="inline-flex rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-bold uppercase tracking-wider text-amber-300">
-            🏆 Tournoi LVPSA 2026
-          </div>
-
-          <h1 className="mt-8 text-6xl font-black leading-tight text-white md:text-7xl">
-            Tournoi de
-            <span className="block text-amber-300">volleyball</span>
-            <span className="block">de plage</span>
-          </h1>
-
-          <p className="mt-6 max-w-xl text-xl leading-8 text-slate-300">
-            Rejoignez-nous pour une journée de compétition, de plaisir et
-            d’ambiance estivale sur le sable.
-          </p>
-
-          <div className="mt-8 max-w-xl rounded-3xl border border-red-500/30 bg-red-500/10 p-5">
-  <p className="text-center text-xl font-black uppercase tracking-wide text-red-300">
-    🔴 Le tournoi est maintenant : COMPLET
-  </p>
-
-  <p className="mt-2 text-center text-slate-300">
-    Merci pour votre enthousiasme ! On se voit bientôt sur le sable!!!
-  </p>
-</div>
-          
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">📅</div>
-              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Date
-              </p>
-              <p className="mt-2 text-3xl font-black">18</p>
-              <p className="font-bold">juillet 2026</p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">🗺</div>
-              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Parc Portneuf
-              </p>
-               <p className="mt-3 font-bold">St-Augustin-de-Desmaures</p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-center">
-              <div className="text-amber-300">🎁</div>
-              <p className="mt-2 text-sm font-bold uppercase text-amber-300">
-                Bourses
-              </p>
-              <p className="mt-2 text-3xl font-black">prix</p>
-              <p className="font-bold">de présence</p>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-wrap gap-4">
-  <Link
-    to="/tournoi/reglements"
-    className="inline-flex items-center rounded-full border border-white/15 px-10 py-4 text-lg font-black text-white hover:border-amber-300 hover:text-amber-300"
-  >
-    Règlements du tournoi
-  </Link>
-</div>
-          </div>
-
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl">
-          <img
-            src="/tournoi-lvpsa-2026.png"
-            alt="Tournoi LVPSA"
-            className="w-full h-auto"
-          />
-        </div>
-      </div>
-
-      <div className="mt-20 grid gap-8 lg:grid-cols-3">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            2 catégories
-          </h2>
-
-          <div className="mt-6 space-y-4 text-slate-300">
-            <p>
-              🏆 <span className="font-bold text-white">Compétitif :</span>{" "}
-              pour les équipes qui veulent se dépasser et jouer pour gagner.
-            </p>
-
-            <p>
-              😎 <span className="font-bold text-white">Récréatif :</span>{" "}
-              pour le plaisir, l’ambiance et le jeu sans pression.
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Format du tournoi
-          </h2>
-
-          <ul className="mt-6 space-y-3 text-slate-300">
-            <li>✅ Tournoi sur 1 journée</li>
-            <li>✅ Matchs en continu de 8 h à 20 h</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points</li>
-            <li>✅ Séries éliminatoires : 2 sets de 25 points</li>
-          </ul>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Sur place
-          </h2>
-
-          <ul className="mt-6 space-y-3 text-slate-300">
-            <li>🍔 BBQ et nourriture</li>
-            <li>🥤 Boissons froides</li>
-            <li>🍉 Collations et fruits</li>
-            <li>🎵 Musique d’ambiance</li>
-            <li>🏖️ Zone détente</li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/10 p-8 text-center">
-        <h2 className="text-3xl font-black text-amber-300">
-          Bourses aux équipes gagnantes
-        </h2>
-
-        <p className="mt-3 text-lg text-slate-300">
-          Une journée complète pour jouer, encourager, profiter de l’ambiance et
-          célébrer le volleyball de plage à Saint-Augustin.
-        </p>
-      </div>
-    </section>
-  );
-}
-
 function Reglements() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
@@ -3816,38 +3533,26 @@ function Connexion() {
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
 
   const seConnecter = async (e) => {
-    e.preventDefault();
-    setMessage("");
+  e.preventDefault();
+  setMessage("");
 
-    try {
-      await setPersistence(
-        auth,
-        seSouvenir
-          ? browserLocalPersistence
-          : browserSessionPersistence
-      );
+  try {
+    localStorage.removeItem("lvpsaSessionExpire");
 
-      await signInWithEmailAndPassword(
-        auth,
-        email.trim(),
-        motDePasse
-      );
+    await setPersistence(auth, browserLocalPersistence);
 
-      if (!seSouvenir) {
-        localStorage.setItem(
-          "lvpsaSessionExpire",
-          String(Date.now() + 60 * 60 * 1000)
-        );
-      } else {
-        localStorage.removeItem("lvpsaSessionExpire");
-      }
+    await signInWithEmailAndPassword(
+      auth,
+      email.trim(),
+      motDePasse
+    );
 
-      window.location.href = "/mon-espace";
-    } catch (error) {
-      console.error("Erreur de connexion :", error);
-      setMessage("Courriel ou mot de passe invalide.");
-    }
-  };
+    window.location.replace("/mon-espace");
+  } catch (error) {
+    console.error("Erreur de connexion :", error);
+    setMessage("Courriel ou mot de passe invalide.");
+  }
+};
 
   const ouvrirPopupMotDePasse = () => {
     setCourrielReinitialisation(email.trim());
@@ -4443,980 +4148,6 @@ function MesDemandesRemplacement() {
             Aucune demande de remplacement pour le moment.
           </p>
         )}
-      </div>
-    </section>
-  );
-}
-
-
-function MonEspace() {
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [chargement, setChargement] = useState(true);
-
-  const [equipeActuelle, setEquipeActuelle] = useState(null);
-  const [demandesRecues, setDemandesRecues] = useState([]);
-  const [demandesEnvoyees, setDemandesEnvoyees] = useState([]);
-  const [commandes, setCommandes] = useState([]);
-
-  const [editionProfil, setEditionProfil] = useState(false);
-  const [profilForm, setProfilForm] = useState({
-    nom: "",
-    telephone: "",
-  });
-  const [messageProfil, setMessageProfil] = useState("");
-
-  const horairesLigue = [
-    {
-      id: "2026-07-13",
-      label: "13 juillet",
-      categorie: "recreatif",
-      matchs: [
-        "18h30 à 19h15 — Les Smash vs Les Artishow",
-        "19h15 à 20h00 — Les Bronzés vs Les Artishow",
-        "20h00 à 20h45 — Les As vs Les Smash",
-        "20h45 à 21h30 — Les As vs Les Bronzés",
-      ],
-    },
-    {
-      id: "2026-07-14",
-      label: "14 juillet",
-      categorie: "competitif",
-      matchs: [
-        "18h30 à 19h15 — Les pieds dans le sable vs Choix du Président",
-        "19h15 à 20h00 — Fireballs vs Choix du Président",
-        "20h00 à 20h45 — Crabe en Bikini vs Les pieds dans le sable",
-        "20h45 à 21h30 — Crabe en Bikini vs Fireballs",
-      ],
-    },
-    {
-      id: "2026-08-03",
-      label: "3 août",
-      categorie: "recreatif",
-      matchs: [
-        "18h30 à 19h15 — Les As vs Les Artishow",
-        "19h15 à 20h00 — Les As vs Les Bronzés",
-        "20h00 à 20h45 — Les Smash vs Les Artishow",
-        "20h45 à 21h30 — Les Bronzés vs Les Smash",
-      ],
-    },
-    {
-      id: "2026-08-04",
-      label: "4 août",
-      categorie: "competitif",
-      matchs: [
-        "18h30 à 19h15 — Crabe en Bikini vs Choix du Président",
-        "19h15 à 20h00 — Crabe en Bikini vs Fireballs",
-        "20h00 à 20h45 — Les pieds dans le sable vs Choix du Président",
-        "20h45 à 21h30 — Fireballs vs Les pieds dans le sable",
-      ],
-    },
-    {
-      id: "2026-08-10",
-      label: "10 août",
-      categorie: "recreatif",
-      matchs: [
-        "18h30 à 19h15 — Les Bronzés vs Les Artishow",
-        "19h15 à 20h00 — Les As vs Les Artishow",
-        "20h00 à 20h45 — Les Bronzés vs Les Smash",
-        "20h45 à 21h30 — Les As vs Les Smash",
-      ],
-    },
-    {
-      id: "2026-08-11",
-      label: "11 août",
-      categorie: "competitif",
-      matchs: [
-        "18h30 à 19h15 — Fireballs vs Choix du Président",
-        "19h15 à 20h00 — Crabe en Bikini vs Choix du Président",
-        "20h00 à 20h45 — Fireballs vs Les pieds dans le sable",
-        "20h45 à 21h30 — Crabe en Bikini vs Les pieds dans le sable",
-      ],
-    },
-    {
-      id: "2026-08-17",
-      label: "17 août",
-      categorie: "recreatif",
-      matchs: [
-        "18h30 à 19h15 — Les As vs Les Smash",
-        "19h15 à 20h00 — Les Smash vs Les Artishow",
-        "20h00 à 20h45 — Les As vs Les Bronzés",
-        "20h45 à 21h30 — Les Bronzés vs Les Artishow",
-      ],
-    },
-    {
-      id: "2026-08-18",
-      label: "18 août",
-      categorie: "competitif",
-      matchs: [
-        "18h30 à 19h15 — Crabe en Bikini vs Les pieds dans le sable",
-        "19h15 à 20h00 — Les pieds dans le sable vs Choix du Président",
-        "20h00 à 20h45 — Crabe en Bikini vs Fireballs",
-        "20h45 à 21h30 — Fireballs vs Choix du Président",
-      ],
-    },
-  ];
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-
-      if (!currentUser) {
-        setUserData(null);
-        setChargement(false);
-        return;
-      }
-
-      try {
-        const userSnap = await getDoc(doc(db, "users", currentUser.uid));
-
-        if (!userSnap.exists()) {
-          setChargement(false);
-          return;
-        }
-
-        const data = {
-          id: currentUser.uid,
-          ...userSnap.data(),
-        };
-
-        setUserData(data);
-
-        setProfilForm({
-          nom: data.nom || "",
-          telephone: formatTelephone(data.telephone) || "",
-        });
-
-        const role = data.role || "membre";
-        const equipeId = String(data.equipeId || data.idEquipe || "").trim();
-        const estDansEquipe =
-          equipeId && normaliserTexteGlobal(equipeId) !== "independant";
-
-        const estCapitaine = role === "capitaine" || data.isAdmin === true;
-        const estRemplacant =
-          role === "remplacant" || data.estRemplacant === true;
-
-        if (estDansEquipe) {
-          try {
-            const equipesChargees = await chargerEquipesLVPSA();
-
-            const equipeTrouvee =
-              equipesChargees.find((equipe) => {
-                const idEquipe = equipe.id || equipe.equipeId || "";
-                const nomEquipe = nomEquipeGlobal(equipe);
-
-                return (
-                  (data.equipeId && idEquipe === data.equipeId) ||
-                  (data.equipeNom &&
-                    normaliserTexteGlobal(nomEquipe) ===
-                      normaliserTexteGlobal(data.equipeNom)) ||
-                  (data.equipenom &&
-                    normaliserTexteGlobal(nomEquipe) ===
-                      normaliserTexteGlobal(data.equipenom))
-                );
-              }) || null;
-
-            setEquipeActuelle(equipeTrouvee);
-          } catch (error) {
-            console.warn("Impossible de charger l'équipe dans Mon espace.", error);
-          }
-        }
-
-        if (estRemplacant || estCapitaine) {
-          try {
-            const demandesSnap = await getDocs(collection(db, "demandesRemplacements"));
-            const emailUser = normaliserTexteGlobal(currentUser.email);
-
-            const toutesDemandes = demandesSnap.docs.map((docItem) => ({
-              id: docItem.id,
-              ...docItem.data(),
-            }));
-
-            if (estRemplacant) {
-              setDemandesRecues(
-                toutesDemandes
-                  .filter((demande) => {
-                    const emailDemande = normaliserTexteGlobal(demande.remplacantEmail);
-
-                    return (
-                      demande.remplacantId === currentUser.uid ||
-                      emailDemande === emailUser
-                    );
-                  })
-                  .sort(
-                    (a, b) =>
-                      (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
-                  )
-              );
-            }
-
-            if (estCapitaine) {
-              setDemandesEnvoyees(
-                toutesDemandes
-                  .filter((demande) => demande.capitaineId === currentUser.uid)
-                  .sort(
-                    (a, b) =>
-                      (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
-                  )
-              );
-            }
-          } catch (error) {
-            console.warn("Demandes de remplacement non disponibles dans Mon espace.", error);
-          }
-        }
-
-        try {
-          const commandesSnap = await getDocs(collection(db, "commandesBoutique"));
-          const emailUser = normaliserTexteGlobal(currentUser.email);
-
-          setCommandes(
-            commandesSnap.docs
-              .map((docItem) => ({
-                id: docItem.id,
-                ...docItem.data(),
-              }))
-              .filter((commande) => {
-                const emailCommande = normaliserTexteGlobal(
-                  commande.courriel || commande.email
-                );
-
-                return (
-                  commande.userId === currentUser.uid ||
-                  emailCommande === emailUser
-                );
-              })
-              .sort(
-                (a, b) =>
-                  (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
-              )
-          );
-        } catch (error) {
-          console.warn("Commandes boutique non disponibles pour cet utilisateur.", error);
-        }
-      } catch (error) {
-        console.error("Erreur Mon espace :", error);
-      }
-
-      setChargement(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  if (chargement) {
-    return null;
-  }
-
-  if (!user) {
-    return (
-      <section className="mx-auto max-w-3xl px-6 py-32 text-center">
-        <h1 className="text-4xl font-black text-white">
-          Connexion requise
-        </h1>
-
-        <p className="mt-4 text-slate-300">
-          Connectez-vous pour accéder à votre espace LVPSA.
-        </p>
-
-        <Link
-          to="/connexion"
-          className="mt-8 inline-flex rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
-        >
-          Connexion
-        </Link>
-      </section>
-    );
-  }
-
-  const role = userData?.role || "membre";
-  const equipeId = String(userData?.equipeId || userData?.idEquipe || "").trim();
-
-  const estAdmin = userData?.isAdmin === true;
-  const estRemplacant = role === "remplacant" || userData?.estRemplacant === true;
-  const estCapitaine = role === "capitaine" || estAdmin;
-  const estDansEquipe =
-    equipeId && normaliserTexteGlobal(equipeId) !== "independant";
-  const estJoueur = !estCapitaine && estDansEquipe && !estRemplacant;
-  const estMembre =
-    !estAdmin && !estCapitaine && !estJoueur && !estRemplacant;
-
-  const roleAffichage = estAdmin
-    ? "Administrateur"
-    : estCapitaine
-    ? "Capitaine"
-    : estJoueur
-    ? "Joueur"
-    : estRemplacant
-    ? "Remplaçant"
-    : "Membre";
-
-  const categorieActive = normaliserCategorieGlobal(
-    userData?.categorie || equipeActuelle?.categorie || equipeActuelle?.catégorie
-  );
-
-  const aujourdHui = new Date();
-  aujourdHui.setHours(0, 0, 0, 0);
-
-  const prochainMatch =
-    horairesLigue.find((date) => {
-      const dateMatch = new Date(`${date.id}T00:00:00`);
-
-      return (
-        dateMatch >= aujourdHui &&
-        (!categorieActive || date.categorie === categorieActive)
-      );
-    }) || null;
-
-  const demandesRecuesEnAttente = demandesRecues.filter(
-    (demande) => demande.statut === "en_attente"
-  );
-
-  const demandesEnvoyeesEnAttente = demandesEnvoyees.filter(
-    (demande) => demande.statut === "en_attente"
-  );
-
-  const libelleStatut = (statut) => {
-    if (statut === "accepte") return "Confirmé";
-    if (statut === "refuse") return "Refusé";
-    if (statut === "en_attente") return "En attente";
-    return statut || "En attente";
-  };
-
-  const couleurStatut = (statut) => {
-    if (statut === "accepte") return "bg-emerald-400/15 text-emerald-300";
-    if (statut === "refuse") return "bg-red-400/15 text-red-300";
-    return "bg-amber-400/15 text-amber-300";
-  };
-
-  const statutCommande = (commande) => {
-    const statut =
-      commande.statut ||
-      commande.status ||
-      commande.etat ||
-      "Reçue";
-
-    return String(statut);
-  };
-
-  const totalCommandeBoutique = (commande) => {
-    const total =
-      commande.total ||
-      commande.totalCommande ||
-      commande.montantTotal ||
-      0;
-
-    return Number(total) || 0;
-  };
-
-  const articlesCommande = (commande) => {
-    if (Array.isArray(commande.articles)) return commande.articles;
-    if (Array.isArray(commande.items)) return commande.items;
-    return [];
-  };
-
-  const numeroCommande = (commande) =>
-    commande.numeroCommande ||
-    commande.numeroCommandeSimple ||
-    commande.noCommande ||
-    commande.id;
-
-  const sauvegarderProfil = async () => {
-    if (!user) return;
-
-    if (!profilForm.nom.trim()) {
-      setMessageProfil("Le nom ne peut pas être vide.");
-      return;
-    }
-
-    try {
-      const updates = {
-        nom: profilForm.nom.trim(),
-        telephone: formatTelephone(profilForm.telephone),
-        updatedAt: serverTimestamp(),
-      };
-
-      await updateDoc(doc(db, "users", user.uid), updates);
-
-      setUserData((prev) => ({
-        ...prev,
-        ...updates,
-      }));
-
-      setEditionProfil(false);
-      setMessageProfil("Profil mis à jour.");
-    } catch (error) {
-      console.error("Erreur mise à jour profil :", error);
-      setMessageProfil("Erreur lors de la mise à jour du profil.");
-    }
-  };
-
-  const prenom = userData?.nom?.split(" ")[0] || "membre";
-
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        LVPSA
-      </p>
-
-      <h1 className="mt-2 text-5xl font-black text-white">
-        Mon espace
-      </h1>
-
-      <p className="mt-5 text-xl text-slate-300">
-        Bonjour {prenom}, voici ce qui te concerne actuellement.
-      </p>
-
-      <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              Profil
-            </p>
-
-            <button
-              type="button"
-              onClick={() => {
-                setEditionProfil(!editionProfil);
-                setMessageProfil("");
-                setProfilForm({
-                  nom: userData?.nom || "",
-                  telephone: formatTelephone(userData?.telephone) || "",
-                });
-              }}
-              className="rounded-full border border-white/15 px-4 py-2 text-sm font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              {editionProfil ? "Annuler" : "Modifier"}
-            </button>
-          </div>
-
-          {!editionProfil ? (
-            <>
-              <h2 className="mt-3 text-2xl font-black text-white">
-                {userData?.nom || "Membre LVPSA"}
-              </h2>
-
-              <p className="mt-2 text-slate-300">
-                {userData?.email || user?.email}
-              </p>
-
-              <p className="text-slate-300">
-                {formatTelephone(userData?.telephone) || "Téléphone non précisé"}
-              </p>
-
-              <p className="mt-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-slate-300">
-                {roleAffichage}
-              </p>
-            </>
-          ) : (
-            <div className="mt-5 space-y-4">
-              <input
-                value={profilForm.nom}
-                onChange={(e) =>
-                  setProfilForm({ ...profilForm, nom: e.target.value })
-                }
-                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white"
-                placeholder="Nom complet"
-              />
-
-              <input
-                value={profilForm.telephone}
-                onChange={(e) =>
-                  setProfilForm({
-                    ...profilForm,
-                    telephone: formatTelephone(e.target.value),
-                  })
-                }
-                maxLength={13}
-                className="w-full rounded-2xl border border-white/10 bg-slate-900 px-4 py-3 text-white"
-                placeholder="Téléphone"
-              />
-
-              <p className="text-xs text-slate-400">
-                Le courriel de connexion doit être modifié par l'administration au besoin.
-              </p>
-
-              <button
-                type="button"
-                onClick={sauvegarderProfil}
-                className="w-full rounded-full bg-amber-400 px-5 py-3 font-black text-slate-950 hover:bg-amber-300"
-              >
-                Sauvegarder
-              </button>
-            </div>
-          )}
-
-          {messageProfil && (
-            <p className="mt-4 rounded-xl bg-white/10 p-3 text-sm text-amber-300">
-              {messageProfil}
-            </p>
-          )}
-        </div>
-
-        {(estJoueur || estCapitaine) && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 xl:col-span-2">
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              Équipe
-            </p>
-
-            <h2 className="mt-3 text-2xl font-black text-white">
-              {userData?.equipeNom ||
-                userData?.equipenom ||
-                nomEquipeGlobal(equipeActuelle) ||
-                "Aucune équipe"}
-            </h2>
-
-            <p className="mt-2 text-slate-300">
-              Catégorie :{" "}
-              {categorieActive === "recreatif"
-                ? "Récréatif"
-                : categorieActive === "competitif"
-                ? "Compétitif"
-                : "Non précisée"}
-            </p>
-
-            {prochainMatch ? (
-              <div className="mt-4 rounded-2xl bg-emerald-400/10 p-4">
-                <p className="font-black text-emerald-300">
-                  Prochain match : {prochainMatch.label}
-                </p>
-
-                <div className="mt-3 space-y-2 text-sm text-slate-200">
-                  {prochainMatch.matchs.map((match, index) => (
-                    <p key={index} className="rounded-xl bg-black/20 p-3">
-                      {match}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p className="mt-4 rounded-2xl bg-white/10 p-4 text-slate-300">
-                Aucun prochain match affiché.
-              </p>
-            )}
-          </div>
-        )}
-
-        {estRemplacant && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              Remplaçant
-            </p>
-
-            <h2 className="mt-3 text-4xl font-black text-white">
-              {demandesRecuesEnAttente.length}
-            </h2>
-
-            <p className="mt-2 text-slate-300">
-              demande{demandesRecuesEnAttente.length > 1 ? "s" : ""} en attente
-            </p>
-
-            <Link
-              to="/remplacants"
-              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-            >
-              Voir mes demandes
-            </Link>
-          </div>
-        )}
-
-        {estCapitaine && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              Capitaine
-            </p>
-
-            <h2 className="mt-3 text-4xl font-black text-white">
-              {demandesEnvoyeesEnAttente.length}
-            </h2>
-
-            <p className="mt-2 text-slate-300">
-              demande{demandesEnvoyeesEnAttente.length > 1 ? "s" : ""} envoyée{demandesEnvoyeesEnAttente.length > 1 ? "s" : ""} en attente
-            </p>
-
-            <Link
-              to="/gestion-equipe"
-              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-            >
-              Gestion d'équipe
-            </Link>
-          </div>
-        )}
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-            Boutique
-          </p>
-
-          <h2 className="mt-3 text-4xl font-black text-white">
-            {commandes.length}
-          </h2>
-
-          <p className="mt-2 text-slate-300">
-            commande{commandes.length > 1 ? "s" : ""} associée{commandes.length > 1 ? "s" : ""} à ton compte
-          </p>
-
-          <a
-            href="#mes-commandes"
-            className="mt-5 inline-flex rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            Voir mes commandes
-          </a>
-        </div>
-
-        {estAdmin && (
-          <div className="rounded-3xl border border-amber-400/30 bg-amber-400/10 p-6">
-            <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
-              Admin
-            </p>
-
-            <h2 className="mt-3 text-2xl font-black text-white">
-              Administration LVPSA
-            </h2>
-
-            <p className="mt-2 text-slate-300">
-              Accès complet à la gestion du site.
-            </p>
-
-            <Link
-              to="/admin"
-              className="mt-5 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-            >
-              Administration
-            </Link>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-12 grid gap-8 lg:grid-cols-2">
-        {estRemplacant && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="text-3xl font-black text-amber-300">
-                  Mes demandes reçues
-                </h2>
-
-                <p className="mt-3 text-slate-300">
-                  Demandes envoyées par les capitaines.
-                </p>
-              </div>
-
-              <Link
-                to="/remplacants"
-                className="rounded-full border border-white/15 px-5 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
-              >
-                Voir tout
-              </Link>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              {demandesRecues.slice(0, 3).length > 0 ? (
-                demandesRecues.slice(0, 3).map((demande) => (
-                  <div
-                    key={demande.id}
-                    className="rounded-2xl border border-white/10 bg-black/20 p-5"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-xl font-black text-white">
-                          {demande.equipeNom || "Équipe non précisée"}
-                        </h3>
-
-                        <p className="mt-2 text-slate-300">
-                          Date : {demande.dateLabel || demande.date || "Non précisée"}
-                        </p>
-
-                        <p className="text-slate-300">
-                          Joueur remplacé : {demande.joueurRemplaceNom || "Non précisé"}
-                        </p>
-                      </div>
-
-                      <span
-                        className={`rounded-full px-4 py-2 text-sm font-black uppercase ${couleurStatut(
-                          demande.statut
-                        )}`}
-                      >
-                        {libelleStatut(demande.statut)}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-slate-400">
-                  Aucune demande reçue pour le moment.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {estCapitaine && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <h2 className="text-3xl font-black text-amber-300">
-                  Demandes envoyées
-                </h2>
-
-                <p className="mt-3 text-slate-300">
-                  Suivi rapide de tes demandes de remplacement.
-                </p>
-              </div>
-
-              <Link
-                to="/gestion-equipe"
-                className="rounded-full border border-white/15 px-5 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
-              >
-                Gestion d'équipe
-              </Link>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              {demandesEnvoyees.slice(0, 3).length > 0 ? (
-                demandesEnvoyees.slice(0, 3).map((demande) => (
-                  <div
-                    key={demande.id}
-                    className="rounded-2xl border border-white/10 bg-black/20 p-5"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-xl font-black text-white">
-                          {demande.remplacantNom || "Remplaçant non précisé"}
-                        </h3>
-
-                        <p className="mt-2 text-slate-300">
-                          Date : {demande.dateLabel || demande.date || "Non précisée"}
-                        </p>
-
-                        <p className="text-slate-300">
-                          Joueur remplacé : {demande.joueurRemplaceNom || "Non précisé"}
-                        </p>
-                      </div>
-
-                      <span
-                        className={`rounded-full px-4 py-2 text-sm font-black uppercase ${couleurStatut(
-                          demande.statut
-                        )}`}
-                      >
-                        {libelleStatut(demande.statut)}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-slate-400">
-                  Aucune demande envoyée pour le moment.
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div className="rounded-3xl border border-amber-400/20 bg-gradient-to-br from-amber-400/10 to-slate-900 p-8">
-          <p className="font-bold uppercase tracking-wider text-amber-300">
-            Événement à venir
-          </p>
-
-          <h2 className="mt-2 text-3xl font-black text-white">
-            Tournoi LVPSA 2026
-          </h2>
-
-          <p className="mt-4 text-slate-300">
-            Le tournoi est complet, mais l'horaire, les règlements et les informations importantes restent disponibles en tout temps.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link
-              to="/tournoi"
-              className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-            >
-              Informations
-            </Link>
-
-            <Link
-              to="/tournoi/horaire"
-              className="rounded-full border border-white/15 px-6 py-3 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              Horaire
-            </Link>
-          </div>
-        </div>
-
-        {estMembre && (
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-            <h2 className="text-3xl font-black text-amber-300">
-              Bienvenue à la LVPSA
-            </h2>
-
-            <p className="mt-3 text-slate-300">
-              Ton compte est actif. Tu peux consulter la boutique, le calendrier et les classements.
-            </p>
-
-            <Link
-              to="/inscription-ligue"
-              className="mt-6 inline-flex rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-            >
-              Devenir remplaçant
-            </Link>
-          </div>
-        )}
-      </div>
-
-      <div id="mes-commandes" className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <p className="font-bold uppercase tracking-wider text-amber-300">
-              Boutique
-            </p>
-
-            <h2 className="mt-2 text-3xl font-black text-white">
-              Mes commandes
-            </h2>
-          </div>
-
-          <Link
-            to="/boutique"
-            className="rounded-full bg-amber-400 px-6 py-3 font-black text-slate-950 hover:bg-amber-300"
-          >
-            Nouvelle commande
-          </Link>
-        </div>
-
-        <div className="mt-8 space-y-5">
-          {commandes.length > 0 ? (
-            commandes.map((commande) => {
-              const articles = articlesCommande(commande);
-
-              return (
-                <div
-                  key={commande.id}
-                  className="rounded-2xl border border-white/10 bg-black/20 p-5"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-xl font-black text-white">
-                        Commande {numeroCommande(commande)}
-                      </h3>
-
-                      <p className="mt-2 text-slate-300">
-                        Statut :{" "}
-                        <span className="font-bold text-amber-300">
-                          {statutCommande(commande)}
-                        </span>
-                      </p>
-                    </div>
-
-                    <p className="rounded-full bg-white/10 px-4 py-2 font-black text-white">
-                      Total : {totalCommandeBoutique(commande)} $
-                    </p>
-                  </div>
-
-                  {articles.length > 0 ? (
-                    <div className="mt-5 grid gap-3 md:grid-cols-2">
-                      {articles.map((article, index) => (
-                        <div
-                          key={`${commande.id}-${index}`}
-                          className="rounded-xl bg-white/5 p-4 text-slate-300"
-                        >
-                          <p className="font-black text-white">
-                            {article.nom ||
-                              article.categorie ||
-                              article.modele ||
-                              article.type ||
-                              "Article"}
-                          </p>
-
-                          <p className="mt-1 text-sm">
-                            Couleur : {article.couleurNom || article.couleur || "Non précisée"}
-                          </p>
-
-                          <p className="text-sm">
-                            Grandeur : {article.taille || article.grandeur || "Non précisée"}
-                          </p>
-
-                          <p className="text-sm">
-                            Quantité : {article.quantite || article.qty || 1}
-                          </p>
-
-                          <p className="text-sm">
-                            Prix : {Number(article.prix || 0)} $
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="mt-5 rounded-xl bg-white/5 p-4 text-slate-300">
-                      {commande.commande || commande.resume || "Détails de commande non disponibles."}
-                    </p>
-                  )}
-                </div>
-              );
-            })
-          ) : (
-            <p className="text-slate-400">
-              Aucune commande associée à ton compte pour le moment.
-            </p>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
-        <h2 className="text-3xl font-black text-amber-300">
-          Accès rapides
-        </h2>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Link
-            to="/calendrier"
-            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            📅 Calendrier
-          </Link>
-
-          <Link
-            to="/classements"
-            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            🏆 Classements
-          </Link>
-
-          <Link
-            to="/boutique"
-            className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-          >
-            🛒 Boutique
-          </Link>
-
-          {estAdmin ? (
-            <Link
-              to="/admin"
-              className="rounded-2xl border border-amber-400 bg-amber-400 p-5 font-black text-slate-950 hover:bg-amber-300"
-            >
-              ⚙️ Administration
-            </Link>
-          ) : estCapitaine ? (
-            <Link
-              to="/gestion-equipe"
-              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              👥 Gestion d'équipe
-            </Link>
-          ) : estRemplacant ? (
-            <Link
-              to="/remplacants"
-              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              🔁 Remplaçants
-            </Link>
-          ) : (
-            <Link
-              to="/inscription-ligue"
-              className="rounded-2xl border border-white/10 bg-black/20 p-5 font-black text-white hover:border-amber-300 hover:text-amber-300"
-            >
-              🙋 Inscriptions
-            </Link>
-          )}
-        </div>
       </div>
     </section>
   );
@@ -6517,600 +5248,3 @@ const couleurStatutDemande = (statut) => {
     </section>
   );
 }
-function HoraireTournoi() {
-  const URL_PRELIMINAIRE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-c5VyUXXuIZzF-kTjV0f5Q3j22z_GEVvDZo_NPv0TL2vFioxrTrbmekcGRsQG_-YZjEpoucTHiuK5/pub?gid=1462787850&single=true&output=csv";
-  const URL_SERIES_RECREATIF = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-c5VyUXXuIZzF-kTjV0f5Q3j22z_GEVvDZo_NPv0TL2vFioxrTrbmekcGRsQG_-YZjEpoucTHiuK5/pub?gid=1339498144&single=true&output=csv";
-  const URL_SERIES_COMPETITIF = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS-c5VyUXXuIZzF-kTjV0f5Q3j22z_GEVvDZo_NPv0TL2vFioxrTrbmekcGRsQG_-YZjEpoucTHiuK5/pub?gid=1822024061&single=true&output=csv";
-
-  const [matchsPreliminaires, setMatchsPreliminaires] = useState([]);
-  const [seriesRecreatif, setSeriesRecreatif] = useState([]);
-  const [seriesCompetitif, setSeriesCompetitif] = useState([]);
-  const [chargementHoraire, setChargementHoraire] = useState(true);
-  const [erreurHoraire, setErreurHoraire] = useState("");
-  const [equipeFiltre, setEquipeFiltre] = useState("");
-
-  const normaliserEntete = (texte) =>
-    String(texte || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const lireCSV = (csv) => {
-  const parserLigne = (ligne) => {
-    const separateurs = [",", ";", "\t"];
-
-    const separateur =
-      separateurs.find((sep) => ligne.includes(sep)) || ",";
-
-    return ligne
-      .split(
-        separateur === ","
-          ? /,(?=(?:(?:[^"]*"){2})*[^"]*$)/
-          : separateur
-      )
-      .map((cell) =>
-        cell
-          .replace(/^"|"$/g, "")
-          .replace(/""/g, '"')
-          .trim()
-      );
-  };
-
-  const lignes = csv
-    .split(/\r?\n/)
-    .map(parserLigne)
-    .filter((row) => row.some((cell) => String(cell).trim() !== ""));
-
-  if (lignes.length < 2) return [];
-
-  const normaliser = (texte) =>
-    String(texte || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const indexEntetes = lignes.findIndex((row) => {
-    const rowNormalisee = row.map(normaliser);
-
-    return (
-      rowNormalisee.some((cell) => cell.includes("match")) &&
-      rowNormalisee.some((cell) => cell.includes("heure"))
-    );
-  });
-
-  if (indexEntetes === -1) {
-    console.error("Aucune ligne d'entêtes trouvée dans le CSV.");
-    return [];
-  }
-
-  const entetes = lignes[indexEntetes].map(normaliser);
-
-  const valeur = (row, nomsPossibles) => {
-    for (const nom of nomsPossibles) {
-      const index = entetes.indexOf(normaliser(nom));
-
-      if (index !== -1) {
-        return row[index] || "";
-      }
-    }
-
-    return "";
-  };
-
-  return lignes
-    .slice(indexEntetes + 1)
-    .filter((row) => {
-      const noMatch = valeur(row, ["Match #", "Match", "No", "No."]);
-      const heure = valeur(row, ["Heure"]);
-
-      return noMatch && heure;
-    })
-    .map((row) => {
-      const set1A = valeur(row, ["Set 1 - A", "Set 1 A"]);
-      const set1B = valeur(row, ["Set 1 - B", "Set 1 B"]);
-      const set2A = valeur(row, ["Set 2 - A", "Set 2 A"]);
-      const set2B = valeur(row, ["Set 2 - B", "Set 2 B"]);
-
-      return {
-        no: valeur(row, ["Match #", "Match", "No", "No."]),
-        heure: valeur(row, ["Heure"]),
-        categorie: valeur(row, ["Catégorie", "Categorie"]),
-        equipeA: valeur(row, ["Équipe A", "Equipe A"]),
-        equipeB: valeur(row, ["Équipe B", "Equipe B"]),
-        set1A,
-        set1B,
-        set2A,
-        set2B,
-        gagnant: valeur(row, ["Gagnant"]),
-        marqueur: valeur(row, ["Arbitre", "Arbitre (équipe)", "Marqueur"]),
-        statut: valeur(row, ["Statut"]) || "À jouer",
-      };
-    });
-};
-  useEffect(() => {
-    async function chargerHoraire() {
-      try {
-        setChargementHoraire(true);
-        setErreurHoraire("");
-
-        const urls = [
-          URL_PRELIMINAIRE,
-          URL_SERIES_RECREATIF,
-          URL_SERIES_COMPETITIF,
-        ];
-
-        if (urls.some((url) => url.includes("COLLE_ICI"))) {
-          setErreurHoraire(
-            "Les liens CSV de l’horaire n’ont pas encore été ajoutés dans le code."
-          );
-          setChargementHoraire(false);
-          return;
-        }
-
-        const [prelimRes, recRes, compRes] = await Promise.all([
-          fetch(URL_PRELIMINAIRE),
-          fetch(URL_SERIES_RECREATIF),
-          fetch(URL_SERIES_COMPETITIF),
-        ]);
-
-        const [prelimCsv, recCsv, compCsv] = await Promise.all([
-          prelimRes.text(),
-          recRes.text(),
-          compRes.text(),
-        ]);
-
-        setMatchsPreliminaires(lireCSV(prelimCsv));
-        setSeriesRecreatif(lireCSV(recCsv));
-        setSeriesCompetitif(lireCSV(compCsv));
-      } catch (error) {
-        console.error("Erreur lors du chargement de l’horaire :", error);
-        setErreurHoraire(
-          "Impossible de charger l’horaire pour le moment. Veuillez réessayer plus tard."
-        );
-      } finally {
-        setChargementHoraire(false);
-      }
-    }
-
-    chargerHoraire();
-  }, []);
-
-  const resultatMatch = (match) => {
-    const aSet1 = String(match.set1A || "").trim();
-    const bSet1 = String(match.set1B || "").trim();
-    const aSet2 = String(match.set2A || "").trim();
-    const bSet2 = String(match.set2B || "").trim();
-
-    if (!aSet1 && !bSet1 && !aSet2 && !bSet2) {
-      return "—";
-    }
-
-    return `${aSet1 || "-"}-${bSet1 || "-"} / ${aSet2 || "-"}-${bSet2 || "-"}`;
-  };
-
-  const couleurCategorie = (categorie) => {
-    const texte = String(categorie || "").toLowerCase();
-
-    if (texte.includes("récréatif") || texte.includes("recreatif")) {
-      return "bg-sky-400/10 text-sky-300";
-    }
-
-    if (texte.includes("compétitif") || texte.includes("competitif")) {
-      return "bg-red-400/10 text-red-300";
-    }
-
-    return "bg-white/10 text-slate-300";
-  };
-
-  const normaliserTexte = (texte) =>
-  String(texte || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-
-const toutesLesEquipes = Array.from(
-  new Set(
-    [...matchsPreliminaires, ...seriesRecreatif, ...seriesCompetitif]
-      .flatMap((match) => [
-        match.equipeA,
-        match.equipeB,
-        match.marqueur,
-      ])
-      .filter(Boolean)
-      .filter((nom) => {
-        const texte = normaliserTexte(nom);
-
-        return (
-          !texte.includes("classement") &&
-          !texte.includes("gagnant") &&
-          !texte.includes("demi-finale") &&
-          texte !== "a confirmer"
-        );
-      })
-  )
-).sort((a, b) => a.localeCompare(b, "fr"));
-
-const matchConcerneEquipe = (match) => {
-  if (!equipeFiltre) return true;
-
-  const equipe = normaliserTexte(equipeFiltre);
-
-  return (
-    normaliserTexte(match.equipeA) === equipe ||
-    normaliserTexte(match.equipeB) === equipe ||
-    normaliserTexte(match.marqueur) === equipe
-  );
-};
-
-const matchsPreliminairesFiltres = matchsPreliminaires.filter(matchConcerneEquipe);
-const seriesRecreatifFiltres = seriesRecreatif.filter(matchConcerneEquipe);
-const seriesCompetitifFiltres = seriesCompetitif.filter(matchConcerneEquipe);
-  
-  const TableHoraire = ({ titre, matchs, afficherGagnant = true }) => (
-    <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl">
-      <div className="bg-amber-400 px-6 py-5 text-slate-950">
-        <h2 className="text-3xl font-black">{titre}</h2>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1100px] text-left">
-          <thead>
-            <tr className="border-b border-white/10 bg-slate-900 text-amber-300">
-              <th className="px-5 py-4 font-black">Match</th>
-              <th className="px-5 py-4 font-black">Heure</th>
-              <th className="px-5 py-4 font-black">Catégorie</th>
-              <th className="px-5 py-4 font-black">Équipe A</th>
-              <th className="px-5 py-4 font-black">Équipe B</th>
-              <th className="px-5 py-4 font-black">Résultat</th>
-              <th className="px-5 py-4 font-black">Marqueur</th>
-              {afficherGagnant && (<th className="px-5 py-4 font-black">Gagnant</th>)}
-              <th className="px-5 py-4 font-black">Statut</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {matchs.length > 0 ? (
-              matchs.map((match) => (
-                <tr
-                  key={`${titre}-${match.no}`}
-                  className="border-b border-white/10 text-white"
-                >
-                  <td className="px-5 py-4 font-black text-amber-300">
-                    #{match.no}
-                  </td>
-
-                  <td className="px-5 py-4 font-bold">
-                    {match.heure}
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-sm font-bold ${couleurCategorie(
-                        match.categorie
-                      )}`}
-                    >
-                      {match.categorie}
-                    </span>
-                  </td>
-
-                  <td className="px-5 py-4 font-bold">
-                    {match.equipeA}
-                  </td>
-
-                  <td className="px-5 py-4 font-bold">
-                    {match.equipeB}
-                  </td>
-
-                  <td className="px-5 py-4 text-slate-300">
-                    {resultatMatch(match)}
-                  </td>
-
-                  <td className="px-5 py-4 text-slate-300">
-                    {match.marqueur || "À confirmer"}
-                  </td>
-
-                  {afficherGagnant && (
-  <td className="px-5 py-4 text-slate-300">
-    {match.gagnant || "—"}
-  </td>
-)}
-
-                  <td className="px-5 py-4">
-                    <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-bold text-slate-300">
-                      {match.statut || "À jouer"}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="9" className="px-5 py-8 text-center text-slate-400">
-                  Aucun match à afficher pour le moment.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        Tournoi LVPSA 2026
-      </p>
-
-      <h1 className="mt-2 text-5xl font-black text-white">
-        Horaire du tournoi
-      </h1>
-
-      <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
-        Voici l’horaire officiel du tournoi. Les équipes doivent être prêtes à
-        commencer dès que leur tour arrive. L’horaire pourrait légèrement varier
-        selon l’avance ou le retard accumulé durant la journée.
-      </p>
-
-      <div className="mt-8 rounded-[2rem] border border-white/10 bg-white/5 p-6">
-  <p className="text-sm font-bold uppercase tracking-[0.25em] text-amber-300">
-    Filtrer l’horaire par équipe
-  </p>
-
-  <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-center">
-    <select
-      value={equipeFiltre}
-      onChange={(e) => setEquipeFiltre(e.target.value)}
-      className="w-full rounded-2xl border border-white/10 bg-slate-900 px-5 py-4 text-white md:max-w-md"
-    >
-      <option value="">Toutes les équipes</option>
-
-      {toutesLesEquipes.map((equipe) => (
-        <option key={equipe} value={equipe}>
-          {equipe}
-        </option>
-      ))}
-    </select>
-
-    {equipeFiltre && (
-      <button
-        type="button"
-        onClick={() => setEquipeFiltre("")}
-        className="rounded-full border border-white/15 px-6 py-3 font-bold text-white hover:border-amber-300 hover:text-amber-300"
-      >
-        Réinitialiser
-      </button>
-    )}
-  </div>
-
-  {equipeFiltre && (
-    <p className="mt-4 text-slate-300">
-      Affichage des matchs et assignations de marqueur pour :{" "}
-      <span className="font-bold text-amber-300">{equipeFiltre}</span>
-    </p>
-  )}
-</div>
-
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
-  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-    <div className="flex items-center gap-3">
-      <div className="text-2xl">🏐</div>
-
-      <h2 className="text-lg font-black text-white">
-        Ronde préliminaire
-      </h2>
-    </div>
-
-    <p className="mt-2 text-sm leading-6 text-slate-300">
-      Parties de 2 sets de 21 points.
-    </p>
-  </div>
-
-  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-    <div className="flex items-center gap-3">
-      <div className="text-2xl">📝</div>
-
-      <h2 className="text-lg font-black text-white">
-        Marqueurs
-      </h2>
-    </div>
-
-    <p className="mt-2 text-sm leading-6 text-slate-300">
-      Chaque équipe fournit un marqueur pour 2 parties.
-    </p>
-  </div>
-
-  <div className="rounded-2xl border border-red-400/20 bg-red-400/10 p-4">
-    <div className="flex items-center gap-3">
-      <div className="text-2xl">⏱️</div>
-
-      <h2 className="text-lg font-black text-white">
-        Soyez prêts
-      </h2>
-    </div>
-
-    <p className="mt-2 text-sm leading-6 text-slate-300">
-      Non prêt 5 minutes après le match précédent : forfait 21-0 au premier set.
-    </p>
-  </div>
-</div>
-
-      {chargementHoraire && (
-        <p className="mt-10 rounded-2xl bg-white/10 p-5 text-center text-slate-300">
-          Chargement de l’horaire...
-        </p>
-      )}
-
-      {erreurHoraire && (
-        <div className="mt-10 rounded-2xl border border-red-400/30 bg-red-400/10 p-5 text-center text-red-300">
-          {erreurHoraire}
-        </div>
-      )}
-
-      {!chargementHoraire && !erreurHoraire && (
-        <>
-          <div className="mt-12">
-            <TableHoraire
-  titre="Ronde préliminaire"
-  matchs={matchsPreliminairesFiltres}
-  afficherGagnant={false}
-/>
-          </div>
-
-          <div className="mt-16 flex flex-col gap-8">
-  <TableHoraire
-    titre="Séries récréatives"
-    matchs={seriesRecreatifFiltres}
-  />
-
-  <TableHoraire
-    titre="Séries compétitives"
-    matchs={seriesCompetitifFiltres}
-  />
-</div>
-        </>
-      )}
-
-      <div className="mt-12 rounded-[2rem] border border-amber-400/20 bg-amber-400/10 p-8">
-        <h2 className="text-3xl font-black text-amber-300">
-          Informations importantes
-        </h2>
-
-        <ul className="mt-6 space-y-3 text-slate-300">
-          <li>• Terrain de pickleball, basketball, parc pour enfants, jeux d’eau et toilettes sur place.</li>
-          <li>• Nourriture et rafraîchissements inclus en quantité déterminée pour les joueurs.</li>
-          <li>• Nourriture et rafraîchissements aussi disponibles à l’achat pour tous.</li>
-          <li>• Prévoir vos chaises.</li>
-          <li>• Bourses, prix de présence et festin d’après-tournoi seront offerts.</li>
-          <li>• Le but est d’avoir du gros fun : en cas de zone grise, le point sera repris.</li>
-        </ul>
-      </div>
-
-      <div className="mt-10 flex flex-wrap gap-4">
-        <Link
-          to="/tournoi"
-          className="rounded-full border border-white/15 px-8 py-4 font-black text-white hover:border-amber-300 hover:text-amber-300"
-        >
-          Retour aux informations
-        </Link>
-
-        <Link
-          to="/tournoi/reglements"
-          className="rounded-full bg-amber-400 px-8 py-4 font-black text-slate-950 hover:bg-amber-300"
-        >
-          Voir les règlements
-        </Link>
-      </div>
-    </section>
-  );
-}
-function ReglementsTournoi() {
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-20">
-      <p className="font-bold uppercase tracking-wider text-amber-300">
-        Tournoi LVPSA
-      </p>
-
-      <h1 className="mt-2 text-5xl font-black">
-        Règlements du tournoi
-      </h1>
-
-      <p className="mt-4 text-xl text-slate-300">
-        Tournoi du 18 juillet 2026
-      </p>
-
-      <div className="mt-12 grid gap-8 lg:grid-cols-2">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Format de jeu
-          </h2>
-
-          <ul className="mt-6 space-y-4 text-slate-300">
-            <li>🏐 4 contre 4 avec au moins une fille sur le terrain en tout temps.</li>
-            <li>👥 Une équipe peut avoir plus de 4 joueurs, mais seulement 4 joueurs sur le terrain.</li>
-            <li>✅ S'il y a de l'avance, les parties peuvent commencer jursqu'à 10 minutes avant l'horaire prévu</li>
-            <li>✅ Phase préliminaire : 2 sets de 21 points (max de 21, pas besoin de 2 points d'écarts)</li>
-            <li>✅ Phase séries : 2 sets de 25 points (2 points d'écarts, plafond à 29), un set de 15 points si égalité (2 points d'écarts, plafond à 19).</li>
-            <li>⚠️ Si une équipe joue à 3, un joueur fantôme perdra un point à sa rotation au service.</li>
-            <li>⚠️ Pour qu'un joueur/joueuse soit admissible à la phase ''série'', il/elle doit avoir jouer au moins une match complet en ronde préléminaire.</li>
-          </ul>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Interdictions
-          </h2>
-
-          <ul className="mt-6 space-y-4 text-slate-300">
-            <li>❌ Bloquer ou feinte de bloquer une femme sur une action à l’attaque pour les hommes.</li>
-            <li>✅ Bloc permis sur une femme uniquement lors d’un deuxième contact ou d’un retour en manchette.</li>
-            <li>❌ Renvoyer en touche ou en tip, sauf pour le volet récréatif.</li>
-            <li>❌ Aucune faute de double touche ne sera appelée.</li>
-            <li>❌ Toucher le filet.</li>
-            <li>❌ Aucune pause entre les sets et les matchs pour assurer le respect de l'horaire.</li>
-            <li>❌ Traverser de l’autre côté.</li>
-            <li>❌ Faire un transport.</li>
-          </ul>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Rotation/Position
-          </h2>
-
-          <p className="mt-6 text-slate-300 leading-8">
-            L’ordre des serveurs doit être respecté en tout temps. Il n’y a
-            toutefois aucune erreur de position : tous les joueurs peuvent
-            attaquer au filet en tout temps.
-          </p>
-        </div>
-
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-3xl font-black text-amber-300">
-            Arbitrage et marqueur
-          </h2>
-
-          <p className="mt-6 text-slate-300 leading-8">
-            Un arbitre non officiel/marqueur sera attitré. Toutes les équipes
-            devront fournir un arbitre/marqueur 2 fois pendant la journée. En cas de
-            doute, le point sera repris.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/10 p-8">
-        <h2 className="text-3xl font-black text-amber-300">
-          Météo
-        </h2>
-
-        <p className="mt-4 text-lg text-slate-300">
-          En cas de mauvais temps, le tournoi sera remis au 19 juillet 2026.
-        </p>
-      </div>
-
-      <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
-        <h2 className="text-3xl font-black">
-          Organisateurs
-        </h2>
-
-        <p className="mt-4 text-slate-300">
-          Valérie Thomassin et Michael Théroux
-        </p>
-
-        <a
-          href="mailto:liguevpsa@gmail.com"
-          className="mt-6 inline-flex rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-        >
-          Nous joindre
-        </a>
-      </div>
-    </section>
-  );
-}
-
-
-
