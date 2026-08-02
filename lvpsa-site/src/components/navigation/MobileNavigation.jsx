@@ -2,25 +2,26 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
   ChevronDown,
-  CircleHelp,
-  ClipboardList,
+  Handshake,
+  Images,
   LogIn,
+  LogOut,
   Menu,
   ShieldCheck,
   ShoppingBag,
   Trophy,
   UserRound,
+  UserPlus,
   Users,
   X,
-  Images,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const liensLigue = [
   {
     titre: "Calendrier",
-    lien: "/ligue/calendrier",
+    lien: "/calendrier",
     icone: CalendarDays,
   },
   {
@@ -29,18 +30,13 @@ const liensLigue = [
     icone: Trophy,
   },
   {
-    titre: "Inscriptions",
-    lien: "/inscriptions",
-    icone: ClipboardList,
-  },
-  {
     titre: "Gestion d’équipe",
-    lien: "/ligue/equipe",
+    lien: "/gestion-equipe",
     icone: Users,
   },
   {
     titre: "Règlements",
-    lien: "/ligue/reglements",
+    lien: "/reglements",
     icone: ShieldCheck,
   },
 ];
@@ -62,15 +58,18 @@ const liensTournoi = [
     icone: ShieldCheck,
   },
   {
-  titre: "Galerie",
-  lien: "/galerie",
-  icone: Images,
+    titre: "Galerie",
+    lien: "/galerie",
+    icone: Images,
   },
 ];
 
-export default function MobileNavigation() {
+export default function MobileNavigation({
+  user,
+  authChargee,
+  deconnexion,
+}) {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [menuOuvert, setMenuOuvert] = useState(false);
   const [sectionOuverte, setSectionOuverte] = useState(null);
@@ -97,6 +96,11 @@ export default function MobileNavigation() {
     setSectionOuverte((sectionActuelle) =>
       sectionActuelle === section ? null : section
     );
+  };
+
+  const gererDeconnexion = async () => {
+    fermerMenu();
+    await deconnexion();
   };
 
   return (
@@ -141,18 +145,18 @@ export default function MobileNavigation() {
                   className="flex items-center gap-3"
                 >
                   <img
-                    src="/logo.jpg"
-                    alt="LVPSA"
-                    className="h-11 w-11 rounded-xl object-cover"
+                    src="/Logo.png"
+                    alt="Logo LVPSA"
+                    className="h-16 w-16 object-contain"
                   />
 
                   <div>
-                    <p className="text-sm font-black text-white">
-                      LVPSA
+                    <p className="text-sm font-black uppercase tracking-wide text-cyan-300">
+                      Ligue de volleyball
                     </p>
 
                     <p className="text-xs text-white/50">
-                      Menu principal
+                      Saint-Augustin-de-Desmaures
                     </p>
                   </div>
                 </Link>
@@ -161,7 +165,7 @@ export default function MobileNavigation() {
                   type="button"
                   aria-label="Fermer le menu"
                   onClick={fermerMenu}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white transition hover:bg-white/20"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -188,9 +192,7 @@ export default function MobileNavigation() {
 
                       <ChevronDown
                         className={`h-5 w-5 transition-transform ${
-                          sectionOuverte === "ligue"
-                            ? "rotate-180"
-                            : ""
+                          sectionOuverte === "ligue" ? "rotate-180" : ""
                         }`}
                       />
                     </button>
@@ -206,13 +208,6 @@ export default function MobileNavigation() {
                           <div className="space-y-1 border-t border-white/10 p-2">
                             {liensLigue.map((item) => {
                               const Icone = item.icone;
-                          <Link
-  to="/inscription-ligue"
-  onClick={fermerMenu}
-  className="mt-2 flex w-full items-center justify-center rounded-xl bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
->
-  S’inscrire à la ligue
-</Link>
 
                               return (
                                 <Link
@@ -226,6 +221,14 @@ export default function MobileNavigation() {
                                 </Link>
                               );
                             })}
+
+                            <Link
+                              to="/inscription-ligue"
+                              onClick={fermerMenu}
+                              className="mt-2 flex w-full items-center justify-center rounded-xl bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
+                            >
+                              S’inscrire à la ligue
+                            </Link>
                           </div>
                         </motion.div>
                       )}
@@ -243,9 +246,7 @@ export default function MobileNavigation() {
 
                       <ChevronDown
                         className={`h-5 w-5 transition-transform ${
-                          sectionOuverte === "tournoi"
-                            ? "rotate-180"
-                            : ""
+                          sectionOuverte === "tournoi" ? "rotate-180" : ""
                         }`}
                       />
                     </button>
@@ -264,7 +265,7 @@ export default function MobileNavigation() {
 
                               return (
                                 <Link
-                                  key={item.titre}
+                                  key={item.lien}
                                   to={item.lien}
                                   onClick={fermerMenu}
                                   className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-white/65 transition hover:bg-white/10 hover:text-white"
@@ -290,43 +291,61 @@ export default function MobileNavigation() {
                   </Link>
 
                   <Link
-                    to="/mon-espace"
+                    to="/partenaires"
                     onClick={fermerMenu}
                     className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
                   >
-                    <UserRound className="h-5 w-5 text-cyan-300" />
-                    Mon espace
+                    <Handshake className="h-5 w-5 text-cyan-300" />
+                    Partenaires
                   </Link>
+
+                  {user && (
+                    <Link
+                      to="/mon-espace"
+                      onClick={fermerMenu}
+                      className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
+                    >
+                      <UserRound className="h-5 w-5 text-cyan-300" />
+                      Mon espace
+                    </Link>
+                  )}
                 </div>
               </div>
 
-<Link
-  to="/mon-espace"
-  onClick={fermerMenu}
-  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
->
-  <UserRound className="h-5 w-5 text-cyan-300" />
-  Mon espace
-</Link>
-              
-              <div className="space-y-3 border-t border-white/10 p-4">
-                <Link
-                  to="/connexion"
-                  onClick={fermerMenu}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-3 text-sm font-black text-white transition hover:bg-white/10"
-                >
-                  <LogIn className="h-4 w-4" />
-                  Connexion
-                </Link>
+              {authChargee && (
+                <div className="border-t border-white/10 p-4">
+                  {user ? (
+                    <button
+                      type="button"
+                      onClick={gererDeconnexion}
+                      className="mx-auto flex items-center justify-center gap-2 rounded-xl border border-red-400/30 px-4 py-2 text-sm font-bold text-red-300 transition hover:bg-red-400/10"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Déconnexion
+                    </button>
+                  ) : (
+                    <div className="space-y-3">
+                      <Link
+                        to="/connexion"
+                        onClick={fermerMenu}
+                        className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-3 text-sm font-black text-white transition hover:bg-white/10"
+                      >
+                        <LogIn className="h-4 w-4" />
+                        Connexion
+                      </Link>
 
-                <Link
-                  to="/inscriptions"
-                  onClick={fermerMenu}
-                  className="flex w-full items-center justify-center rounded-xl bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
-                >
-                  Créer un compte
-                </Link>
-              </div>
+                      <Link
+                        to="/creer-compte"
+                        onClick={fermerMenu}
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
+                      >
+                        <UserPlus className="h-4 w-4" />
+                        Créer un compte
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </motion.div>
           </>
         )}
