@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LogOut } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import MegaMenuLigue from "./MegaMenuLigue";
@@ -32,7 +32,11 @@ const routesLigue = [
 const routeEstActive = (pathname, route) =>
   pathname === route || pathname.startsWith(`${route}/`);
 
-export default function DesktopNavigation() {
+export default function DesktopNavigation({
+  user,
+  authChargee,
+  deconnexion,
+}) {
   const location = useLocation();
 
   const [menuOuvert, setMenuOuvert] = useState(null);
@@ -196,19 +200,36 @@ export default function DesktopNavigation() {
       </nav>
 
       <div className="hidden items-center gap-3 lg:flex">
+       {authChargee && (
+  <>
+    {user ? (
+      <button
+        type="button"
+        onClick={deconnexion}
+        className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-red-400/30 px-3 py-2 text-xs font-bold text-red-300 transition hover:bg-red-400/10"
+      >
+        <LogOut className="h-4 w-4" />
+        Déconnexion
+      </button>
+    ) : (
+      <>
         <Link
           to="/connexion"
-          className="rounded-xl border border-white/20 bg-slate-950/25 px-5 py-2.5 text-sm font-black text-white backdrop-blur-md transition hover:bg-white/15"
+          className="shrink-0 rounded-xl border border-white/15 px-5 py-3 text-sm font-black text-white transition hover:border-cyan-300 hover:text-cyan-300"
         >
           Connexion
         </Link>
 
         <Link
-          to="/inscriptions"
-          className="rounded-xl bg-cyan-300 px-5 py-2.5 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200"
+          to="/creer-compte"
+          className="shrink-0 rounded-xl bg-cyan-300 px-5 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-200"
         >
           Créer un compte
         </Link>
+      </>
+    )}
+  </>
+)}
       </div>
     </>
   );
