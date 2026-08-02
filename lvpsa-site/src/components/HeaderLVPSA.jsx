@@ -28,7 +28,7 @@ export default function HeaderLVPSA() {
           : "bg-gradient-to-b from-slate-950/90 to-transparent"
       }`}
     >
-      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between overflow-visible px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-28 max-w-7xl items-center justify-between overflow-visible px-4 sm:px-6 lg:px-8">
        <Link
         to="/"
         aria-label="Retour à l’accueil"
