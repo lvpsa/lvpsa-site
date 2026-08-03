@@ -282,7 +282,7 @@ export default function AccueilV2() {
                   </div>
 
                   <h2 className="mt-3 text-3xl font-black">
-                    Parc Portneuf
+                    Parc Place Portneuf
                   </h2>
                 </div>
 
