@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
+  Medal,
   ChevronDown,
   Handshake,
   Images,
@@ -28,6 +29,12 @@ const liensLigue = [
     titre: "Classements",
     lien: "/classements",
     icone: Trophy,
+  },
+  {
+    titre: "Séries",
+    description: "Consulte l’horaire et les résultats des séries 2026.",
+    lien: "/series",
+    icone: Medal,
   },
   {
     titre: "Gestion d’équipe",
