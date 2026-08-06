@@ -17,6 +17,7 @@ import Tournoi from "./pages/Tournoi";
 import HoraireTournoi from "./pages/HoraireTournoi";
 import ReglementsTournoi from "./pages/ReglementsTournoi";
 import HeaderLVPSA from "./components/HeaderLVPSA";
+import SeriesLigue from "./pages/SeriesLigue";
 
 import { auth, db } from "./firebase";
 import AdminCommandesBoutique from "./components/boutique/AdminCommandesBoutique";
@@ -454,6 +455,7 @@ function ContenuApplication() {
           <Route path="/" element={<AccueilV2 />} />
           <Route path="/galerie" element={<Galerie />} />
           <Route path="/mon-espace" element={<MonEspace />} />
+          <Route path="/series" element={<SeriesLigue />} />
           <Route
   path="/classements"
   element={<Classements />}
