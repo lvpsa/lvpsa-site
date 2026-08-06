@@ -10,6 +10,7 @@ import {
   ShoppingBag,
   Sparkles,
   Trophy,
+  Clock3,
   Wind,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -430,6 +431,71 @@ export default function AccueilV2() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+  <motion.div
+    {...reveal}
+    className="relative overflow-hidden rounded-[2rem] border border-yellow-300/25 bg-gradient-to-br from-yellow-300/15 via-slate-900 to-cyan-300/10 p-6 sm:p-8 lg:p-10"
+  >
+    <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-yellow-300/10 blur-3xl" />
+    <div className="absolute -bottom-20 -left-16 h-56 w-56 rounded-full bg-cyan-300/10 blur-3xl" />
+
+    <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+      <div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-yellow-200">
+          <Trophy className="h-4 w-4" />
+          Les séries arrivent
+        </div>
+
+        <h2 className="mt-5 text-3xl font-black text-white sm:text-4xl">
+          Les séries LVPSA 2026 approchent!
+        </h2>
+
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65">
+          Les meilleures équipes récréatives et compétitives s’affronteront
+          pour terminer la saison en beauté. Demi-finales, matchs pour la
+          troisième place et grandes finales seront au programme.
+        </p>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+            <CalendarDays className="h-5 w-5 text-cyan-300" />
+
+            <div>
+              <p className="text-xs font-bold uppercase text-white/40">
+                Date
+              </p>
+              <p className="font-black text-white">29 août 2026</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+            <Clock3 className="h-5 w-5 text-yellow-300" />
+
+            <div>
+              <p className="text-xs font-bold uppercase text-white/40">
+                Premier match
+              </p>
+              <p className="font-black text-white">13 h 00</p>
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm font-semibold text-white/45">
+          Remis au 30 août en cas de pluie.
+        </p>
+      </div>
+
+      <Link
+        to="/series"
+        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-yellow-300 px-6 py-4 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-yellow-200"
+      >
+        Voir l’horaire des séries
+        <ArrowRight className="h-5 w-5" />
+      </Link>
+    </div>
+  </motion.div>
+</section>
+        
         <section className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
           <motion.div
             {...reveal}
