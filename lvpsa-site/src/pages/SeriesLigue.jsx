@@ -201,14 +201,12 @@ function formaterPhase(phase) {
 
 function formaterStatut(statut) {
   const statuts = {
-    planifie: "Planifié",
-    "en cours": "En cours",
-    en_cours: "En cours",
+    a jouer: "À jouer",
     termine: "Terminé",
     reporte: "Reporté",
   };
 
-  return statuts[statut?.toLowerCase()] || statut || "Planifié";
+  return statuts[statut?.toLowerCase()] || statut || "Prévu";
 }
 
 function classeCategorie(categorie) {
@@ -226,12 +224,12 @@ function classeStatut(statut) {
     return "border-emerald-400/30 bg-emerald-400/10 text-emerald-300";
   }
 
-  if (valeur === "en cours" || valeur === "en_cours") {
-    return "border-orange-400/30 bg-orange-400/10 text-orange-300";
-  }
-
   if (valeur === "reporte") {
     return "border-red-400/30 bg-red-400/10 text-red-300";
+  }
+
+  if (valeur === "a jouer") {
+    return "border-cyan-400/30 bg-cyan-400/10 text-cyan-300";
   }
 
   return "border-white/15 bg-white/5 text-white/60";
