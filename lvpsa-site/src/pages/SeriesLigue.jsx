@@ -201,7 +201,7 @@ function formaterPhase(phase) {
 
 function formaterStatut(statut) {
   const statuts = {
-    a jouer: "À jouer",
+    a_jouer: "À jouer",
     termine: "Terminé",
     reporte: "Reporté",
   };
@@ -228,7 +228,7 @@ function classeStatut(statut) {
     return "border-red-400/30 bg-red-400/10 text-red-300";
   }
 
-  if (valeur === "a jouer") {
+  if (valeur === "a_jouer") {
     return "border-cyan-400/30 bg-cyan-400/10 text-cyan-300";
   }
 
