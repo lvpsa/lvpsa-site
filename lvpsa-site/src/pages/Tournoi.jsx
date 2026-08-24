@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export default function Tournoi() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
+      {/* HERO */}
       <div className="overflow-hidden rounded-[2.5rem] border border-cyan-300/20 bg-gradient-to-br from-slate-950 via-cyan-950 to-slate-950 shadow-2xl">
         <div className="grid items-center lg:grid-cols-[1.1fr_0.9fr]">
           <div className="p-8 sm:p-12 lg:p-16">
@@ -69,6 +70,64 @@ export default function Tournoi() {
         </div>
       </div>
 
+      {/* VIDÉO SOUVENIR */}
+      <div className="mt-20 overflow-hidden rounded-[2.5rem] border border-white/10 bg-slate-900 shadow-2xl">
+        <div className="grid items-center lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="p-8 sm:p-10 lg:p-12">
+            <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">
+              Souvenir 2026
+            </p>
+
+            <h2 className="mt-4 text-4xl font-black leading-tight text-white">
+              Revivez notre premier tournoi
+            </h2>
+
+            <p className="mt-6 text-lg leading-8 text-slate-300">
+              Une journée remplie de volleyball, de compétition, de plaisir et
+              de beaux souvenirs.
+            </p>
+
+            <p className="mt-4 leading-7 text-slate-400">
+              Merci à tous les joueurs, bénévoles, partenaires et spectateurs
+              qui ont contribué au succès de cette première édition.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-4">
+              <a
+                href="https://youtu.be/4idQfxIaUQo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-6 py-3 font-black text-slate-950 transition hover:bg-cyan-200"
+              >
+                Voir sur YouTube
+                <ArrowRight className="h-5 w-5" />
+              </a>
+
+              <Link
+                to="/galerie"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 font-black text-white transition hover:border-cyan-300 hover:text-cyan-300"
+              >
+                Voir les photos
+                <Images className="h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-black">
+            <div className="aspect-video">
+              <iframe
+                className="h-full w-full"
+                src="https://www.youtube.com/embed/4idQfxIaUQo"
+                title="Tournoi LVPSA 2026"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* INFORMATIONS À VENIR */}
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <Link
           to="/tournoi/horaire"
