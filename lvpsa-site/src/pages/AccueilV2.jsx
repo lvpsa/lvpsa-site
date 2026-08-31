@@ -132,10 +132,6 @@ export default function AccueilV2() {
                       <h3 className="mt-2 text-2xl font-black text-white">
                         Les Smash
                       </h3>
-
-                      <p className="mt-2 text-sm text-white/50">
-                        Champions des séries — catégorie récréative
-                      </p>
                     </div>
                   </div>
 
@@ -166,9 +162,6 @@ export default function AccueilV2() {
                         Les Crabes en bikini
                       </h3>
 
-                      <p className="mt-2 text-sm text-white/50">
-                        Champions des séries — catégorie compétitive
-                      </p>
                     </div>
                   </div>
                 </div>
