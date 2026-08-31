@@ -143,7 +143,7 @@ export default function AccueilV2() {
                   <div className="group overflow-hidden rounded-2xl border border-yellow-300/20 bg-slate-950/60">
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img
-                        src="/ligue/crabes-en-bikini.jpg"
+                        src="/ligue/crabes-en-bikini.JPG"
                         alt="Les Crabes en bikini, champions compétitifs LVPSA 2026"
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
