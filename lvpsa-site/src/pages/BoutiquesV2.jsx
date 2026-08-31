@@ -176,7 +176,11 @@ function ImageBoutique({ produit, couleur, vue = "devant", alt, className }) {
 }
 
 export default function BoutiquesV2() {
-  const { chargementInventaire, statutInventaire } = useInventaire();
+  const {
+  chargementInventaire,
+  statutInventaire,
+  quantiteInventaire,
+} = useInventaire();
 
   const [produits, setProduits] = useState([]);
   const [chargementProduits, setChargementProduits] = useState(true);
