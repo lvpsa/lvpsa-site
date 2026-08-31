@@ -730,17 +730,89 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
   </details>
 )}
 
-                <label className="mt-5 block text-sm font-bold text-slate-300">
-                  Quantité
-                </label>
+<div className="mt-6">
+  <label className="block text-sm font-bold text-slate-300">
+    Quantité
+  </label>
 
-                <input
-                  type="number"
-                  min="1"
-                  value={quantite}
-                  onChange={(e) => setQuantite(e.target.value)}
-                  className="mt-2 w-full rounded-2xl px-4 py-3 text-slate-950"
-                />
+  <div className="mt-3 flex items-center gap-4">
+    <button
+      type="button"
+      onClick={() =>
+        setQuantite((q) => Math.max(1, Number(q) - 1))
+      }
+      disabled={Number(quantite) <= 1}
+      className="flex h-12 w-12 items-center justify-center rounded-full
+                 border border-white/15 bg-white/5 text-2xl font-black
+                 text-white transition hover:border-amber-400
+                 hover:bg-amber-400 hover:text-slate-950
+                 disabled:cursor-not-allowed disabled:opacity-30"
+    >
+      −
+    </button>
+
+    <div className="flex h-12 min-w-[80px] items-center justify-center rounded-2xl bg-white text-xl font-black text-slate-950">
+      {quantite}
+    </div>
+
+    <button
+      type="button"
+      onClick={() =>
+        setQuantite((q) => Number(q) + 1)
+      }
+      className="flex h-12 w-12 items-center justify-center rounded-full
+                 border border-white/15 bg-white/5 text-2xl font-black
+                 text-white transition hover:border-amber-400
+                 hover:bg-amber-400 hover:text-slate-950"
+    >
+      +
+    </button>
+  </div>
+
+  {(() => {
+    const stock = quantiteInventaire(
+      produitSelectionne.id,
+      couleurSelectionnee.id,
+      taille
+    );
+
+    const demande = Number(quantite);
+
+    if (stock <= 0) {
+      return (
+        <div className="mt-4 rounded-2xl border border-orange-400/30 bg-orange-400/10 p-4">
+          <p className="font-bold text-orange-300">
+            🔶 Cet article est actuellement sur commande.
+          </p>
+        </div>
+      );
+    }
+
+    if (demande > stock) {
+      return (
+        <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4">
+          <p className="font-bold text-amber-300">
+            ⚠️ Seulement {stock} en inventaire
+          </p>
+
+          <p className="mt-1 text-sm text-slate-300">
+            {stock} disponible{stock > 1 ? "s" : ""} immédiatement et{" "}
+            {demande - stock} sur commande.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4">
+        <p className="font-bold text-emerald-300">
+          ✓ Quantité disponible en inventaire
+        </p>
+      </div>
+    );
+  })()}
+</div>
+</div>
 
                 <button
                   type="button"
