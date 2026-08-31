@@ -538,9 +538,15 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
   ))}
 </div>
 
-      {produitSelectionne && couleurSelectionnee && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
-          <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl">
+{produitSelectionne && couleurSelectionnee && (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-4 py-6"
+    onClick={() => setProduitSelectionne(null)}
+  >
+    <div
+      className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-[2rem] border border-white/10 bg-slate-950 p-6 shadow-2xl"
+      onClick={(e) => e.stopPropagation()}
+    >
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="text-sm font-bold uppercase tracking-wider text-amber-300">
@@ -560,7 +566,7 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
               <button
                 type="button"
                 onClick={() => setProduitSelectionne(null)}
-                className="rounded-full border border-white/10 px-4 py-2 text-sm"
+                className="sticky top-0 z-10 rounded-full border border-white/10 bg-slate-950 px-4 py-2 text-sm"
               >
                 Fermer
               </button>
