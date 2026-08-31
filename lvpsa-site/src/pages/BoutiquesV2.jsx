@@ -812,7 +812,6 @@ alert(`Commande ${resultatCommande.numeroCommande} envoyée avec succès!`);
     );
   })()}
 </div>
-</div>
 
                 <button
                   type="button"
