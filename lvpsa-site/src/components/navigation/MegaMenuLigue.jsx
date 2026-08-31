@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
+  Images,
   Medal,
   ShieldCheck,
   Trophy,
@@ -26,6 +27,12 @@ const liensLigue = [
     description: "Consulte l’horaire et les résultats des séries 2026.",
     lien: "/series",
     icone: Medal,
+  },
+  {
+    titre: "Galerie",
+    description: "Revivez les meilleurs moments de la saison LVPSA.",
+    lien: "/ligue/galerie",
+    icone: Images,
   },
   {
     titre: "Gestion d’équipe",
