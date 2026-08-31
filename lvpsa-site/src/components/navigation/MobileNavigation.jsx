@@ -37,6 +37,11 @@ const liensLigue = [
     icone: Medal,
   },
   {
+  titre: "Galerie",
+  lien: "/ligue/galerie",
+  icone: Images,
+  },
+  {
     titre: "Gestion d’équipe",
     lien: "/gestion-equipe",
     icone: Users,
