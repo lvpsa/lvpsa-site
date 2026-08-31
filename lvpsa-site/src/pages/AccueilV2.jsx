@@ -110,7 +110,7 @@ export default function AccueilV2() {
                   <div className="group overflow-hidden rounded-2xl border border-cyan-300/20 bg-slate-950/60">
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img
-                        src="/les-smash.jpg"
+                        src="/ligue/les-smash.jpg"
                         alt="Les Smash, champions récréatifs LVPSA 2026"
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
@@ -143,7 +143,7 @@ export default function AccueilV2() {
                   <div className="group overflow-hidden rounded-2xl border border-yellow-300/20 bg-slate-950/60">
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img
-                        src="/crabes-en-bikini.jpg"
+                        src="/ligue/crabes-en-bikini.jpg"
                         alt="Les Crabes en bikini, champions compétitifs LVPSA 2026"
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
@@ -183,7 +183,7 @@ export default function AccueilV2() {
                   </Link>
 
                   <Link
-                    to="/galerie"
+                    to="/ligue/galerie"
                     className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-black text-white transition hover:border-cyan-300/30 hover:bg-white/10"
                   >
                     Voir les photos
