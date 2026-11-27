@@ -144,6 +144,7 @@ const memeEquipeGlobal = (membre, equipe) => {
   );
 };
 
+
 async function chargerEquipesLVPSA() {
   const [teamsSnap, equipesSnap] = await Promise.all([
     getDocs(collection(db, "Teams")),
@@ -167,6 +168,7 @@ async function chargerEquipesLVPSA() {
 
   toutes.forEach((equipe) => {
     const cle = equipe.id || normaliserTexteGlobal(nomEquipeGlobal(equipe));
+
     if (!uniques.has(cle)) {
       uniques.set(cle, equipe);
     }
@@ -174,6 +176,7 @@ async function chargerEquipesLVPSA() {
 
   return Array.from(uniques.values());
 }
+
 
 const estRemplacantGlobal = (data) => {
   const equipeId = normaliserTexteGlobal(data.equipeId);
@@ -2384,13 +2387,29 @@ setRemplacements(
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
-const equipesRecreatives = equipes.filter(
-  (equipe) => normaliserCategorie(equipe.categorie) === "recreatif"
+
+const normaliserCategorie = (categorie) =>
+  String(categorie || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+
+// Saison affichée dans l'administration
+const saisonActive = 2027;
+
+const equipesSaisonActive = equipes.filter(
+  (equipe) => Number(equipe.saison) === saisonActive
 );
 
-const equipesCompetitives = equipes.filter(
-  (equipe) => normaliserCategorie(equipe.categorie) === "competitif"
+const equipesRecreatives = equipesSaisonActive.filter(
+  (equipe) => normaliserCategorie(equipe.categorie).includes("recreatif")
 );
+
+const equipesCompetitives = equipesSaisonActive.filter(
+  (equipe) => normaliserCategorie(equipe.categorie).includes("competitif")
+);
+
 
   const joueursParEquipe = (equipe) =>
   membres.filter((membre) => {
