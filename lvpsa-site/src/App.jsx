@@ -1912,14 +1912,24 @@ function Partenaires() {
               </div>
             </div>
 
-            <div className="flex justify-center lg:justify-end">
+            
+            <div className="flex flex-wrap justify-center gap-3 lg:justify-end">
               <a
-                href="https://www.facebook.com/profile.php?id=61572358300215&locale=fr_CA"
+                href="https://www.facebook.com/profile.php?id=61572358300215"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex whitespace-nowrap rounded-full bg-amber-400 px-8 py-4 text-lg font-black text-slate-950 hover:bg-amber-300"
+                className="inline-flex whitespace-nowrap rounded-full bg-blue-600 px-6 py-4 text-lg font-black text-white transition hover:bg-blue-500"
               >
-                Visiter notre page Facebook ↗
+                Facebook ↗
+              </a>
+            
+              <a
+                href="https://www.instagram.com/lvpsa_officiel/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex whitespace-nowrap rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 px-6 py-4 text-lg font-black text-white transition hover:opacity-90"
+              >
+                Instagram ↗
               </a>
             </div>
           </div>
