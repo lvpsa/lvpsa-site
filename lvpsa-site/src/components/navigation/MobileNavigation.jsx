@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
+  Facebook,
+  Instagram,
   Medal,
   ChevronDown,
   Handshake,
@@ -322,6 +324,27 @@ export default function MobileNavigation({
                     </Link>
                   )}
                 </div>
+                <a
+  href="https://www.facebook.com/profile.php?id=61572358300215"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={fermerMenu}
+  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
+>
+  <Facebook className="h-5 w-5 text-blue-400" />
+  Suivez-nous sur Facebook
+</a>
+
+<a
+  href="https://www.instagram.com/lvpsa_officiel/"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={fermerMenu}
+  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-white/80 transition hover:bg-white/10 hover:text-white"
+>
+  <Instagram className="h-5 w-5 text-pink-400" />
+  Suivez-nous sur Instagram
+</a>
               </div>
 
               {authChargee && (
