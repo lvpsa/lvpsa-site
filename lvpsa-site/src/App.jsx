@@ -4295,7 +4295,8 @@ const [equipe, setEquipe] = useState({
   }, []);
 
   
-const envoyerEquipe = () => {
+
+const envoyerEquipe = async () => {
   if (
     !equipe.capitaine.trim() ||
     !equipe.courriel.trim() ||
@@ -4323,39 +4324,70 @@ const envoyerEquipe = () => {
     return;
   }
 
-  fetch(inscriptionUrl, {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({
-      type: "equipe",
-      capitaine: equipe.capitaine,
-      courriel: equipe.courriel,
-      telephone: equipe.telephone,
-      nomEquipe: equipe.nomEquipe,
-      categorie: equipe.categorie,
-      joueurs: joueursInscrits,
-      notes: equipe.notes,
-    }),
-  });
+  const donneesEquipe = {
+    nom: equipe.nomEquipe.trim(),
+    nomEquipe: equipe.nomEquipe.trim(),
+    categorie: equipe.categorie,
+    capitaine: equipe.capitaine.trim(),
+    capitaineNom: equipe.capitaine.trim(),
+    courriel: equipe.courriel.trim(),
+    telephone: equipe.telephone.trim(),
+    joueurs: joueursInscrits,
+    notes: equipe.notes || "",
+    saison: 2027,
+    statut: "inscrite",
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
 
-  alert("Inscription envoyée avec succès !");
+  try {
+    // 1. Créer l'équipe dans Firebase
+    const equipeRef = await addDoc(
+      collection(db, "Equipes"),
+      donneesEquipe
+    );
 
-  setEquipe({
-    capitaine: "",
-    courriel: "",
-    telephone: "",
-    nomEquipe: "",
-    categorie: "Récréatif",
-    joueurs: Array.from({ length: 8 }, () => ({
-      nom: "",
-      telephone: "",
+    // 2. Envoyer les mêmes informations dans Google Sheets
+    await fetch(inscriptionUrl, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({
+        type: "equipe",
+        capitaine: equipe.capitaine,
+        courriel: equipe.courriel,
+        telephone: equipe.telephone,
+        nomEquipe: equipe.nomEquipe,
+        categorie: equipe.categorie,
+        joueurs: joueursInscrits,
+        notes: equipe.notes,
+        equipeId: equipeRef.id,
+        saison: 2027,
+      }),
+    });
+
+    alert("Équipe enregistrée dans Firebase et envoyée à Google Sheets !");
+
+    setEquipe({
+      capitaine: "",
       courriel: "",
-      residentSaintAugustin: false,
-    })),
-    notes: "",
-  });
+      telephone: "",
+      nomEquipe: "",
+      categorie: "Récréatif",
+      joueurs: Array.from({ length: 8 }, () => ({
+        nom: "",
+        telephone: "",
+        courriel: "",
+        residentSaintAugustin: false,
+      })),
+      notes: "",
+    });
 
-  setType(null);
+    setType(null);
+
+  } catch (error) {
+    console.error("Erreur lors de la création de l'équipe :", error);
+    alert("Une erreur est survenue lors de l'enregistrement de l'équipe dans Firebase.");
+  }
 };
 
 
