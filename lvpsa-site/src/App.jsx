@@ -2387,14 +2387,6 @@ setRemplacements(
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
-
-const normaliserCategorie = (categorie) =>
-  String(categorie || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim();
-
 // Saison affichée dans l'administration
 const saisonActive = 2027;
 
