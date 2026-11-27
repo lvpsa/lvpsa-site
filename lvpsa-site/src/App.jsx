@@ -4237,15 +4237,21 @@ function InscriptionLigue() {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  const [equipe, setEquipe] = useState({
-    capitaine: "",
-    courriel: "",
+  
+const [equipe, setEquipe] = useState({
+  capitaine: "",
+  courriel: "",
+  telephone: "",
+  nomEquipe: "",
+  categorie: "Récréatif",
+  joueurs: Array.from({ length: 8 }, () => ({
+    nom: "",
     telephone: "",
-    nomEquipe: "",
-    categorie: "Récréatif",
-    joueurs: ["", "", "", "", "", "", "", ""],
-    notes: "",
-  });
+    courriel: "",
+    residentSaintAugustin: false,
+  })),
+  notes: "",
+});
 
   const [joueur, setJoueur] = useState({
     nom: "",
@@ -4288,36 +4294,70 @@ function InscriptionLigue() {
     return () => unsubscribe();
   }, []);
 
-  const envoyerEquipe = () => {
-    fetch(inscriptionUrl, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({
-        type: "equipe",
-        capitaine: equipe.capitaine,
-        courriel: equipe.courriel,
-        telephone: equipe.telephone,
-        nomEquipe: equipe.nomEquipe,
-        categorie: equipe.categorie,
-        joueurs: equipe.joueurs.filter((j) => j.trim() !== ""),
-        notes: equipe.notes,
-      }),
-    });
+  
+const envoyerEquipe = () => {
+  if (
+    !equipe.capitaine.trim() ||
+    !equipe.courriel.trim() ||
+    !equipe.telephone.trim() ||
+    !equipe.nomEquipe.trim()
+  ) {
+    alert("Veuillez compléter les informations du capitaine et le nom de l'équipe.");
+    return;
+  }
 
-    alert("Inscription envoyée avec succès !");
+  const nombreMax =
+    equipe.categorie === "2 contre 2 mixte" ? 4 : 8;
 
-    setEquipe({
-      capitaine: "",
-      courriel: "",
+  const joueursInscrits = equipe.joueurs
+    .slice(0, nombreMax)
+    .filter((j) => j.nom.trim() !== "");
+
+  if (joueursInscrits.length < 4 && equipe.categorie !== "2 contre 2 mixte") {
+    alert("Une équipe doit inscrire au moins 4 joueurs.");
+    return;
+  }
+
+  if (equipe.categorie === "2 contre 2 mixte" && joueursInscrits.length < 2) {
+    alert("Une équipe 2 contre 2 mixte doit inscrire au moins 2 joueurs.");
+    return;
+  }
+
+  fetch(inscriptionUrl, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      type: "equipe",
+      capitaine: equipe.capitaine,
+      courriel: equipe.courriel,
+      telephone: equipe.telephone,
+      nomEquipe: equipe.nomEquipe,
+      categorie: equipe.categorie,
+      joueurs: joueursInscrits,
+      notes: equipe.notes,
+    }),
+  });
+
+  alert("Inscription envoyée avec succès !");
+
+  setEquipe({
+    capitaine: "",
+    courriel: "",
+    telephone: "",
+    nomEquipe: "",
+    categorie: "Récréatif",
+    joueurs: Array.from({ length: 8 }, () => ({
+      nom: "",
       telephone: "",
-      nomEquipe: "",
-      categorie: "Récréatif",
-      joueurs: ["", "", "", "", "", "", "", ""],
-      notes: "",
-    });
+      courriel: "",
+      residentSaintAugustin: false,
+    })),
+    notes: "",
+  });
 
-    setType(null);
-  };
+  setType(null);
+};
+
 
   const envoyerJoueur = async () => {
     if (!user) {
