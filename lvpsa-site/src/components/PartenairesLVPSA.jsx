@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Handshake } from "lucide-react";
+import {
+  ArrowRight,
+  Handshake,
+  Facebook,
+  Instagram,
+} from "lucide-react";
 
 const partenaires = [
   {
@@ -147,6 +152,50 @@ export default function PartenairesLVPSA() {
             Joignez-vous à l’aventure
             <ArrowRight className="h-5 w-5" />
           </a>
+        </motion.div>
+        
+        {/* RÉSEAUX SOCIAUX */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45 }}
+          className="mt-12 border-t border-white/10 pt-10 text-center"
+        >
+          <h3 className="text-2xl font-black text-white">
+            Restez connectés à la LVPSA!
+          </h3>
+
+          <p className="mt-3 text-slate-400">
+            Suivez-nous sur les réseaux sociaux pour découvrir nos nouvelles,
+            nos photos et les prochaines activités.
+          </p>
+
+          <div className="mt-7 flex flex-wrap justify-center gap-4">
+            <a
+              href="https://www.facebook.com/profile.php?id=61572358300215"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Suivre la LVPSA sur Facebook"
+              className="inline-flex items-center gap-3 rounded-2xl border border-blue-400/20 bg-blue-500/10 px-6 py-4 font-bold text-white transition hover:-translate-y-1 hover:border-blue-400/50 hover:bg-blue-500/20"
+            >
+              <Facebook className="h-6 w-6 text-blue-400" />
+              Facebook
+              <ArrowRight className="h-4 w-4" />
+            </a>
+
+            <a
+              href="https://www.instagram.com/lvpsa_officiel/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Suivre la LVPSA sur Instagram"
+              className="inline-flex items-center gap-3 rounded-2xl border border-pink-400/20 bg-pink-500/10 px-6 py-4 font-bold text-white transition hover:-translate-y-1 hover:border-pink-400/50 hover:bg-pink-500/20"
+            >
+              <Instagram className="h-6 w-6 text-pink-400" />
+              Instagram
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
