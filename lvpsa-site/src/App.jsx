@@ -4781,7 +4781,10 @@ function Protegee() {
     );
   }
 
-  if (!userData?.equipeId || userData?.equipeId === "independant") {
+  if (
+  userData?.role !== "admin" &&
+  (!userData?.equipeId || userData?.equipeId === "independant")
+) {
     return (
       <section className="mx-auto max-w-3xl px-6 py-32 text-center">
         <h1 className="text-4xl font-black text-white">
