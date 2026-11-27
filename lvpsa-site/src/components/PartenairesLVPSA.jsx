@@ -153,7 +153,8 @@ export default function PartenairesLVPSA() {
             <ArrowRight className="h-5 w-5" />
           </a>
         </motion.div>
-        
+
+        <h2 className="mt-10 text-center text-3xl font-black text-red-500">
         {/* RÉSEAUX SOCIAUX */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
