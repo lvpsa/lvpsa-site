@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, Instagram, LogOut } from "lucide-react";
+import { ChevronDown, Facebook, Instagram, LogOut } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import MegaMenuLigue from "./MegaMenuLigue";
@@ -201,6 +201,17 @@ export default function DesktopNavigation({
 
       <div className="hidden items-center gap-3 lg:flex">
         <a
+  href="https://www.facebook.com/profile.php?id=61572358300215"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Suivre la LVPSA sur Facebook"
+  title="Facebook LVPSA"
+  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 text-white/80 transition hover:border-blue-400/50 hover:bg-blue-400/10 hover:text-blue-300"
+>
+  <Facebook className="h-5 w-5" />
+</a>
+
+<a
   href="https://www.instagram.com/lvpsa_officiel/"
   target="_blank"
   rel="noopener noreferrer"
