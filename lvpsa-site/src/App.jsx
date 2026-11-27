@@ -4461,27 +4461,33 @@ const envoyerEquipe = () => {
 
       {!type && (
         <div className="mt-12 grid gap-8 md:grid-cols-2">
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Les inscriptions d'équipes pour la saison 2026 sont maintenant terminées. Merci pour votre intérêt et restez à l'affût pour la saison prochaine !"
-              )
-            }
-            className="rounded-3xl border border-amber-400/40 bg-amber-400 p-8 text-left text-slate-950 hover:bg-amber-300"
-          >
-            <h2 className="text-3xl font-black">
-              Inscrire une équipe
-            </h2>
+          
+<button
+  type="button"
+  onClick={() => {
+    if (userData?.role === "admin") {
+      setType("equipe");
+    } else {
+      alert("Les inscriptions d'équipes pour la saison 2027 ne sont pas encore ouvertes.");
+    }
+  }}
+  className="rounded-3xl border border-amber-400/40 bg-amber-400 p-8 text-left text-slate-950 hover:bg-amber-300"
+>
+  <h2 className="text-3xl font-black">
+    Inscrire une équipe
+  </h2>
 
-            <p className="mt-4 text-lg font-semibold">
-              Je suis capitaine et je veux inscrire mon équipe complète.
-            </p>
+  <p className="mt-4 text-lg font-semibold">
+    Je suis capitaine et je veux inscrire mon équipe complète.
+  </p>
 
-            <p className="mt-3 text-sm font-bold">
-              Inscriptions maintenant terminées, on se revoit en 2027.
-            </p>
-          </button>
+  <p className="mt-3 text-sm font-bold">
+    {userData?.role === "admin"
+      ? "Aperçu administrateur – Saison 2027"
+      : "Inscriptions 2027 bientôt ouvertes !"}
+  </p>
+</button>
+
 
           <button
             onClick={() => setType("joueur")}
@@ -4498,7 +4504,7 @@ const envoyerEquipe = () => {
         </div>
       )}
 
-      {type === "equipe" && (
+      {type === "equipe" && userData?.role === "admin" && (
         <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
           <button onClick={() => setType(null)} className="mb-6 text-amber-300">
             ← Retour
@@ -4541,28 +4547,97 @@ const envoyerEquipe = () => {
               onChange={(e) => setEquipe({ ...equipe, nomEquipe: e.target.value })}
             />
 
-            <select
-              className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
-              value={equipe.categorie}
-              onChange={(e) => setEquipe({ ...equipe, categorie: e.target.value })}
-            >
-              <option>Récréatif</option>
-              <option>Compétitif</option>
-            </select>
+            
+<select
+  className="rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
+  value={equipe.categorie}
+  onChange={(e) =>
+    setEquipe({ ...equipe, categorie: e.target.value })
+  }
+>
+  <option value="Récréatif">Récréatif 4 contre 4</option>
+  <option value="Compétitif">Compétitif 4 contre 4</option>
+  <option value="2 contre 2 mixte">2 contre 2 mixte</option>
+</select>
 
-            {equipe.joueurs.map((joueurnom, index) => (
-              <input
-                key={index}
-                className="rounded-2xl px-4 py-3 text-slate-950"
-                placeholder={`Joueur ${index + 1}${index > 3 ? " optionnel" : ""}`}
-                value={joueurnom}
-                onChange={(e) => {
-                  const nouveauxJoueurs = [...equipe.joueurs];
-                  nouveauxJoueurs[index] = e.target.value;
-                  setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
-                }}
-              />
-            ))}
+
+            
+{equipe.joueurs
+  .slice(0, equipe.categorie === "2 contre 2 mixte" ? 4 : 8)
+  .map((joueur, index) => (
+    <div
+      key={index}
+      className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 md:col-span-2"
+    >
+      <h3 className="mb-4 text-lg font-black text-amber-300">
+        Joueur {index + 1}
+        {index < 4 ? " (titulaire)" : " (additionnel)"}
+      </h3>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <input
+          className="rounded-xl px-4 py-3 text-slate-950"
+          placeholder="Nom complet"
+          value={joueur.nom}
+          onChange={(e) => {
+            const nouveauxJoueurs = [...equipe.joueurs];
+            nouveauxJoueurs[index] = {
+              ...nouveauxJoueurs[index],
+              nom: e.target.value,
+            };
+            setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
+          }}
+        />
+
+        <input
+          className="rounded-xl px-4 py-3 text-slate-950"
+          placeholder="Téléphone"
+          maxLength={13}
+          value={joueur.telephone}
+          onChange={(e) => {
+            const nouveauxJoueurs = [...equipe.joueurs];
+            nouveauxJoueurs[index] = {
+              ...nouveauxJoueurs[index],
+              telephone: formatTelephone(e.target.value),
+            };
+            setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
+          }}
+        />
+
+        <input
+          type="email"
+          className="rounded-xl px-4 py-3 text-slate-950 md:col-span-2"
+          placeholder="Adresse courriel"
+          value={joueur.courriel}
+          onChange={(e) => {
+            const nouveauxJoueurs = [...equipe.joueurs];
+            nouveauxJoueurs[index] = {
+              ...nouveauxJoueurs[index],
+              courriel: e.target.value,
+            };
+            setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
+          }}
+        />
+
+        <label className="flex items-center gap-3 text-sm text-white md:col-span-2">
+          <input
+            type="checkbox"
+            checked={joueur.residentSaintAugustin}
+            onChange={(e) => {
+              const nouveauxJoueurs = [...equipe.joueurs];
+              nouveauxJoueurs[index] = {
+                ...nouveauxJoueurs[index],
+                residentSaintAugustin: e.target.checked,
+              };
+              setEquipe({ ...equipe, joueurs: nouveauxJoueurs });
+            }}
+            className="h-5 w-5 accent-amber-400"
+          />
+          Résident(e) de Saint-Augustin-de-Desmaures
+        </label>
+      </div>
+    </div>
+  ))}
 
             <textarea
               className="min-h-32 rounded-2xl px-4 py-3 text-slate-950 md:col-span-2"
@@ -4572,13 +4647,15 @@ const envoyerEquipe = () => {
             />
           </div>
 
-          <button
-            type="button"
-            onClick={envoyerEquipe}
-            className="mt-8 rounded-full bg-amber-400 px-8 py-3 font-bold text-slate-950 hover:bg-amber-300"
-          >
-            Envoyer l’inscription
-          </button>
+          
+<button
+  type="button"
+  disabled
+  className="mt-8 cursor-not-allowed rounded-full bg-slate-500 px-8 py-3 font-bold text-white opacity-70"
+>
+  Aperçu seulement – Inscriptions non ouvertes
+</button>
+
         </div>
       )}
 
