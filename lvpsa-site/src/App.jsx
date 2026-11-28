@@ -4501,6 +4501,11 @@ const envoyerEquipe = async () => {
 
       <h1 className="mt-2 text-5xl font-black">Inscriptions</h1>
 
+      <p className="mt-3 text-xs text-red-400">
+  Diagnostic admin — role : {String(userData?.role)}
+  | isAdmin : {String(userData?.isAdmin)}
+</p>
+
       <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
         Inscrivez une équipe complète comme capitaine ou ajoutez votre nom à la
         liste des joueurs indépendants pour les remplacements ou les équipes à compléter.
