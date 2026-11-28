@@ -2402,6 +2402,9 @@ const equipesCompetitives = equipesSaisonActive.filter(
   (equipe) => normaliserCategorie(equipe.categorie).includes("competitif")
 );
 
+  const equipesDeuxContreDeux = equipesSaisonActive.filter(
+  (equipe) => normaliserCategorie(equipe.categorie).includes("2 contre 2")
+);
 
   const joueursParEquipe = (equipe) =>
   membres.filter((membre) => {
@@ -2554,6 +2557,7 @@ const membresSansEquipe = membres.filter((membre) => {
           {[
             ["Récréatif", equipesRecreatives],
             ["Compétitif", equipesCompetitives],
+            ["2 contre 2 mixte", equipesDeuxContreDeux],
           ].map(([titre, liste]) => (
             <div
               key={titre}
