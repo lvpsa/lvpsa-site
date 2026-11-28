@@ -2402,8 +2402,8 @@ const equipesCompetitives = equipesSaisonActive.filter(
   (equipe) => normaliserCategorie(equipe.categorie).includes("competitif")
 );
 
-  const equipesDeuxContreDeux = equipesSaisonActive.filter(
-  (equipe) => normaliserCategorie(equipe.categorie).includes("2 contre 2")
+const equipesDeuxContreDeux = equipesSaisonActive.filter(
+  (equipe) => normaliserCategorie(equipe.categorie).includes("2 contre 2 mixte")
 );
 
   const joueursParEquipe = (equipe) =>
