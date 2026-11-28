@@ -4782,7 +4782,7 @@ const envoyerEquipe = async () => {
           </button>
         </div>
       )}
-    </section>
+       </div>
   );
 }
 
