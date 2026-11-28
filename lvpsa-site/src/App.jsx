@@ -4714,6 +4714,8 @@ const envoyerEquipe = async () => {
   </button>
 )}
 
+        </div>
+      )}
 
       {type === "joueur" && (
         <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
@@ -4780,8 +4782,7 @@ const envoyerEquipe = async () => {
           >
             Envoyer mon inscription
           </button>
-        </div>
-             </div>
+                </div>
       )}
     </section>
   );
