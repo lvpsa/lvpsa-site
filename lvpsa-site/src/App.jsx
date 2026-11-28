@@ -2583,7 +2583,9 @@ const membresSansEquipe = membres.filter((membre) => {
                      {equipe.joueurs?.length > 0 ? (
   equipe.joueurs.map((joueur, index) => (
     <p key={index} className="text-slate-300">
-      • {joueur}
+      • {typeof joueur === "string"
+        ? joueur
+        : `${joueur.nom || "Nom non indiqué"}${joueur.telephone ? ` — ${joueur.telephone}` : ""}${joueur.courriel ? ` — ${joueur.courriel}` : ""}`}
     </p>
   ))
 ) : joueursParEquipe(equipe).length > 0 ? (
