@@ -4711,12 +4711,12 @@ const envoyerEquipe = async () => {
   </button>
 ) : (
   <button
-    type="button"
-    disabled
-    className="mt-8 cursor-not-allowed rounded-full bg-slate-500 px-8 py-3 font-bold text-white opacity-70"
-  >
-    Aperçu seulement – Inscriptions non ouvertes
-  </button>
+  type="button"
+  onClick={envoyerEquipe}
+  className="mt-8 rounded-full bg-emerald-500 px-8 py-3 font-bold text-white hover:bg-emerald-400"
+>
+  TEST ADMIN — SOUMETTRE
+</button>
 )}
 
         </div>
