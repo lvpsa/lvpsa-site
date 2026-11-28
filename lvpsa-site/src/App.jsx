@@ -4695,16 +4695,25 @@ const envoyerEquipe = async () => {
           </div>
 
           
-<button
-  type="button"
-  disabled
-  className="mt-8 cursor-not-allowed rounded-full bg-slate-500 px-8 py-3 font-bold text-white opacity-70"
->
-  Aperçu seulement – Inscriptions non ouvertes
-</button>
 
-        </div>
-      )}
+{userData?.role === "admin" ? (
+  <button
+    type="button"
+    onClick={envoyerEquipe}
+    className="mt-8 rounded-full bg-emerald-500 px-8 py-3 font-bold text-white hover:bg-emerald-400"
+  >
+    Tester l'inscription (Admin)
+  </button>
+) : (
+  <button
+    type="button"
+    disabled
+    className="mt-8 cursor-not-allowed rounded-full bg-slate-500 px-8 py-3 font-bold text-white opacity-70"
+  >
+    Aperçu seulement – Inscriptions non ouvertes
+  </button>
+)}
+
 
       {type === "joueur" && (
         <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
