@@ -4701,7 +4701,7 @@ const envoyerEquipe = async () => {
 
           
 
-{userData?.role === "admin" ? (
+{(userData?.role === "admin" || userData?.isAdmin) ? (
   <button
     type="button"
     onClick={envoyerEquipe}
