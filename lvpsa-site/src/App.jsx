@@ -4781,8 +4781,9 @@ const envoyerEquipe = async () => {
             Envoyer mon inscription
           </button>
         </div>
+             </div>
       )}
-       </div>
+    </section>
   );
 }
 
