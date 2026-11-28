@@ -4512,7 +4512,7 @@ const envoyerEquipe = async () => {
 <button
   type="button"
   onClick={() => {
-    if (userData?.role === "admin") {
+    if (userData?.role === "admin" || userData?.isAdmin) {
       setType("equipe");
     } else {
       alert("Les inscriptions d'équipes pour la saison 2027 ne sont pas encore ouvertes.");
@@ -4529,7 +4529,7 @@ const envoyerEquipe = async () => {
   </p>
 
   <p className="mt-3 text-sm font-bold">
-    {userData?.role === "admin"
+    {(userData?.role === "admin" || userData?.isAdmin)
       ? "Aperçu administrateur – Saison 2027"
       : "Inscriptions 2027 bientôt ouvertes !"}
   </p>
@@ -4551,7 +4551,7 @@ const envoyerEquipe = async () => {
         </div>
       )}
 
-      {type === "equipe" && userData?.role === "admin" && (
+      {type === "equipe" && (userData?.role === "admin" || userData?.isAdmin) && (
         <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-8">
           <button onClick={() => setType(null)} className="mb-6 text-amber-300">
             ← Retour
